@@ -1,36 +1,22 @@
-import React, { useState } from 'react';
-import {Text, View} from 'react-native';
-import { AppLoading } from 'expo';
-import {
-  useFonts,
-  Lato_100Thin, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black,
-  Montserrat_100Thin, Montserrat_200ExtraLight, Montserrat_300Light, Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold, Montserrat_900Black,
-  OpenSans_300Light, OpenSans_400Regular, OpenSans_600SemiBold, OpenSans_700Bold, OpenSans_800ExtraBold,
-  Oswald_200ExtraLight, Oswald_300Light, Oswald_400Regular, Oswald_500Medium, Oswald_600SemiBold, Oswald_700Bold,
-  Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold, Poppins_800ExtraBold, Poppins_900Black,
-  Roboto_100Thin, Roboto_300Light, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold, Roboto_900Black,
-} from '@expo-google-fonts/dev';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-// import * as Font from 'expo-font';
+import React, { useState } from "react";
+import { Text, View } from "react-native";
+import { AppLoading } from "expo";
+import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 
-import LandingPage from './src/screens/LandingPage'; // Import your LandingPage component
-import LoginPage from './src/screens/LoginPage';
-import SignUpPage from './src/screens/SignUpPage';
+import LandingPage from "./src/screens/LandingPage"; // Import your LandingPage component
+import LoginPage from "./src/screens/LoginPage";
+import SignUpPage from "./src/screens/SignUpPage";
 
+import styles from "./src/styles";
 
-import styles from './src/styles';
+import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
+import { Lato } from "@expo-google-fonts/lato";
+import { Poppins_400Regular } from "@expo-google-fonts/poppins";
+import { Montserrat } from "@expo-google-fonts/montserrat";
+import { Roboto } from "@expo-google-fonts/roboto";
+import { OpenSans } from "@expo-google-fonts/open-sans";
 
-// export default function App() {
-//   let [fontsLoaded] = useFonts({
-//     Lato_100Thin, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black,
-//     Montserrat_100Thin, Montserrat_200ExtraLight, Montserrat_300Light, Montserrat_400Regular, Montserrat_500Medium, Montserrat_600SemiBold, Montserrat_700Bold, Montserrat_800ExtraBold, Montserrat_900Black,
-//     OpenSans_300Light, OpenSans_400Regular, OpenSans_600SemiBold, OpenSans_700Bold, OpenSans_800ExtraBold,
-//     Oswald_200ExtraLight, Oswald_300Light, Oswald_400Regular, Oswald_500Medium, Oswald_600SemiBold, Oswald_700Bold,
-//     Poppins_100Thin, Poppins_200ExtraLight, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold, Poppins_800ExtraBold, Poppins_900Black,
-//     Roboto_100Thin, Roboto_300Light, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold, Roboto_900Black,
-//   });
-// }
-
+import { useEffect } from "react";
 
 const theme = {
   colors: {
@@ -69,7 +55,7 @@ const theme = {
       level2: "rgb(231, 240, 244)",
       level3: "rgb(223, 236, 240)",
       level4: "rgb(221, 234, 239)",
-      level5: "rgb(216, 231, 237)"
+      level5: "rgb(216, 231, 237)",
     },
     surfaceDisabled: "rgba(25, 28, 29, 0.12)",
     onSurfaceDisabled: "rgba(25, 28, 29, 0.38)",
@@ -78,14 +64,19 @@ const theme = {
   },
 };
 
-
-
 const App = () => {
-
-  const [fontLoaded, setFontLoaded] = useState(false);
+  const [fontLoaded] = useFonts({
+    Oswald_400Regular,
+    Lato,
+    Poppins_400Regular,
+    Montserrat,
+    Roboto,
+    OpenSans,
+  });
+  // const [fontLoaded, setFontLoaded] = useState(false);
   return (
-    <PaperProvider theme={theme} font={loadFonts}>
-      <SignUpPage />
+    <PaperProvider theme={theme}>
+      <LoginPage />
     </PaperProvider>
   );
 };
