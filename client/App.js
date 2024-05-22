@@ -6,7 +6,9 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
 import LandingPage from "./src/screens/LandingPage"; // Import your LandingPage component
 import LoginPage from "./src/screens/LoginPage";
 import SignUpPage from "./src/screens/SignUpPage";
+import DatePickerComponent from "./src/components/datePicker";
 import styles from "./src/styles";
+import { registerTranslation } from 'react-native-paper-dates'
 
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
 import { Lato } from "@expo-google-fonts/lato";
@@ -16,6 +18,24 @@ import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 
 import { useEffect } from "react";
+registerTranslation('en', {
+  save: 'Save',
+  selectSingle: 'Select date',
+  selectMultiple: 'Select dates',
+  selectRange: 'Select period',
+  notAccordingToDateFormat: (inputFormat) =>
+    `Date format must be ${inputFormat}`,
+  mustBeHigherThan: (date) => `Must be later then ${date}`,
+  mustBeLowerThan: (date) => `Must be earlier then ${date}`,
+  mustBeBetween: (startDate, endDate) =>
+    `Must be between ${startDate} - ${endDate}`,
+  dateIsDisabled: 'Day is not allowed',
+  previous: 'Previous',
+  next: 'Next',
+  typeInDate: 'Type in date',
+  pickDateFromCalendar: 'Pick date from calendar',
+  close: 'Close',
+})
 
 const theme = {
   colors: {

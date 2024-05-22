@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   pageHeading: {
     textShadowColor: "#F69E35",
-    top: "20%",
+    top: "10%",
     fontFamily: "Montserrat",
     fontSize: 40,
     fontWeight: "bold",
@@ -127,7 +127,44 @@ const styles = StyleSheet.create({
     right: 40, // Adjust this value as needed
     top: '54%', // Align it vertically to the center
     transform: [{ translateY: -12 }],
-  }
+  },
+  dateBtn: {
+    width: 140, 
+    height: 50,
+    backgroundColor: "#87B6C4",
+    borderWidth: 1, // Border width
+    borderColor: "#F4F9FB", // Border color
+    borderRadius: 5, 
+    flexDirection: 'column',
+    padding: 15,
+    justifyContent: 'center',
+    pointerEvents: 'auto'
+  },
+  dateBtnText: {
+    fontWeight: "regular",
+    color: "black"
+  },
+  genderDropdown: {
+    width: 145, 
+    height: 30,
+    margin: 15,
+    marginRight: 0,
+    backgroundColor: "#87B6C4",
+    borderWidth: 1, // Border width
+    borderColor: "#F4F9FB", // Border color
+    borderRadius: 5, 
+    flexDirection: 'row',
+  },
+  dropDownContainer: {
+    width: 200, // Set your desired width here
+    alignSelf: 'center', // Center the dropdown items if desired
+  },
+  row: {
+    width: 300,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
 });
 
 export default styles;
