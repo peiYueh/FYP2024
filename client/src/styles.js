@@ -3,15 +3,17 @@ import { AppLoading } from "expo";
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "center",
     height: "100%",
     width: "100%",
   },
   content: {
+    top: "20%",
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    height: "100%",
+    height: "50%",
     width: "100%",
   },
   landingContent: {
@@ -77,6 +79,16 @@ const styles = StyleSheet.create({
     fontWeight: 900,
     color: "white",
   },
+  remarkText: {
+    fontFamily: "serif",
+    fontSize: 15,
+    top: 40,
+  },
+  hyperLinkText: {
+    color: "yellow",
+    textDecorationLine: "underline",
+    fontStyle: "italic",
+  },
   inputField: {
     width: 300,
     height: 50,
@@ -110,6 +122,12 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans",
     fontSize: 24,
   },
+  showPasswordIconButton: {
+    position: 'absolute',
+    right: 40, // Adjust this value as needed
+    top: '54%', // Align it vertically to the center
+    transform: [{ translateY: -12 }],
+  }
 });
 
 export default styles;
