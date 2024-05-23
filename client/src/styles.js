@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     width: 145, 
     height: 30,
     margin: 15,
+    top:0,
     marginRight: 0,
     backgroundColor: "#87B6C4",
     borderWidth: 1, // Border width
