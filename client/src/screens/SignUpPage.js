@@ -6,10 +6,10 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import styles from '../styles'; // Import styles from your stylesheet file
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-// import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '../../config';
 
 const SignUpPage = () => {
-  const API_BASE_URL = 'https://2343-2001-d08-1010-d01f-d431-8a33-5eb7-19d8.ngrok-free.app'; // This should match the ngrok URL provided
+  // const API_BASE_URL = 'https://2343-2001-d08-1010-d01f-d431-8a33-5eb7-19d8.ngrok-free.app'; // This should match the ngrok URL provided
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
