@@ -18,8 +18,11 @@ def members():
 def signup_route():
     db = get_db()  # Get the database connection
     data = request.json  # Access JSON data from request body
-    print(data)
     return signup(db)
+
+# @app.route('/login', methods=['POST'])
+    # def login_route():
+
 
 if __name__ == "__main__":
     app.run(debug=True)

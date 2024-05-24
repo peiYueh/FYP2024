@@ -9,7 +9,9 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 
 const SignUpPage = () => {
-  // const API_BASE_URL = 'https://2343-2001-d08-1010-d01f-d431-8a33-5eb7-19d8.ngrok-free.app'; // This should match the ngrok URL provided
+  console.log("API BASE URL HERE");
+  console.log(API_BASE_URL);
+  const today = new Date();
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -76,7 +78,7 @@ const SignUpPage = () => {
     // Add your sign-up logic here, such as sending data to the server
     // TODO: Add to database
     // Send data to the Flask server
-    console.log(API_BASE_URL);
+    
     try {
       console.log(email, username, password);
       const response = await axios.post(API_BASE_URL + '/signup', {
@@ -87,6 +89,7 @@ const SignUpPage = () => {
         gender,
       });
       console.log('Sign up successful!', response.data);
+      alert('Sign Up Successful! Please proceed to Login');
     } catch (error) {
       console.error('Error signing up', error);
       alert('There was an error signing up. Please try again.');
@@ -237,6 +240,9 @@ const SignUpPage = () => {
             onConfirm={handleConfirm}
             dropDownContainerStyle={styles.dropDownContainer}
             accessibilityLabel="Date Picker Modal"
+            validRange={{
+              endDate: today, // Set the maximum date to today
+            }}
           />
         </Portal>
       </View>

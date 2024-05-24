@@ -24,3 +24,14 @@ def signup(db):
         return jsonify(result), 400
     
     return jsonify(result), 201
+
+def login(db):
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    user = User.query.filter_by(email=email).first()
+    if user and check_password_hash(user.password_hash, password):
+        return jsonify({'message': 'Login successful!', 'user': {'email': user.email, 'username': user.username}}), 200
+    else:
+        return jsonify({'message': 'Invalid email or password'}), 401

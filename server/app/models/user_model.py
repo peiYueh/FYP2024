@@ -3,7 +3,7 @@ import bcrypt
 
 class User:
     def __init__(self, db):
-        self.collection = db['users']
+        self.collection = db['user']
         print("users collection")
         print(self.collection)
 
@@ -15,11 +15,11 @@ class User:
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
         user = {
-            'username': username,
-            'email': email,
-            'password': hashed_password,
-            'birthDate': birthDate,
-            'gender': gender
+            'user_name': username,
+            'user_email': email,
+            'user_password': hashed_password,
+            'user_birthDate': birthDate,
+            'user_gender': gender
         }
 
         self.collection.insert_one(user)
