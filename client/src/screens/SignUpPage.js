@@ -91,6 +91,7 @@ const SignUpPage = () => {
       });
       console.log('Sign up successful!', response.data);
       alert('Sign Up Successful! Please proceed to Login');
+      navigation.navigate('LoginPage')
     } catch (error) {
       console.error('Error signing up', error);
       alert('There was an error signing up. Please try again.');

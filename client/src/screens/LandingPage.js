@@ -45,7 +45,7 @@ const LandingPage = () => {
               justifyContent: 'center',
               pointerEvents: 'auto'
             })}
-            onPress={() => navigation.navigate('LoginPage')}
+            onPress={() => navigation.navigate('SignUpPage')}
           >
             <Text style={[styles.buttonText, { color: '#F69E35' }]}>Sign Up</Text>
           </Pressable>
