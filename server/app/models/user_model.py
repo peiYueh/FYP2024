@@ -24,3 +24,6 @@ class User:
 
         self.collection.insert_one(user)
         return {'message': 'User created successfully'}
+    
+    def get_user_by_email(self, email):
+        return self.collection.find_one({'user_email': email})

@@ -80,7 +80,6 @@ const SignUpPage = () => {
     // Send data to the Flask server
     
     try {
-      console.log(email, username, password);
       const response = await axios.post(API_BASE_URL + '/signup', {
         email,
         username,
@@ -222,7 +221,7 @@ const SignUpPage = () => {
           <Text style={[styles.remarkText, { color: '#0A252D' }]}>
             Already have an account?{' '}
             <Text style={styles.hyperLinkText} onPress={() => console.log("Already have an account?")}>
-              Sign Up
+              Login
             </Text>
           </Text>
         </View>

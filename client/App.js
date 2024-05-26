@@ -95,7 +95,7 @@ const App = () => {
   // const [fontLoaded, setFontLoaded] = useState(false);
   return (
     <PaperProvider theme={theme}>
-      <SignUpPage />
+      <LoginPage />
     </PaperProvider>
   );
 };

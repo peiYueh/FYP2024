@@ -1,5 +1,8 @@
-from flask import request, jsonify
+from flask import request, jsonify, session
 from app.models.user_model import User
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt
 
 def signup(db):
     print("HIII Im in sign up")
@@ -26,12 +29,17 @@ def signup(db):
     return jsonify(result), 201
 
 def login(db):
+    print("I'm in login user controller")
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-
-    user = User.query.filter_by(email=email).first()
-    if user and check_password_hash(user.password_hash, password):
-        return jsonify({'message': 'Login successful!', 'user': {'email': user.email, 'username': user.username}}), 200
+    print(email)
+    user_model = User(db)
+    user = user_model.get_user_by_email(email)
+    print(user)
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['user_password']):
+        user_id = user['_id']
+        session['user_id'] = str(user_id)
+        return jsonify({'message': 'Login successful!', 'user': {'email': user['user_email'], 'username': user['user_name']}}), 200
     else:
         return jsonify({'message': 'Invalid email or password'}), 401
