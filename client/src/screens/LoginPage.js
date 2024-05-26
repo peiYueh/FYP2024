@@ -7,12 +7,16 @@ import styles from "../styles"; // Import styles from your stylesheet file
 import { TextInput } from "react-native-paper";
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import LoadingIndicator from '../components/loading-component'; // Import the LoadingIndicator component
+import { useNavigation } from '@react-navigation/native'; 
 
 const LoginPage = () => {
+  const navigation = useNavigation();
   const theme = useTheme(); // Access the theme object
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!validEmail(email)) {
@@ -24,7 +28,7 @@ const LoginPage = () => {
       alert('Invalid Password', 'Password must be at least 6 characters long.');
       return;
     }
-
+    setLoading(true);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/login`, 
@@ -37,10 +41,12 @@ const LoginPage = () => {
         }
       );
       console.log('Login successful!', response.data);
+      alert(`Welcome ${response.data.user.username}`);
       // Navigate to the next screen or perform any action you need upon successful login
     } catch (error) {
-      console.error('Error logging in', error);
-      alert('Login Error', 'There was an error logging in. Please try again.');
+      alert('Login Error', 'Login Unsuccessful. Please try again.');
+    }finally {
+      setLoading(false); // Set loading to false regardless of login success or failure
     }
   };
 
@@ -101,10 +107,14 @@ const LoginPage = () => {
         </Pressable>
         <Text style={[styles.remarkText, { color: '#F4F9FB' }]}>
           Don't have an account?{' '}
-          <Text style={styles.hyperLinkText} onPress={() => console.log("going to signup page")}>
+          <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('SignUpPage')}>
             Sign Up
           </Text>
         </Text>
+        {( loading &&
+          <LoadingIndicator theme={theme} />
+        )}
+
       </View>
       <Image
         source={require('../../assets/graph_bg.png')}

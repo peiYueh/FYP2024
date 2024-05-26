@@ -6,14 +6,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     height: "100%",
+    position: "relative",
     width: "100%",
   },
   content: {
-    top: "20%",
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    height: "50%",
+    height: "40%",
     width: "100%",
   },
   landingContent: {
@@ -39,13 +39,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bottomImage: {
-    position: "relative",
+    position: 'absolute',
     bottom: 0,
-    right: 0,
     left: 0,
-    width: "100%",
+    width: '100%',
     height: 350,
-    zIndex: -1,
+    zIndex: -1, // Set a lower zIndex to keep it behind the content
   },
   heading: {
     fontFamily: "Montserrat",
@@ -53,8 +52,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   pageHeading: {
+    top: 50, // Adjust the top value to position it where you want
+    zIndex: 2,
+    position: 'absolute',
     textShadowColor: "#F69E35",
-    top: "10%",
     fontFamily: "Montserrat",
     fontSize: 40,
     fontWeight: "bold",

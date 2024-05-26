@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
-import { AppLoading } from "expo";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
+import React from "react";
+import { Provider as PaperProvider } from "react-native-paper";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import LandingPage from "./src/screens/LandingPage"; // Import your LandingPage component
 import LoginPage from "./src/screens/LoginPage";
 import SignUpPage from "./src/screens/SignUpPage";
-import DatePickerComponent from "./src/components/datePicker";
-import styles from "./src/styles";
 import { registerTranslation } from 'react-native-paper-dates'
 
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -17,7 +15,6 @@ import { Montserrat } from "@expo-google-fonts/montserrat";
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 
-import { useEffect } from "react";
 registerTranslation('en', {
   save: 'Save',
   selectSingle: 'Select date',
@@ -82,6 +79,8 @@ const theme = {
     accent: "rgb(255, 165, 0)",
   },
 };
+// Define your stack navigator
+const Stack = createStackNavigator();
 
 const App = () => {
   const [fontLoaded] = useFonts({
@@ -92,12 +91,29 @@ const App = () => {
     Roboto,
     OpenSans,
   });
-  // const [fontLoaded, setFontLoaded] = useState(false);
+
   return (
     <PaperProvider theme={theme}>
-      <LoginPage />
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="LandingPage">
+          <Stack.Screen
+            name="LandingPage"
+            component={LandingPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUpPage"
+            component={SignUpPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="LoginPage"
+            component={LoginPage}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </PaperProvider>
   );
 };
-
 export default App;

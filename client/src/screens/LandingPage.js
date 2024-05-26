@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, Image, Text, StyleSheet, Button, Pressable } from 'react-native';
 import { useTheme } from 'react-native-paper'; // Import useTheme hook
 import styles from '../styles'; // Import styles from your stylesheet file
-
+import { useNavigation } from '@react-navigation/native';
 
 const LandingPage = () => {
   const theme = useTheme(); // Access the theme object
-
+  const navigation = useNavigation();
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
       <View style={styles.content}>
@@ -45,9 +45,9 @@ const LandingPage = () => {
               justifyContent: 'center',
               pointerEvents: 'auto'
             })}
-            onPress={() => console.log('Sign Up Pressed')}
+            onPress={() => navigation.navigate('LoginPage')}
           >
-            <Text style={[styles.buttonText,{ color: '#F69E35' }]}>Sign Up</Text>
+            <Text style={[styles.buttonText, { color: '#F69E35' }]}>Sign Up</Text>
           </Pressable>
 
           <Pressable
@@ -62,17 +62,16 @@ const LandingPage = () => {
               justifyContent: 'center',
               pointerEvents: 'auto'
             })}
-            onPress={() => console.log('Login Pressed')}
+            onPress={() => navigation.navigate('LoginPage')}
           >
             <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Login</Text>
           </Pressable>
-
         </View>
-        <Image
-          source={require('../../assets/graph_bg.png')}
-          style={styles.bottomImage}
-        />
       </View>
+      <Image
+        source={require('../../assets/graph_bg.png')}
+        style={styles.bottomImage}
+      />
     </View>
   );
 };

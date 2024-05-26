@@ -7,10 +7,11 @@ import styles from '../styles'; // Import styles from your stylesheet file
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import LoadingIndicator from '../components/loading-component';
+import { useNavigation } from '@react-navigation/native'; 
 
 const SignUpPage = () => {
-  console.log("API BASE URL HERE");
-  console.log(API_BASE_URL);
+  const navigation = useNavigation();
   const today = new Date();
   const theme = useTheme();
   const [email, setEmail] = useState('');
@@ -34,6 +35,7 @@ const SignUpPage = () => {
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
   const [birthDateTouched, setBirthDateTouched] = useState(false);
   const [genderTouched, setGenderTouched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Functions to show and hide date picker
   const showDatePicker = () => setDatePickerVisibility(true);
@@ -78,7 +80,7 @@ const SignUpPage = () => {
     // Add your sign-up logic here, such as sending data to the server
     // TODO: Add to database
     // Send data to the Flask server
-    
+    setLoading(true);
     try {
       const response = await axios.post(API_BASE_URL + '/signup', {
         email,
@@ -92,6 +94,8 @@ const SignUpPage = () => {
     } catch (error) {
       console.error('Error signing up', error);
       alert('There was an error signing up. Please try again.');
+    }finally {
+      setLoading(false); // Set loading to false regardless of login success or failure
     }
   };
 
@@ -220,10 +224,13 @@ const SignUpPage = () => {
           </Pressable>
           <Text style={[styles.remarkText, { color: '#0A252D' }]}>
             Already have an account?{' '}
-            <Text style={styles.hyperLinkText} onPress={() => console.log("Already have an account?")}>
+            <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('LoginPage')}>
               Login
             </Text>
           </Text>
+          {( loading &&
+            <LoadingIndicator theme={theme} />
+          )}
         </View>
         <Image
           source={require('../../assets/graph_bg.png')}
