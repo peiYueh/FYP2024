@@ -15,7 +15,7 @@ import { Poppins_400Regular } from "@expo-google-fonts/poppins";
 import { Montserrat } from "@expo-google-fonts/montserrat";
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
-
+import FlashMessage from "react-native-flash-message";
 registerTranslation('en', {
   save: 'Save',
   selectSingle: 'Select date',
@@ -119,6 +119,7 @@ const App = () => {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      <FlashMessage position="top" />
     </PaperProvider>
   );
 };

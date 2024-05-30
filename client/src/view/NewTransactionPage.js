@@ -5,13 +5,14 @@ import { useTheme, IconButton, TextInput, Portal, SegmentedButtons } from 'react
 import { DatePickerModal } from 'react-native-paper-dates';
 import { useNavigation } from '@react-navigation/native';
 import LoadingIndicator from '../components/loading-component';
+import { showMessage, hideMessage } from "react-native-flash-message";
 import styles from '../styles';
 
 const NewTransactionPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const [amount, setAmount] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState("");
     const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const formatAmount = (value) => {
@@ -108,7 +109,7 @@ const NewTransactionPage = () => {
                 {renderTransactionType()}
 
             </View>
-            {!keyboardVisible && (
+            {!keyboardVisible && selectedCategory !== "" && (
                 <Pressable
                     style={({ pressed }) => ({
                         backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
@@ -120,7 +121,13 @@ const NewTransactionPage = () => {
                         pointerEvents: 'auto',
                         alignSelf: 'center',
                     })}
-                    onPress={() => console.log("Adding new transaction...")}
+                    onPress={() => 
+                        showMessage({
+                            message: "Transaction Created!",
+                            description: "Your transaction has been added",
+                            type: "success",
+                        })
+                    }
                 >
                     <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save</Text>
                 </Pressable>
@@ -295,8 +302,8 @@ const SavingComponent = () => {
     const [transactionDateTouched, settransactionDateTouched] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [incomeTaxability, setIncomeTaxability] = useState(false);
-    const [savingInterestRate, setSavingInterestRate] = useState(false);
-    const [incomeType, setIncomeType] = useState('');
+    const [savingInterestRate, setSavingInterestRate] = useState(null);
+    const [incomeType, setIncomeType] = useState("active");
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
     // Handle date confirmation
