@@ -3,9 +3,10 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import LandingPage from "./src/screens/LandingPage"; // Import your LandingPage component
-import LoginPage from "./src/screens/LoginPage";
-import SignUpPage from "./src/screens/SignUpPage";
+import LandingPage from "./src/view/LandingPage"; // Import your LandingPage component
+import LoginPage from "./src/view/LoginPage";
+import SignUpPage from "./src/view/SignUpPage";
+import NewTransactionPage from "./src/view/NewTransactionPage";
 import { registerTranslation } from 'react-native-paper-dates'
 
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -37,7 +38,7 @@ registerTranslation('en', {
 const theme = {
   colors: {
     primary: "#1F8AAA",
-    onPrimary: "rgb(255, 255, 255)",
+    onPrimary: "#F4F9FB",
     primaryContainer: "rgb(185, 234, 255)",
     onPrimaryContainer: "rgb(0, 31, 41)",
     secondary: "rgb(0, 104, 122)",
@@ -95,7 +96,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LandingPage">
+        <Stack.Navigator initialRouteName="NewTransactionPage">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -104,12 +105,17 @@ const App = () => {
           <Stack.Screen
             name="SignUpPage"
             component={SignUpPage}
-            options={{ headerShown: false }}
+            options={{ headerShown: true }}
           />
           <Stack.Screen
             name="LoginPage"
             component={LoginPage}
-            options={{ headerShown: false }}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="NewTransactionPage"
+            component={NewTransactionPage}
+            options={{ headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

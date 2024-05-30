@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    height: "40%",
+    // height: "40%",
     width: "100%",
   },
   landingContent: {
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   pageHeading: {
-    top: 50, // Adjust the top value to position it where you want
+    top: '1%', // Adjust the top value to position it where you want
     zIndex: 2,
     position: 'absolute',
     textShadowColor: "#F69E35",
@@ -62,6 +62,12 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingLeft: "10%",
   },
+  topLeftButton: {
+    position: 'absolute',
+    top: '5%',
+    left: '2%',
+    zIndex:100
+},
   bodyText: {
     fontFamily: "Roboto",
     fontSize: 20,
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
   inputField: {
     width: 300,
     height: 50,
-    margin: 20,
+    marginBottom: 20,
     backgroundColor: "#87B6C4",
     borderWidth: 1, // Border width
     borderColor: "#F4F9FB", // Border color
@@ -130,12 +136,12 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }],
   },
   dateBtn: {
-    width: 140, 
+    width: 140,
     height: 50,
     backgroundColor: "#87B6C4",
     borderWidth: 1, // Border width
     borderColor: "#F4F9FB", // Border color
-    borderRadius: 5, 
+    borderRadius: 5,
     flexDirection: 'column',
     padding: 15,
     justifyContent: 'center',
@@ -146,15 +152,15 @@ const styles = StyleSheet.create({
     color: "black"
   },
   genderDropdown: {
-    width: 145, 
+    width: 145,
     height: 30,
     margin: 15,
-    top:0,
+    top: 0,
     marginRight: 0,
     backgroundColor: "#87B6C4",
     borderWidth: 1, // Border width
     borderColor: "#F4F9FB", // Border color
-    borderRadius: 5, 
+    borderRadius: 5,
     flexDirection: 'row',
   },
   dropDownContainer: {
@@ -166,7 +172,50 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom:20
   },
+  transactionInput: {
+    height: 100,
+    width: '100%',
+    marginVertical: 20,
+    fontSize: 50,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    textAlign: 'center',
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 5,
+  },
+  option: {
+    paddingTop: 10,
+    paddingRight: 20,
+    paddingBottom: 10,
+    paddingLeft: 20,
+  },
+  selectedOption: {
+    borderRadius: 5,
+    backgroundColor: '#ddd', // Fill color when selecte
+  },
+  optionText: {
+    color: '#000',
+  },
+  selectedText: {
+    fontWeight: 'bold',
+  },
+  transactionComponent: {
+    padding: 15,
+    alignItems: 'center',
+  },
+  transactionDetailInput: {
+    backgroundColor: "transparent",
+    margin: 10,
+    width: '90%',
+    height: 50,
+    fontSize: 20,
+  }
 });
 
 export default styles;
