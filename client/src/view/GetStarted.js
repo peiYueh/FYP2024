@@ -42,10 +42,11 @@ const GetStarted = () => {
     const progress = (step + 1) / 3;
     return (
         <View style={[style.container, { backgroundColor: theme.colors.primary }]}>
+            <Title style={[styles.headingText, { color: theme.colors.background, fontWeight: 'bold', fontSize: 30, textAlign: 'left', marginBottom: '5%' }]}>Let's Get Started!</Title>
             <ProgressBar progress={progress} color="#F4F9FB" style={style.progressBar} />
             <Animated.View style={[style.innerContainer, { transform: [{ translateX }] }]}>
                 <View style={styles.step}>
-                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontWeight: 900, fontSize: 18 }]}>Step 1: Enter your estimated monthly income and expenses</Title>
+                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontSize: 18 }]}>Step 1: Enter your estimated monthly income and expenses</Title>
                     <TextInput
                         label="Estimated Monthly Income"
                         value={formData.income}
@@ -63,7 +64,7 @@ const GetStarted = () => {
                 </View>
 
                 <View style={styles.step}>
-                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontWeight: 900, fontSize: 18 }]}>Step 2: Enter the current saving amount you have</Title>
+                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontSize: 18 }]}>Step 2: Enter the current saving amount you have</Title>
                     <TextInput
                         label="Current Savings"
                         value={formData.savings}
@@ -74,7 +75,7 @@ const GetStarted = () => {
                 </View>
 
                 <View style={styles.step}>
-                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontWeight: 900, fontSize: 18 }]}>Step 3: Retirement and Life Expectancy</Title>
+                    <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontSize: 18 }]}>Step 3: Retirement and Life Expectancy</Title>
                     <TextInput
                         label="Retirement Age"
                         value={formData.retirementAge}
@@ -101,9 +102,9 @@ const GetStarted = () => {
                 )}
             </View>
             <Image
-        source={require('../../assets/graph_bg.png')}
-        style={styles.bottomImage}
-      />
+                source={require('../../assets/graph_bg.png')}
+                style={styles.bottomImage}
+            />
         </View>
     );
 
