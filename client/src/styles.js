@@ -1,13 +1,13 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { AppLoading } from "expo";
-
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     height: "100%",
     position: "relative",
-    width: "100%",
+    width: width,
   },
   content: {
     alignItems: "center",
@@ -215,7 +215,35 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     fontSize: 20,
-  }
+  },
+  getStartedContainer:{
+    flex: 1,
+    justifyContent: "center",
+    height: "100%",
+    position: "relative",
+  },
+  progressBar: {
+    height: 10,
+    width: (width/3),
+    marginBottom: 16,
+  },
+  innerContainer: {
+    flexDirection: 'row',
+    width: width * 3, // Total width: 3 steps
+  },
+  step: {
+    marginTop: '10%',
+    marginBottom: '10%',
+    width: width,
+    padding: 16,
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  
 });
 
 export default styles;

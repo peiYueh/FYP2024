@@ -7,8 +7,9 @@ import LandingPage from "./src/view/LandingPage"; // Import your LandingPage com
 import LoginPage from "./src/view/LoginPage";
 import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";
-import { registerTranslation } from 'react-native-paper-dates'
+import GetStartedPage from "./src/view/GetStarted";
 
+import { registerTranslation } from 'react-native-paper-dates'
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
 import { Lato } from "@expo-google-fonts/lato";
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
@@ -96,7 +97,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="NewTransactionPage">
+        <Stack.Navigator initialRouteName="Get Started">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -115,6 +116,11 @@ const App = () => {
           <Stack.Screen
             name="NewTransactionPage"
             component={NewTransactionPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="Get Started"
+            component={GetStartedPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>
