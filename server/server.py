@@ -1,8 +1,8 @@
 
 from flask import Flask
 from flask_cors import CORS
-from flask import Blueprint, current_app, request
-from app.controllers.user_controller import signup, login
+from flask import current_app, request
+from app.controllers.user_controller import signup, login, getStarted
 from app.db import get_db
 from app import create_app
 
@@ -21,12 +21,17 @@ def signup_route():
     data = request.json  # Access JSON data from request body
     return signup(db)
 
-
 @app.route('/login', methods=['POST'])
 def login_route():
     db = get_db()  # Get the database connection
     data = request.json  # Access JSON data from request body
     return login(db)
+
+@app.route('/getStarted', methods=['POST'])
+def getStarted_route():
+    print("hii get starting")
+    db = get_db()  # Get the database connection
+    return getStarted(db)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -43,3 +43,13 @@ def login(db):
         return jsonify({'message': 'Login successful!', 'user': {'email': user['user_email'], 'username': user['user_name']}}), 200
     else:
         return jsonify({'message': 'Invalid email or password'}), 401
+
+def getStarted(db):
+    print("HIII Im in getStarted")
+    data = request.get_json()
+    print(data)
+
+    user_model = User(db)
+    inserted_id = user_model.insert_get_started_data(data['formData'])
+
+    return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201

@@ -4,8 +4,9 @@ import bcrypt
 class User:
     def __init__(self, db):
         self.collection = db['user']
-        print("users collection")
-        print(self.collection)
+        self.basic_info_collection = db['Basic_Information']
+        # print("users collection")
+        # print(self.collection)
 
     def create_user(self, username, email, password, birthDate, gender):
         print("in create user liao")
@@ -27,3 +28,7 @@ class User:
     
     def get_user_by_email(self, email):
         return self.collection.find_one({'user_email': email})
+    
+    def insert_get_started_data(self, data):
+        result = self.basic_info_collection.insert_one(data)
+        return result.inserted_id
