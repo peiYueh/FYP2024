@@ -103,18 +103,16 @@ const MyTransactionPage = () => {
         }
     });
 
+
     const renderFilterModal = () => (
-        <Modal visible={showFilterModal} animationType="fade" transparent={true} onRequestClose={() => setShowFilterModal(false)}>
-            <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => setShowFilterModal(false)}
-                style={styles.filterModalContainer}>
+        <Modal visible={showFilterModal} animationType="fade" transparent={true}>
+            <View style={styles.filterModalContainer}>
                 <View style={styles.filterModal}>
                     <View style={styles.filterModalHeader}>
                         <Text style={styles.filterModalHeaderText}>Filters</Text>
                         <IconButton icon="close" onPress={() => setShowFilterModal(false)} />
                     </View>
-                    <TouchableOpacity activeOpacity={1} style={styles.filterModalContent} onPress={() => {}}>
+                    <View style={styles.filterModalContent}>
                         <View style={styles.filterItem}>
                             <Picker
                                 selectedValue={filterType}
@@ -167,9 +165,9 @@ const MyTransactionPage = () => {
                         <TouchableOpacity style={styles.applyFilterButton} onPress={resetFilters}>
                             <Text style={styles.applyFilterButtonText}>Reset Filters</Text>
                         </TouchableOpacity>
-                    </TouchableOpacity>
+                    </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         </Modal>
     );
 
@@ -206,7 +204,6 @@ const MyTransactionPage = () => {
     const resetFilters = () => {
         setFilterType('');
         setFilterMonth('');
-        setFilterYear('');
     };
 
     return (
