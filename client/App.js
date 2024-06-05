@@ -7,6 +7,7 @@ import LandingPage from "./src/view/LandingPage"; // Import your LandingPage com
 import LoginPage from "./src/view/LoginPage";
 import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";
+import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 
 import { registerTranslation } from 'react-native-paper-dates'
@@ -97,7 +98,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Get Started">
+        <Stack.Navigator initialRouteName="My Transaction">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -121,6 +122,11 @@ const App = () => {
           <Stack.Screen
             name="Get Started"
             component={GetStartedPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="My Transaction"
+            component={MyTransactionPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

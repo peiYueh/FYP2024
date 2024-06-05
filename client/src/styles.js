@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '5%',
     left: '2%',
-    zIndex:100
-},
+    zIndex: 100
+  },
   bodyText: {
     fontFamily: "Roboto",
     fontSize: 20,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom:20
+    marginBottom: 20
   },
   transactionInput: {
     height: 100,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     height: 50,
     fontSize: 20,
   },
-  getStartedContainer:{
+  getStartedContainer: {
     flex: 1,
     justifyContent: "center",
     height: "100%",
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 10,
-    width: (width/3),
+    width: (width / 3),
     marginBottom: 16,
   },
   innerContainer: {
@@ -243,7 +243,155 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
   },
-  
+  chart: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#FBFCFE',
+    borderRadius: 10
+  },
+  legend: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  legendColor: {
+    width: 10,
+    height: 10,
+    borderRadius: 0,
+    marginRight: 5,
+  },
+  legendText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#333', // Adjust the color as needed
+  },
+  chartTitle: {
+    fontFamily: "Montserrat",
+    fontWeight: 900,
+    fontSize: 15,
+  },
+  transactionContainer: {
+    margin: 10,
+    padding: 15,
+    backgroundColor: '#FBFCFE',
+    borderRadius: 5
+  },
+  transactionItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingBottom: 5,
+  },
+  leftColumn: {
+    flex: 1,
+  },
+  rightColumn: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  description: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  date: {
+    fontSize: 14,
+    color: '#888',
+  },
+  amount: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  // filterSection: {
+  //     paddingTop: 5,
+  //     paddingBottom: 5,
+  //     flexDirection: 'row',
+  //     justifyContent: 'space-between',
+  //     alignItems: 'center',
+  //     alignContent: 'center',
+  //     width: '90%'
+  // },
+  // filterItem: {
+  //     flex: 1,
+  //     marginHorizontal: 10,
+  //     alignItems: 'center',
+  //     borderWidth: 1,
+  //     height: 30,
+  //     width: '100%',
+  //     fontSize: 10,
+  //     justifyContent: 'center',
+  //     // fontSize: 10
+  //     borderRadius: 5
+  // },
+  // cancelButtonContainer: {
+  //   width: '5%'
+  // }
+
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    margin: 10,
+  },
+  filterButtonText: {
+    marginRight: 5,
+    color: '#333',
+  },
+  filterModalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterModal: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+  },
+  filterModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  filterModalHeaderText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  filterModalContent: {
+    marginTop: 10,
+  },
+  filterItem: {
+    marginBottom: 20,
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  applyFilterButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  applyFilterButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
 
 export default styles;
