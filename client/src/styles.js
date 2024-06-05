@@ -376,6 +376,8 @@ const styles = StyleSheet.create({
   },
   filterItem: {
     marginBottom: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
   },
   picker: {
     borderWidth: 1,
