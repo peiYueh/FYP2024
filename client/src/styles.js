@@ -275,11 +275,27 @@ const styles = StyleSheet.create({
     fontWeight: 900,
     fontSize: 15,
   },
+  monthYearHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingVertical: 10,
+    width: '100%',
+    // backgroundColor: 'blue'
+  },  
   transactionContainer: {
-    margin: 10,
-    padding: 15,
+    borderRadius: 5,
+  },
+  transactionHeader:{
+    // width: '100%',
+    backgroundColor: '#D5E5EB',
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    marginTop: 15,
+  },
+  transactionContent: {
     backgroundColor: '#FBFCFE',
-    borderRadius: 5
+    marginHorizontal: 10,
+    padding: 10,
   },
   transactionItem: {
     flexDirection: 'row',
@@ -288,6 +304,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 5,
+    height: 50
   },
   leftColumn: {
     flex: 1,
@@ -295,19 +312,23 @@ const styles = StyleSheet.create({
   rightColumn: {
     flex: 1,
     alignItems: 'flex-end',
+    justifyContent: 'center', // Align items vertically in the center
   },
   description: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 900,
+    fontFamily: 'Roboto'
   },
   date: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#888',
+    fontStyle: 'italic'
   },
   amount: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+    // fontFamily: 'Lato',
   },
   // filterSection: {
   //     paddingTop: 5,
@@ -394,6 +415,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  
 });
 
 export default styles;

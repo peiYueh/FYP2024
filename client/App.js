@@ -9,6 +9,8 @@ import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
+import TransactionDetailsPage from "./src/view/TransactionDetailsPage";
+import EditTransactionPage from "./src/view/EditTransactionPage";
 
 import { registerTranslation } from 'react-native-paper-dates'
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -18,6 +20,9 @@ import { Montserrat } from "@expo-google-fonts/montserrat";
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
+
+
+
 registerTranslation('en', {
   save: 'Save',
   selectSingle: 'Select date',
@@ -127,6 +132,16 @@ const App = () => {
           <Stack.Screen
             name="My Transaction"
             component={MyTransactionPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="TransactionDetailsPage"
+            component={TransactionDetailsPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="EditTransactionPage"
+            component={EditTransactionPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

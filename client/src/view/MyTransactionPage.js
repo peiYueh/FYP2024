@@ -1,82 +1,132 @@
 // import * as React from 'react';
-import React, { useState } from 'react';
-import { View, Dimensions, ScrollView, Modal, TouchableOpacity } from 'react-native';
-import { useTheme, Text, Button, IconButton } from 'react-native-paper';
-import { LineChart, LineChartBicolor } from 'react-native-gifted-charts';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import { useTheme, Text, IconButton } from 'react-native-paper';
 import styles from '../styles';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import { useNavigation } from '@react-navigation/native';
+import TransactionLinechart from '../components/transaction-linechart';
 
 const MyTransactionPage = () => {
     const theme = useTheme();
+    const navigation = useNavigation();
 
-    // Example data for the chart
-    const data = [
-        { month: 'Jan', income: 3000, expenses: -2000, savings: 1000 },
-        { month: 'Feb', income: 2500, expenses: -2100, savings: 1400 },
-        { month: 'Mar', income: 2700, expenses: -2200, savings: 1500 },
-        { month: 'Apr', income: 2900, expenses: -2000, savings: 1600 },
-        { month: 'May', income: 3200, expenses: -2300, savings: 1700 },
-        { month: 'Jun', income: 3300, expenses: -2400, savings: 1800 },
-        { month: 'Jul', income: 3100, expenses: -2500, savings: 1900 },
-        { month: 'Aug', income: 3400, expenses: -2600, savings: 2000 },
-        { month: 'Sep', income: 3600, expenses: -2700, savings: 2100 },
-        { month: 'Oct', income: 3700, expenses: -2800, savings: 2200 },
-        { month: 'Nov', income: 3800, expenses: -2900, savings: 2300 },
-        { month: 'Dec', income: 4000, expenses: -3300, savings: 2400 },
+    // console.log(graphData);
+    const transactionData = [
+        { description: 'Salary', date: '14 January 2022', amount: 3200, transactionType: 'income', transaction_id: 1 },
+        { description: 'Rent', date: '28 January 2022', amount: -1200, transactionType: 'expense', transaction_id: 2 },
+        { description: 'Groceries', date: '15 February 2022', amount: -250, transactionType: 'expense', transaction_id: 3 },
+        { description: 'Savings', date: '19 February 2022', amount: 800, transactionType: 'savings', transaction_id: 4 },
+        { description: 'Freelance', date: '10 March 2022', amount: 1500, transactionType: 'income', transaction_id: 5 },
+        { description: 'Dining Out', date: '22 March 2022', amount: -100, transactionType: 'expense', transaction_id: 6 },
+        { description: 'Investment', date: '6 April 2022', amount: 500, transactionType: 'savings', transaction_id: 7 },
+        { description: 'Salary', date: '18 April 2022', amount: 3100, transactionType: 'income', transaction_id: 8 },
+        { description: 'Travel', date: '29 April 2022', amount: -600, transactionType: 'expense', transaction_id: 9 },
+        { description: 'Groceries', date: '11 May 2022', amount: -300, transactionType: 'expense', transaction_id: 10 },
+        { description: 'Savings', date: '27 May 2022', amount: 900, transactionType: 'savings', transaction_id: 11 },
+        { description: 'Salary', date: '14 June 2022', amount: 3250, transactionType: 'income', transaction_id: 12 },
+        { description: 'Rent', date: '28 June 2022', amount: -1300, transactionType: 'expense', transaction_id: 13 },
+        { description: 'Groceries', date: '15 July 2022', amount: -200, transactionType: 'expense', transaction_id: 14 },
+        { description: 'Savings', date: '19 July 2022', amount: 1000, transactionType: 'savings', transaction_id: 15 },
+        { description: 'Freelance', date: '22 August 2022', amount: 1800, transactionType: 'income', transaction_id: 16 },
+        { description: 'Dining Out', date: '6 September 2022', amount: -150, transactionType: 'expense', transaction_id: 17 },
+        { description: 'Investment', date: '14 September 2022', amount: 700, transactionType: 'savings', transaction_id: 18 },
+        { description: 'Salary', date: '18 October 2022', amount: 3000, transactionType: 'income', transaction_id: 19 },
+        { description: 'Travel', date: '23 October 2022', amount: -500, transactionType: 'expense', transaction_id: 20 },
+        { description: 'Groceries', date: '11 November 2022', amount: -250, transactionType: 'expense', transaction_id: 21 },
+        { description: 'Savings', date: '27 November 2022', amount: 850, transactionType: 'savings', transaction_id: 22 },
+        { description: 'Salary', date: '14 December 2022', amount: 3150, transactionType: 'income', transaction_id: 23 },
+        { description: 'Rent', date: '28 December 2022', amount: -1250, transactionType: 'expense', transaction_id: 24 },
+        { description: 'Groceries', date: '15 January 2023', amount: -200, transactionType: 'expense', transaction_id: 25 },
+        { description: 'Savings', date: '19 February 2023', amount: 950, transactionType: 'savings', transaction_id: 26 },
+        { description: 'Freelance', date: '22 February 2023', amount: 1700, transactionType: 'income', transaction_id: 27 },
+        { description: 'Dining Out', date: '6 March 2023', amount: -100, transactionType: 'expense', transaction_id: 28 },
+        { description: 'Investment', date: '14 March 2023', amount: 800, transactionType: 'savings', transaction_id: 29 },
+        { description: 'Salary', date: '18 April 2023', amount: 3400, transactionType: 'income', transaction_id: 30 },
+        { description: 'Travel', date: '23 April 2023', amount: -550, transactionType: 'expense', transaction_id: 31 },
+        { description: 'Groceries', date: '11 May 2023', amount: -300, transactionType: 'expense', transaction_id: 32 },
+        { description: 'Savings', date: '27 May 2023', amount: 950, transactionType: 'savings', transaction_id: 33 },
+        { description: 'Salary', date: '14 June 2023', amount: 3300, transactionType: 'income', transaction_id: 34 },
+        { description: 'Rent', date: '28 June 2023', amount: -1400, transactionType: 'expense', transaction_id: 35 },
+        { description: 'Groceries', date: '15 July 2023', amount: -250, transactionType: 'expense', transaction_id: 36 },
+        { description: 'Savings', date: '19 August 2023', amount: 1050, transactionType: 'savings', transaction_id: 37 },
+        { description: 'Freelance', date: '22 September 2023', amount: 1600, transactionType: 'income', transaction_id: 38 },
+        { description: 'Dining Out', date: '6 October 2023', amount: -120, transactionType: 'expense', transaction_id: 39 },
+        { description: 'Investment', date: '14 November 2023', amount: 850, transactionType: 'savings', transaction_id: 40 },
+        { description: 'Salary', date: '18 December 2023', amount: 3200, transactionType: 'income', transaction_id: 41 },
+        { description: 'Travel', date: '23 December 2023', amount: -600, transactionType: 'expense', transaction_id: 42 },
+        { description: 'Groceries', date: '11 January 2024', amount: -200, transactionType: 'expense', transaction_id: 43 },
+        { description: 'Savings', date: '27 February 2024', amount: 1000, transactionType: 'savings', transaction_id: 44 },
+        { description: 'Salary', date: '14 March 2024', amount: 1000, transactionType: 'income', transaction_id: 45 },
+        { description: 'Rent', date: '28 April 2024', amount: -1500, transactionType: 'expense', transaction_id: 46 },
+        { description: 'Groceries', date: '15 May 2024', amount: -200, transactionType: 'expense', transaction_id: 47 },
+        { description: 'Savings', date: '19 June 2024', amount: 1000, transactionType: 'savings', transaction_id: 48 },
+        { description: 'Freelance', date: '22 July 2024', amount: 3000, transactionType: 'income', transaction_id: 49 },
+        { description: 'Dining Out', date: '6 August 2024', amount: -1500, transactionType: 'expense', transaction_id: 50 }
     ];
 
-    // const incomeData = data.map(item => ({ x: item.month, y: item.income }));
-    // const expensesData = data.map(item => ({ x: item.month, y: item.expenses }));
-    // const savingsData = data.map(item => ({ x: item.month, y: item.savings }));
-
-    // const lineData = [
-    //     { value: 15, label: 'Mon' },
-    //     { value: 30, label: 'Tue' },
-    //     { value: 23, label: 'Wed' },
-    //     { value: 40, label: 'Thu' },
-    //     { value: 16, label: 'Fri' },
-    //     { value: 40, label: 'Sat' },
-    // ];
-
-    // const lineData2 = [
-    //     { value: -15, label: 'Mon' },
-    //     { value: -30, label: 'Tue' },
-    //     { value: -23, label: 'Wed' },
-    //     { value: -40, label: 'Thu' },
-    //     { value: -16, label: 'Fri' },
-    //     { value: -40, label: 'Sat' },
-    // ];
-    const [graphData, setGraphData] = useState({});
 
     const mapDataToLineFormat = (type) => {
-        return data.map(item => {
-            return { value: item[type], label: item.month };
+        const monthlyData = {};
+        transactionData.forEach(item => {
+            const dateParts = item.date.split(' ');
+            const month = dateParts[1];
+            const year = dateParts[2];
+            const key = `${year}-${month}`;
+            
+            if (!monthlyData[key]) {
+                monthlyData[key] = { income: 0, expense: 0, savings: 0 };
+            }
+            if (item.transactionType === type) {
+                monthlyData[key][type] += item.amount;
+            }
+        });
+    
+        return Object.keys(monthlyData).map(key => {
+            const [year, month] = key.split('-');
+            // Short form of month names
+            const shortMonthNames = {
+                'January': 'Jan',
+                'February': 'Feb',
+                'March': 'Mar',
+                'April': 'Apr',
+                'May': 'May',
+                'June': 'Jun',
+                'July': 'Jul',
+                'August': 'Aug',
+                'September': 'Sep',
+                'October': 'Oct',
+                'November': 'Nov',
+                'December': 'Dec'
+            };
+            return {
+                value: monthlyData[key][type],
+                label: shortMonthNames[month], // Use the short form from the mapping
+                year: year
+            };
         });
     };
 
-    const incomeData = mapDataToLineFormat("income");
-    // console.log("Income Data:", incomeData);
+    const allIncomeData = mapDataToLineFormat("income");
+    // console.log(incomeData)
+    const allExpensesData = mapDataToLineFormat("expense");
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+    const [incomeData, setIncomeData] = useState([]);
+    const [expensesData, setExpensesData] = useState([]);
 
-    const expensesData = mapDataToLineFormat("expenses");
-    // console.log(graphData);
-    // console.log(lineData);
-    const transactionData = [
-        { description: 'Salary', date: '14 January 2024', amount: 3000, transactionType: 'income', transaction_id: 1 },
-        { description: 'Rent', date: '28 February 2024', amount: -1500, transactionType: 'expenses', transaction_id: 2 },
-        { description: 'Groceries', date: '15 March 2024', amount: -200, transactionType: 'expenses', transaction_id: 3 },
-        { description: 'Savings', date: '19 April 2024', amount: 1000, transactionType: 'savings', transaction_id: 4 },
-        { description: 'Salary', date: '22 May 2024', amount: 3000, transactionType: 'income', transaction_id: 5 },
-        { description: 'Rent', date: '6 June 2024', amount: -1500, transactionType: 'expenses', transaction_id: 6 },
-        { description: 'Groceries', date: '10 July 2024', amount: -200, transactionType: 'expenses', transaction_id: 7 },
-        { description: 'Savings', date: '14 August 2024', amount: 1000, transactionType: 'savings', transaction_id: 8 },
-        { description: 'Salary', date: '18 September 2024', amount: 3000, transactionType: 'income', transaction_id: 9 },
-        { description: 'Rent', date: '23 October 2024', amount: -1500, transactionType: 'expenses', transaction_id: 10 },
-        { description: 'Groceries', date: '11 November 2024', amount: -200, transactionType: 'expenses', transaction_id: 11 },
-        { description: 'Savings', date: '27 December 2024', amount: 1000, transactionType: 'savings', transaction_id: 12 }
-        // Add more data as needed
-    ];
+    useEffect(() => {
+        if (selectedYear) {
+            const newIncomeData = getTransactionByYear(allIncomeData, selectedYear);
+            const newExpensesData = getTransactionByYear(allExpensesData, selectedYear);
+            setIncomeData(newIncomeData);
+            setExpensesData(newExpensesData);
+        }
+    }, [selectedYear]);
+
+    function getTransactionByYear(data, year) {
+        return data.filter(entry => entry.year === year);
+    }
 
     const [filterType, setFilterType] = useState('');
     const [filterMonth, setFilterMonth] = useState('');
@@ -103,6 +153,72 @@ const MyTransactionPage = () => {
         }
     });
 
+    const findMaxIncomeAndExpenseByMonth = () => {
+        const yearlyData = {};
+    
+        // Iterate through transactionData to calculate totals for each month
+        transactionData.forEach(item => {
+            const dateParts = item.date.split(' ');
+            const month = dateParts[1];
+            const year = dateParts[2];
+            const amount = Math.abs(item.amount); // Take the absolute value to handle negative amounts
+    
+            if (!yearlyData[year]) {
+                yearlyData[year] = {};
+            }
+    
+            if (!yearlyData[year][month]) {
+                yearlyData[year][month] = { income: 0, expense: 0 };
+            }
+    
+            if (item.amount > 0) {
+                yearlyData[year][month].income += amount;
+            } else {
+                yearlyData[year][month].expense -= amount;
+            }
+        });
+    
+        // Find the maximum income and maximum expense for each month and year
+        let maxIncome = 0;
+        let maxExpense = Number.POSITIVE_INFINITY; // Initialize with positive infinity to ensure the first expense amount is captured
+    
+        Object.keys(yearlyData).forEach(year => {
+            Object.keys(yearlyData[year]).forEach(month => {
+                const { income, expense } = yearlyData[year][month];
+    
+                if (income > maxIncome) {
+                    maxIncome = income;
+                }
+    
+                if (expense < maxExpense) {
+                    maxExpense = expense;
+                }
+            });
+        });
+    
+        const steppingValue = Math.ceil(maxIncome / 4000) * 1000;
+    
+        const roundMaxExpense = (amount) => {
+            // Round up to the nearest multiple of 2000 for expenses            
+            return Math.ceil(amount / steppingValue) * steppingValue;
+        };
+    
+        const roundedMaxIncome = roundMaxExpense(maxIncome);
+    
+        // Round up expense to the nearest multiple of 2000 and make it negative
+        const roundedMaxExpense = -roundMaxExpense(-maxExpense);
+    
+        return { maxIncome: roundedMaxIncome, maxExpense: roundedMaxExpense, stepValue: steppingValue };
+    };
+    
+    
+    const { maxIncome, maxExpense, stepValue } = findMaxIncomeAndExpenseByMonth();
+    
+    
+    
+    
+    
+
 
     const renderFilterModal = () => (
         <Modal visible={showFilterModal} animationType="fade" transparent={true}>
@@ -121,7 +237,7 @@ const MyTransactionPage = () => {
                             >
                                 <Picker.Item label="Type" value="" enabled={false} />
                                 <Picker.Item label="Income" value="income" />
-                                <Picker.Item label="Expenses" value="expenses" />
+                                <Picker.Item label="Expenses" value="expense" />
                                 <Picker.Item label="Savings" value="savings" />
                             </Picker>
                         </View>
@@ -175,7 +291,7 @@ const MyTransactionPage = () => {
         switch (transactionType) {
             case 'income':
                 return '#006400';
-            case 'expenses':
+            case 'expense':
                 return '#8B0000';
             case 'savings':
                 return '#FFD700';
@@ -183,27 +299,65 @@ const MyTransactionPage = () => {
                 return 'black'; // Default color if transaction type is not recognized
         }
     };
-
     const renderTransactionItems = () => {
-        return filteredTransactionData.map((item, index) => (
-            <View key={index} style={styles.transactionItem}>
-                {/* Left Column: Description and Date */}
-                <View style={styles.leftColumn}>
-                    <Text style={styles.description}>{item.description}</Text>
-                    <Text style={styles.date}>{item.date}</Text>
-                </View>
-                {/* Right Column: Amount */}
-                <View style={styles.rightColumn}>
-                    <Text style={[styles.amount, { color: getColorForTransactionType(item.transactionType) }]}>
-                        RM {Math.abs(item.amount)}
-                    </Text>
-                </View>
-            </View>
+        let transactionGroups = {};
+    
+        // Group transactions by month-year
+        filteredTransactionData.forEach(item => {
+            const transactionMonthYear = item.date.split(' ')[1] + ' ' + item.date.split(' ')[2];
+            if (!transactionGroups[transactionMonthYear]) {
+                transactionGroups[transactionMonthYear] = [];
+            }
+            transactionGroups[transactionMonthYear].push(item);
+        });
+    
+        // Render transaction groups
+        return Object.entries(transactionGroups).map(([monthYear, transactions], index) => (
+            <TransactionGroup
+                key={monthYear}
+                monthYear={monthYear}
+                transactions={transactions}
+                navigation={navigation}
+            />
         ));
     };
+    
+    const TransactionGroup = ({ monthYear, transactions, navigation }) => {
+        return (
+            <View style={styles.transactionContainer}>
+                <View style={styles.transactionHeader}>
+                    <Text style={styles.monthYearHeader}>{monthYear}</Text>
+                </View>
+                <View style={styles.transactionContent}>
+                {transactions.map((item, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={styles.transactionItem}
+                        onPress={() => navigation.navigate('TransactionDetailsPage', { transaction: item })}
+                    >
+                        {/* Left Column: Description and Date */}
+                        <View style={styles.leftColumn}>
+                            <Text style={styles.description}>{item.description}</Text>
+                            <Text style={styles.date}>{item.date}</Text>
+                        </View>
+                        {/* Right Column: Amount */}
+                        <View style={styles.rightColumn}>
+                            <Text style={[styles.amount, { color: getColorForTransactionType(item.transactionType) }]}>
+                                RM {Math.abs(item.amount)}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+                </View>
+
+            </View>
+        );
+    };
+
     const resetFilters = () => {
         setFilterType('');
         setFilterMonth('');
+        setFilterYear('');
     };
 
     return (
@@ -220,45 +374,24 @@ const MyTransactionPage = () => {
                         <Text style={styles.legendText}>Expenses</Text>
                     </View>
                 </View>
-                <LineChart
-                    width={300}
-                    data={incomeData}
-                    data2={expensesData}
-                    height={100}
-                    spacing={30}
-                    initialSpacing={20}
-                    color1={theme.colors.primary}
-                    color2={theme.colors.error}
-                    textColor1={'#191C1D'}
-                    dataPointsHeight={3}
-                    dataPointsWidth={3}
-                    dataPointsColor1={theme.colors.primary}
-                    dataPointsColor2={theme.colors.error}
-                    textFontSize={10}
-                    maxValue={4000} // Adjust according to your data - gonna be the highest value for income (rounded)
-                    mostNegativeValue={-4000} // Adjust according to your data - gonna be the highest value for expense (rounded)
-                    stepValue={1000} // Adjust according to your data range - (divide highest into 5)
-                    xAxisLabelTextStyle={{ fontSize: 10 }}
-                    yAxisTextStyle={{ fontSize: 10 }}
-                    rulesType="solid"
-                    isAnimated
-                    animationDuration={1000}
-                    animationDuration2={1000}
-                    areaChart
-                    startFillColor={theme.colors.primary}
-                    endFillColor={theme.colors.primary}
-                    startFillColor2={'#BA1A1A'}
-                    endFillColor2={'#BA1A1A'}
-                    startOpacity={0.4}
-                    endOpacity={0.1}
-                    backgroundColor
-                    focusEnabled
-                    showTextOnFocus
-                    endSpacing={15}
-                    showValuesAsDataPointsText
-                    overflowBottom
-                    textShiftX={-10}
-                    textShiftY={15}
+                {/* Year Picker */}
+                <Picker
+                    selectedValue={selectedYear}
+                    onValueChange={(itemValue) => setSelectedYear(itemValue)}
+                >
+                    <Picker.Item label="Select Year" value="" enabled={false}/>
+                    {[...new Set(transactionData.map(item => item.date.split(' ')[2]))].map((year, index) => (
+                        <Picker.Item key={index} label={year} value={year} />
+                    ))}
+                </Picker>
+                <TransactionLinechart 
+                style={[styles.chart, { backgroundColor: '#FBFCFE' }]}
+                    incomeData={incomeData} 
+                    expensesData={expensesData} 
+                    maxIncome={maxIncome} 
+                    maxExpense={maxExpense} 
+                    stepValue={stepValue} 
+                    theme={theme} 
                 />
             </View>
             {renderFilterModal()}
@@ -267,36 +400,7 @@ const MyTransactionPage = () => {
                 <Icon name="filter-list" size={24} color={theme.colors.primary} />
             </TouchableOpacity>
 
-            {/* <View style={[styles.filterSection, { margin: 5, flexDirection: 'row', justifyContent: 'space-between' }]}>
-                <View style={styles.filterItem}>
-                    <Picker
-                        selectedValue={filterType}
-                        onValueChange={(itemValue) => setFilterType(itemValue)}
-                        style={[styles.picker, { width: '100%' }]}
-                    >
-                        <Picker.Item label="Type" value="" enabled={false} />
-                        <Picker.Item label="Income" value="income" />
-                        <Picker.Item label="Expenses" value="expenses" />
-                        <Picker.Item label="Savings" value="savings" />
-                    </Picker>
-                </View>
-                <View style={styles.filterItem}>
-                    <Picker
-                        selectedValue={filterMonth}
-                        onValueChange={(itemValue) => setFilterMonth(itemValue)}
-                        style={[styles.picker, { width: '100%' }]}
-                    >
-                        <Picker.Item label="Month" value="" enabled={false} />
-                        {data.map((item) => (
-                            <Picker.Item key={item.month} label={item.month} value={item.month} />
-                        ))}
-                    </Picker>
-                </View>
-                <View style={styles.cancelButtonContainer}>
-                    <IconButton icon={() => <Icon name="close" size={24} />} onPress={resetFilters} />
-                </View>
-            </View> */}
-            <View style={styles.transactionContainer}>
+            <View>
                 {renderTransactionItems()}
             </View>
         </ScrollView >
