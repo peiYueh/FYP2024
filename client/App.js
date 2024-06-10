@@ -9,8 +9,10 @@ import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
-import TransactionDetailsPage from "./src/view/TransactionDetailsPage";
+import TransactionDetailsPage from "./src/view/TransactionDetailsPage-old";
 import EditTransactionPage from "./src/view/EditTransactionPage";
+import ExpenseTree from "./src/view/ExpenseTree";
+
 
 import { registerTranslation } from 'react-native-paper-dates'
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -142,6 +144,11 @@ const App = () => {
           <Stack.Screen
             name="EditTransactionPage"
             component={EditTransactionPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="ExpenseTree"
+            component={ExpenseTree}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

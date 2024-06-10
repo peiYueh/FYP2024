@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     margin: 10,
     width: '90%',
-    height: 50,
+    height: 55,
     fontSize: 20,
   },
   getStartedContainer: {
@@ -415,7 +415,80 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  
+  receiptContainer: {
+    backgroundColor: 'rgb(220, 228, 232)',
+    marginHorizontal: 40,
+    height: '40%',
+    width: '80%',
+    padding: 20,
+    // borderWidth:1
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  receiptTitle: {
+    fontFamily: 'Monaco',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  popupTitle: {
+    fontWeight: 'bold',
+    fontSize: 22,
+    paddingBottom: 10,
+    textTransform: 'uppercase',
+  },
+  transactionPopupContainer: {
+    flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  transactionPopup: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+},
+popupText: {
+    fontSize: 18,
+    marginBottom: 5,
+    marginTop: 5,
+    padding: 5,
+    fontSize: 20,
+    paddingLeft: 10,
+},
+actionButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#2196F3',
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '40%'
+},
+closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+},
+closeButton: {
+  position: 'absolute',
+  top: 10, // Adjust this value to position the button vertically
+  right: 10, // Adjust this value to position the button horizontally
+  backgroundColor: '#A9A9A9',
+  padding: 10,
+  borderRadius: 5,
+},
+detailContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 10,
+},
+popupIcon:{
+  fontSize: 25
+}
 });
 
 export default styles;

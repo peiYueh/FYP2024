@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { LineChart } from 'react-native-gifted-charts';
-import { Text } from 'react-native-paper';
+import { Text, useTheme } from 'react-native-paper';
 import styles from '../styles';
 
 const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense, stepValue, theme }) => {
