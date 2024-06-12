@@ -1,6 +1,5 @@
 from flask import request, jsonify, session
 from app.models.user_model import User
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import bcrypt
 
@@ -45,9 +44,7 @@ def login(db):
         return jsonify({'message': 'Invalid email or password'}), 401
 
 def getStarted(db):
-    print("HIII Im in getStarted")
     data = request.get_json()
-    print(data)
 
     user_model = User(db)
     inserted_id = user_model.insert_get_started_data(data['formData'])

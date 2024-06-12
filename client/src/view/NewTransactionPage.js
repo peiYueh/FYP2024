@@ -1,19 +1,29 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Keyboard } from 'react-native';
-import { useTheme, IconButton, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
+import { useTheme, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { useNavigation } from '@react-navigation/native';
+import { showMessage } from "react-native-flash-message";
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
-import { showMessage, hideMessage } from "react-native-flash-message";
 import styles from '../styles';
 
 const NewTransactionPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const [amount, setAmount] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [transactionType, setType] = useState("");
     const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const [transactionDescription, setTransactionDescription] = useState("");
+    const [transactionDate, settransactionDate] = useState(new Date().toLocaleDateString('en-GB'));
+    const [transactionCategory, setTransactionCategory] = useState("");
+    const [incomeType, setIncomeType] = useState('');
+    const [incomeTaxability, setIncomeTaxability] = useState(false);
+    const [savingInterestRate, setSavingInterestRate] = useState(null);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const formatAmount = (value) => {
         const cleanValue = value.replace(/[^0-9]/g, '');
@@ -31,14 +41,122 @@ const NewTransactionPage = () => {
         setAmount(formattedAmount);
     };
 
+    const validateInputs = () => {
+        if (!amount || parseFloat(amount.replace(/,/g, '')) <= 0) {
+            showMessage({
+                message: "Invalid Amount",
+                description: "Please enter a valid amount",
+                type: "danger",
+            });
+            return false;
+        }
+        if (!transactionDescription) {
+            showMessage({
+                message: "Invalid Description",
+                description: "Please enter a description",
+                type: "danger",
+            });
+            return false;
+        }
+        if (!transactionDate) {
+            showMessage({
+                message: "Invalid Date",
+                description: "Please select a date",
+                type: "danger",
+            });
+            return false;
+        }
+        if (transactionType === 2 && (!savingInterestRate || parseFloat(savingInterestRate) <= 0)) {
+            showMessage({
+                message: "Invalid Interest Rate",
+                description: "Please enter a valid interest rate",
+                type: "danger",
+            });
+            return false;
+        }
+        return true;
+    };
+
+    const handleSubmit = async () => {
+        if (!validateInputs()) {
+            return;
+        }
+
+        const transactionData = {
+            amount,
+            description: transactionDescription,
+            date: transactionDate,
+            category: transactionCategory,
+            incomeType,
+            incomeTaxability,
+            savingInterestRate,
+            transactionType
+        };
+        // Here you can add the logic to submit the transactionData to your server or save it locally.
+        showMessage({
+            message: "Transaction Created!",
+            description: "Your transaction has been added",
+            type: "success",
+        });
+        // Optionally, you can navigate back or reset the form after submission
+        // navigation.goBack();
+        setLoading(true);
+        try {
+            const response = await axios.post(API_BASE_URL + '/newTransaction', {
+                transactionData
+            });
+            console.log('Sign up successful!', response.data);
+            alert('New Transaction Added!');
+            // navigation.navigate('LoginPage')
+        } catch (error) {
+            console.error('Error Adding New Transaction', error);
+            alert('Please try again.');
+        } finally {
+            setLoading(false); // Set loading to false regardless of login success or failure
+        }
+    };
+
     const renderTransactionType = () => {
-        switch (selectedCategory) {
+        switch (transactionType) {
             case 0:
-                return <ExpenseComponent />;
+                return <ExpenseComponent
+                    transactionDescription={transactionDescription}
+                    setTransactionDescription={setTransactionDescription}
+                    transactionDate={transactionDate}
+                    settransactionDate={settransactionDate}
+                    transactionCategory={transactionCategory}
+                    setTransactionCategory={setTransactionCategory}
+                    isDatePickerVisible={isDatePickerVisible}
+                    setDatePickerVisibility={setDatePickerVisibility}
+                />;
             case 1:
-                return <IncomeComponent />;
+                return <IncomeComponent
+                    transactionDescription={transactionDescription}
+                    setTransactionDescription={setTransactionDescription}
+                    transactionDate={transactionDate}
+                    settransactionDate={settransactionDate}
+                    transactionCategory={transactionCategory}
+                    setTransactionCategory={setTransactionCategory}
+                    incomeType={incomeType}
+                    setIncomeType={setIncomeType}
+                    incomeTaxability={incomeTaxability}
+                    setIncomeTaxability={setIncomeTaxability}
+                    isDatePickerVisible={isDatePickerVisible}
+                    setDatePickerVisibility={setDatePickerVisibility}
+                />;
             case 2:
-                return <SavingComponent />;
+                return <SavingComponent
+                    transactionDescription={transactionDescription}
+                    setTransactionDescription={setTransactionDescription}
+                    transactionDate={transactionDate}
+                    settransactionDate={settransactionDate}
+                    transactionCategory={transactionCategory}
+                    setTransactionCategory={setTransactionCategory}
+                    savingInterestRate={savingInterestRate}
+                    setSavingInterestRate={setSavingInterestRate}
+                    isDatePickerVisible={isDatePickerVisible}
+                    setDatePickerVisibility={setDatePickerVisibility}
+                />;
             default:
                 return null;
         }
@@ -87,18 +205,18 @@ const NewTransactionPage = () => {
                     placeholder="0.00"
                     placeholderTextColor="#aaa"
                 />
-                <Text style={{ position: 'absolute', top: 35, right: 10, fontWeight:'bold' }}>MYR</Text>
+                <Text style={{ position: 'absolute', top: 35, right: 10, fontWeight: 'bold' }}>MYR</Text>
                 <View style={styles.optionsRow}>
                     {['EXPENSE', 'INCOME', 'SAVING'].map((option, index) => (
                         <TouchableOpacity
                             key={index}
                             style={[
                                 styles.option,
-                                selectedCategory === index && styles.selectedCategory,
+                                transactionType === index && styles.transactionType,
                             ]}
-                            onPress={() =>setSelectedCategory(index)}
+                            onPress={() => setType(index)}
                         >
-                            <Text style={selectedCategory === index ? styles.selectedText : styles.optionText}>
+                            <Text style={transactionType === index ? styles.selectedText : styles.optionText}>
                                 {option}
                             </Text>
                         </TouchableOpacity>
@@ -109,7 +227,7 @@ const NewTransactionPage = () => {
                 {renderTransactionType()}
 
             </View>
-            {!keyboardVisible && selectedCategory !== "" && (
+            {!keyboardVisible && transactionType !== "" && (
                 <Pressable
                     style={({ pressed }) => ({
                         backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
@@ -121,33 +239,23 @@ const NewTransactionPage = () => {
                         pointerEvents: 'auto',
                         alignSelf: 'center',
                     })}
-                    onPress={() => 
-                        showMessage({
-                            message: "Transaction Created!",
-                            description: "Your transaction has been added",
-                            type: "success",
-                        })
-                    }
+                    onPress={handleSubmit}
                 >
                     <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save</Text>
                 </Pressable>
+            )}
+            {(loading &&
+                <LoadingIndicator theme={theme} />
             )}
         </View>
     );
 };
 
-const ExpenseComponent = () => {
+const ExpenseComponent = ({ transactionDescription, setTransactionDescription, transactionDate, settransactionDate, transactionCategory, setTransactionCategory, isDatePickerVisible, setDatePickerVisibility }) => {
     const theme = useTheme();
-    const today = new Date().toLocaleDateString('en-GB');
-    const [transactionDescription, setTransactionDescription] = useState("");
-    const [transactionDate, settransactionDate] = useState(today);
-    const [transactionCategory, setTransactionCategory] = useState("");
-    const [transactionDateTouched, settransactionDateTouched] = useState(false);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    // Handle date confirmation
-
+    const today = new Date().toLocaleDateString('en-GB');
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
@@ -185,7 +293,6 @@ const ExpenseComponent = () => {
                 onChangeText={(text) => setTransactionCategory(text)}
             />
 
-
             <Portal>
                 <DatePickerModal
                     mode="single"
@@ -204,19 +311,11 @@ const ExpenseComponent = () => {
     )
 };
 
-const IncomeComponent = () => {
-    const today = new Date().toLocaleDateString('en-GB');
-    const [transactionDescription, setTransactionDescription] = useState("");
-    const [transactionDate, settransactionDate] = useState(today);
-    const [transactionCategory, setTransactionCategory] = useState("");
-    const [transactionDateTouched, settransactionDateTouched] = useState(false);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [incomeTaxability, setIncomeTaxability] = useState(false);
-    const [incomeType, setIncomeType] = useState('');
+const IncomeComponent = ({ transactionDescription, setTransactionDescription, transactionDate, settransactionDate, transactionCategory, setTransactionCategory, incomeType, setIncomeType, incomeTaxability, setIncomeTaxability, isDatePickerVisible, setDatePickerVisibility }) => {
+    const theme = useTheme();
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    // Handle date confirmation
-
+    const today = new Date().toLocaleDateString('en-GB');
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
@@ -294,20 +393,11 @@ const IncomeComponent = () => {
     );
 };
 
-const SavingComponent = () => {
-    const today = new Date().toLocaleDateString('en-GB');
-    const [transactionDescription, setTransactionDescription] = useState("");
-    const [transactionDate, settransactionDate] = useState(today);
-    const [transactionCategory, setTransactionCategory] = useState("");
-    const [transactionDateTouched, settransactionDateTouched] = useState(false);
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [incomeTaxability, setIncomeTaxability] = useState(false);
-    const [savingInterestRate, setSavingInterestRate] = useState(null);
-    const [incomeType, setIncomeType] = useState("active");
+const SavingComponent = ({ transactionDescription, setTransactionDescription, transactionDate, settransactionDate, transactionCategory, setTransactionCategory, savingInterestRate, setSavingInterestRate, isDatePickerVisible, setDatePickerVisibility }) => {
+    const theme = useTheme();
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    // Handle date confirmation
-
+    const today = new Date().toLocaleDateString('en-GB');
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));

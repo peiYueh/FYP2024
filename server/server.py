@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
+from app.controllers.transaction_controller import newTransaction
 from app.db import get_db
 from app import create_app
 
@@ -29,9 +30,15 @@ def login_route():
 
 @app.route('/getStarted', methods=['POST'])
 def getStarted_route():
-    print("hii get starting")
     db = get_db()  # Get the database connection
     return getStarted(db)
+
+@app.route('/newTransaction', methods=['POST'])
+def create_transaction():
+    data = request.json
+    db = get_db()
+    return newTransaction(db)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
