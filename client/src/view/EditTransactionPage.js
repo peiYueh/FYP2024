@@ -4,99 +4,99 @@ import { View, Text, TouchableOpacity, Pressable, Keyboard } from 'react-native'
 import { useTheme, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { DatePickerModal } from 'react-native-paper-dates';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 import styles from '../styles';
 
 const EditTransactionPage = ({ route, navigation }) => {
   const theme = useTheme();
-  // const navigation = useNavigation();
-  const { transactionData } = route.params; // Assuming you pass transaction data as route params
-  // console.log("HI MORNING: " + transactionData.amount);
   
   const formatAmount = (value) => {
-    // Remove non-numeric characters except for the decimal point
     const cleanValue = value.replace(/[^0-9.]/g, '');
-  
-    // Ensure the value is a valid number
     const numericValue = parseFloat(cleanValue);
     if (isNaN(numericValue)) {
       return '0.00';
     }
-  
-    // Format the number to always have two decimal places
     const formattedValue = numericValue.toFixed(2);
-  
-    // Split the integer and decimal parts
     const parts = formattedValue.split('.');
     const integerPart = parts[0];
     const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
-  
-    // Add commas to the integer part
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  
     return formattedIntegerPart + decimalPart;
   };
 
+  const { transactionData } = route.params;
   const [amount, setAmount] = useState(formatAmount(transactionData.amount.toString()));
-  const [selectedCategory, setSelectedCategory] = useState(transactionData.transactionType);
+  const [transactionType, setType] = useState(transactionData.transactionType);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [transactionDescription, setTransactionDescription] = useState(transactionData.description);
+  const [transactionDate, settransactionDate] = useState(transactionData.date);
+  const [transactionCategory, setTransactionCategory] = useState(transactionData.category);
+  const [incomeType, setIncomeType] = useState(transactionData.incomeType === "-" ? null : transactionData.incomeType);
+  const [incomeTaxability, setIncomeTaxability] = useState(transactionData.taxability === "-" ? false : transactionData.taxability);
+  const [savingInterestRate, setSavingInterestRate] = useState(transactionData.interestRate === "-" ? null : transactionData.interestRate);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    renderTransactionType(); // Call renderTransactionType when the component mounts
-  }, []);
-
-
-  const handleAmountChange = (text) => {
-    const formattedAmount = formatAmount(text);
-    setAmount(formattedAmount);
-  };
-
-  const renderTransactionType = () => {
-    switch (selectedCategory.toLowerCase()) {
-      case 'expense':
-        return <ExpenseComponent transactionData={transactionData} />;
-      case 'income':
-        return <IncomeComponent transactionData={transactionData} />;
-      case 'saving':
-        return <SavingComponent transactionData={transactionData} />;
-      default:
-        return null;
-    }
-  };
-
-  useEffect(() => {
-    console.log("selected cat" + selectedCategory)
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // Set keyboard visibility to true when the keyboard is shown
-      }
-    );
-
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // Set keyboard visibility to false when the keyboard is hidden
-      }
-    );
-
-    // Cleanup function to remove event listeners
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => setKeyboardVisible(true));
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => setKeyboardVisible(false));
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
   }, []);
 
+  const handleAmountChange = (text) => {
+    const formattedAmount = formatAmount(text);
+    setAmount(formattedAmount);
+  };
+
+  const showDatePicker = () => setDatePickerVisibility(true);
+  const hideDatePicker = () => setDatePickerVisibility(false);
+  const handleConfirm = (params) => {
+    settransactionDate(params.date.toLocaleDateString('en-GB'));
+    hideDatePicker();
+  };
+
+  const handleSave = async () => {
+    const updatedData = {
+      _id: "6669eea282b0f37856acf217",
+      amount: parseFloat(amount.replace(/,/g, '')),
+      transactionType,
+      description: transactionDescription,
+      date: transactionDate,
+      category: transactionCategory,
+      incomeType: incomeType || "-",
+      taxability: incomeTaxability,
+      interestRate: savingInterestRate || "-"
+    };
+
+    try {
+      const response = await axios.post(API_BASE_URL + '/editTransaction', updatedData);
+      if (response.status === 200) {
+        showMessage({
+          message: "Transaction Updated!",
+          description: "Your transaction has been updated successfully",
+          type: "success",
+        });
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+      showMessage({
+        message: "Update Failed",
+        description: "There was an error updating the transaction",
+        type: "danger",
+      });
+    }
+  };
+
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.onPrimary }]}>
-      <Text
-        style={[
-          styles.pageHeading,
-          {
-            color: theme.colors.primary,
-          },
-        ]}
-      >
-        New Transaction
+      <Text style={[styles.pageHeading, { color: theme.colors.primary }]}>
+        Edit Transaction
       </Text>
       <View style={styles.content}>
         <TextInput
@@ -114,11 +114,11 @@ const EditTransactionPage = ({ route, navigation }) => {
               key={index}
               style={[
                 styles.option,
-                selectedCategory === option.toLowerCase() && styles.selectedCategory, // Apply different style for the selected category
+                transactionType === option.toLowerCase() && styles.transactionType,
               ]}
-              onPress={() => setSelectedCategory(option.toLowerCase())} // Set the selected category in lowercase
+              onPress={() => setType(option.toLowerCase())}
             >
-              <Text style={selectedCategory === option.toLowerCase() ? styles.selectedText : styles.optionText}>
+              <Text style={transactionType === option.toLowerCase() ? styles.selectedText : styles.optionText}>
                 {option}
               </Text>
             </TouchableOpacity>
@@ -126,11 +126,26 @@ const EditTransactionPage = ({ route, navigation }) => {
         </View>
       </View>
       <View style={{ flex: 0.8, height: 300 }}>
-        {selectedCategory === 'expense' && <ExpenseComponent transactionData={transactionData} />}
-        {selectedCategory === 'income' && <IncomeComponent transactionData={transactionData} />}
-        {selectedCategory === 'saving' && <SavingComponent transactionData={transactionData} />}
+        <TransactionComponent
+          transactionType={transactionType}
+          transactionDescription={transactionDescription}
+          setTransactionDescription={setTransactionDescription}
+          transactionDate={transactionDate}
+          settransactionDate={settransactionDate}
+          transactionCategory={transactionCategory}
+          setTransactionCategory={setTransactionCategory}
+          incomeType={incomeType}
+          setIncomeType={setIncomeType}
+          incomeTaxability={incomeTaxability}
+          setIncomeTaxability={setIncomeTaxability}
+          savingInterestRate={savingInterestRate}
+          setSavingInterestRate={setSavingInterestRate}
+          isDatePickerVisible={isDatePickerVisible}
+          setDatePickerVisibility={setDatePickerVisibility}
+          handleConfirm={handleConfirm}
+        />
       </View>
-      {!keyboardVisible && selectedCategory !== "" && (
+      {!keyboardVisible && transactionType !== "" && (
         <Pressable
           style={({ pressed }) => ({
             backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
@@ -142,13 +157,7 @@ const EditTransactionPage = ({ route, navigation }) => {
             pointerEvents: 'auto',
             alignSelf: 'center',
           })}
-          onPress={() =>
-            showMessage({
-              message: "Transaction Created!",
-              description: "Your transaction has been added",
-              type: "success",
-            })
-          }
+          onPress={handleSave}
         >
           <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save</Text>
         </Pressable>
@@ -157,23 +166,25 @@ const EditTransactionPage = ({ route, navigation }) => {
   );
 };
 
-const ExpenseComponent = ({ transactionData = {} }) => {
-  const theme = useTheme();
+const TransactionComponent = ({
+  transactionType,
+  transactionDescription,
+  setTransactionDescription,
+  transactionDate,
+  settransactionDate,
+  transactionCategory,
+  setTransactionCategory,
+  incomeType,
+  setIncomeType,
+  incomeTaxability,
+  setIncomeTaxability,
+  savingInterestRate,
+  setSavingInterestRate,
+  isDatePickerVisible,
+  setDatePickerVisibility,
+  handleConfirm
+}) => {
   const today = new Date().toLocaleDateString('en-GB');
-  const [transactionDescription, setTransactionDescription] = useState(transactionData.description);
-  const [transactionDate, settransactionDate] = useState(transactionData.date);
-  const [transactionCategory, setTransactionCategory] = useState(transactionData.category);
-  const [transactionDateTouched, settransactionDateTouched] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => setDatePickerVisibility(true);
-  const hideDatePicker = () => setDatePickerVisibility(false);
-
-  const handleConfirm = (params) => {
-    settransactionDate(params.date.toLocaleDateString('en-GB'));
-    settransactionDateTouched(true);
-    hideDatePicker();
-  };
 
   return (
     <View style={styles.transactionComponent}>
@@ -182,14 +193,9 @@ const ExpenseComponent = ({ transactionData = {} }) => {
         label="Description"
         left={<TextInput.Icon icon="fountain-pen" />}
         value={transactionDescription}
-        onChangeText={(text) => setTransactionDescription(text)}
+        onChangeText={setTransactionDescription}
       />
-      <Pressable
-        onPress={showDatePicker}
-        accessibilityLabel="Transaction Date"
-        locale={'en'}
-        style={styles.transactionDetailInput}
-      >
+      <Pressable onPress={() => setDatePickerVisibility(true)} style={styles.transactionDetailInput}>
         <TextInput
           label={transactionDate}
           left={<TextInput.Icon icon="calendar" />}
@@ -197,181 +203,56 @@ const ExpenseComponent = ({ transactionData = {} }) => {
           style={{ backgroundColor: 'transparent', fontSize: 20, height: 50 }}
         />
       </Pressable>
-      <TextInput
-        style={styles.transactionDetailInput}
-        label="Category"
-        left={<TextInput.Icon icon="shape" />}
-        value={transactionCategory}
-        onChangeText={(text) => setTransactionCategory(text)}
-      />
-      <Portal>
-        <DatePickerModal
-          mode="single"
-          visible={isDatePickerVisible}
-          onDismiss={hideDatePicker}
-          date={new Date()}
-          onConfirm={handleConfirm}
-          dropDownContainerStyle={styles.dropDownContainer}
-          accessibilityLabel="Date Picker Modal"
-          validRange={{
-            endDate: today,
-          }}
-        />
-      </Portal>
-    </View>
-  );
-};
-const IncomeComponent = ({ transactionData = {} }) => {
-  const today = new Date().toLocaleDateString('en-GB');
-  const [transactionDescription, setTransactionDescription] = useState(transactionData.description);
-  const [transactionDate, settransactionDate] = useState(transactionData.date);
-  const [transactionCategory, setTransactionCategory] = useState(transactionData.category);
-  const [transactionDateTouched, settransactionDateTouched] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [incomeTaxability, setIncomeTaxability] = useState(transactionData.taxability || false);
-  const [incomeType, setIncomeType] = useState(transactionData.incomeType || '');
-
-  const showDatePicker = () => setDatePickerVisibility(true);
-  const hideDatePicker = () => setDatePickerVisibility(false);
-
-  const handleConfirm = (params) => {
-    settransactionDate(params.date.toLocaleDateString('en-GB'));
-    settransactionDateTouched(true);
-    hideDatePicker();
-  };
-
-  return (
-    <View style={styles.transactionComponent}>
-      <TextInput
-        style={styles.transactionDetailInput}
-        label="Description"
-        left={<TextInput.Icon icon="fountain-pen" />}
-        value={transactionDescription}
-        onChangeText={(text) => setTransactionDescription(text)}
-      />
-      <Pressable
-        onPress={showDatePicker}
-        accessibilityLabel="Transaction Date"
-        locale={'en'}
-        style={styles.transactionDetailInput}
-      >
+      {transactionType === 'expense' && (
         <TextInput
-          label={transactionDate}
-          left={<TextInput.Icon icon="calendar" />}
-          editable={false}
-          style={{ backgroundColor: 'transparent', fontSize: 20, height: 50 }}
+          style={styles.transactionDetailInput}
+          label="Category"
+          left={<TextInput.Icon icon="shape" />}
+          value={transactionCategory}
+          onChangeText={setTransactionCategory}
         />
-      </Pressable>
-      <SegmentedButtons
-        value={incomeType}
-        onValueChange={setIncomeType}
-        buttons={[
-          {
-            value: 'active',
-            label: 'Active Income',
-          },
-          {
-            value: 'passive',
-            label: 'Passive Income',
-          },
-        ]}
-        style={{ marginTop: 30 }}
-      />
-      <SegmentedButtons
-        value={incomeTaxability}
-        onValueChange={setIncomeTaxability}
-        buttons={[
-          {
-            value: false,
-            label: 'Non-taxable Income',
-          },
-          {
-            value: true,
-            label: 'Taxable Income',
-          },
-        ]}
-        style={{ marginTop: 30 }}
-      />
-      <Portal>
-        <DatePickerModal
-          mode="single"
-          visible={isDatePickerVisible}
-          onDismiss={hideDatePicker}
-          date={new Date()}
-          onConfirm={handleConfirm}
-          dropDownContainerStyle={styles.dropDownContainer}
-          accessibilityLabel="Date Picker Modal"
-          validRange={{
-            endDate: today,
-          }}
-        />
-      </Portal>
-    </View>
-  );
-};
-
-const SavingComponent = ({ transactionData = {} }) => {
-  const today = new Date().toLocaleDateString('en-GB');
-  const [transactionDescription, setTransactionDescription] = useState(transactionData.description);
-  const [transactionDate, settransactionDate] = useState(today);
-  const [transactionCategory, setTransactionCategory] = useState(transactionData.category);
-  const [transactionDateTouched, settransactionDateTouched] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [incomeTaxability, setIncomeTaxability] = useState(transactionData.taxability || false);
-  const [savingInterestRate, setSavingInterestRate] = useState(transactionData.interestRate || null);
-  const [incomeType, setIncomeType] = useState(transactionData.incomeType || 'active');
-
-  const showDatePicker = () => setDatePickerVisibility(true);
-  const hideDatePicker = () => setDatePickerVisibility(false);
-
-  const handleConfirm = (params) => {
-    settransactionDate(params.date.toLocaleDateString('en-GB'));
-    settransactionDateTouched(true);
-    hideDatePicker();
-  };
-
-  return (
-    <View style={styles.transactionComponent}>
-      <TextInput
-        style={styles.transactionDetailInput}
-        label="Description"
-        left={<TextInput.Icon icon="fountain-pen" />}
-        value={transactionDescription}
-        onChangeText={(text) => setTransactionDescription(text)}
-      />
-      <Pressable
-        onPress={showDatePicker}
-        accessibilityLabel="Transaction Date"
-        locale={'en'}
-        style={styles.transactionDetailInput}
-      >
+      )}
+      {transactionType === 'income' && (
+        <>
+          <SegmentedButtons
+            value={incomeType}
+            onValueChange={setIncomeType}
+            buttons={[
+              { value: 'active', label: 'Active Income' },
+              { value: 'passive', label: 'Passive Income' },
+            ]}
+            style={{ marginTop: 30 }}
+          />
+          <SegmentedButtons
+            value={incomeTaxability}
+            onValueChange={setIncomeTaxability}
+            buttons={[
+              { value: false, label: 'Non-taxable Income' },
+              { value: true, label: 'Taxable Income' },
+            ]}
+            style={{ marginTop: 30 }}
+          />
+        </>
+      )}
+      {transactionType === 'saving' && (
         <TextInput
-          label={transactionDate}
-          left={<TextInput.Icon icon="calendar" />}
-          editable={false}
-          style={{ backgroundColor: 'transparent', fontSize: 20, height: 50 }}
+          style={styles.transactionDetailInput}
+          label="Interest Rate (%)"
+          keyboardType="numeric"
+          left={<TextInput.Icon icon="stairs-up" />}
+          value={savingInterestRate}
+          onChangeText={setSavingInterestRate}
         />
-      </Pressable>
-      <TextInput
-        style={styles.transactionDetailInput}
-        label="Interest Rate (%)"
-        keyboardType="numeric"
-        left={<TextInput.Icon icon="stairs-up" />}
-        value={savingInterestRate}
-        onChangeText={(text) => setSavingInterestRate(text)}
-      />
+      )}
       <Portal>
         <DatePickerModal
           mode="single"
           visible={isDatePickerVisible}
-          onDismiss={hideDatePicker}
+          onDismiss={() => setDatePickerVisibility(false)}
           date={new Date()}
           onConfirm={handleConfirm}
           dropDownContainerStyle={styles.dropDownContainer}
-          accessibilityLabel="Date Picker Modal"
-          validRange={{
-            endDate: today,
-          }}
+          validRange={{ endDate: today }}
         />
       </Portal>
     </View>

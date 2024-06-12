@@ -9,7 +9,6 @@ import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
-import TransactionDetailsPage from "./src/view/TransactionDetailsPage-old";
 import EditTransactionPage from "./src/view/EditTransactionPage";
 import ExpenseTree from "./src/view/ExpenseTree";
 
@@ -105,7 +104,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="NewTransactionPage">
+        <Stack.Navigator initialRouteName="My Transaction">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -134,11 +133,6 @@ const App = () => {
           <Stack.Screen
             name="My Transaction"
             component={MyTransactionPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="TransactionDetailsPage"
-            component={TransactionDetailsPage}
             options={{ headerShown: true }}
           />
           <Stack.Screen
