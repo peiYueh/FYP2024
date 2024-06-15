@@ -3,7 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
-from app.controllers.transaction_controller import newTransaction, editTransaction
+from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions
 from app.db import get_db
 from app import create_app
 
@@ -45,6 +45,12 @@ def update_transaction():
     data = request.json
     db = get_db()
     return editTransaction(db)
+
+@app.route('/transactions', methods=['GET'])
+def get_transactions():
+    print("getting transaction")
+    db = get_db()
+    return getTransactions(db)
 
 
 

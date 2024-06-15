@@ -19,3 +19,7 @@ class Transaction:
             return {"message": "Transaction updated successfully"}, 200
         else:
             return {"error": "Transaction not found"}, 404
+        
+    def get_transaction(self, user_id):
+        print("in model")
+        return list(self.collection.find({'user_id': user_id}))  # Filter transactions by userId

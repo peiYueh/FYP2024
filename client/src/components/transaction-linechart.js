@@ -46,7 +46,7 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 overflowBottom
                 textShiftX={-10}
                 textShiftY={15}
-                xAxisLabelsVerticalShift={55}
+                xAxisLabelsVerticalShift={80}
             />
         </View>
     );

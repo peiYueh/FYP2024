@@ -247,7 +247,8 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     backgroundColor: '#FBFCFE',
-    borderRadius: 10
+    borderRadius: 10,
+    height: '15%'
   },
   legend: {
     flexDirection: 'row',
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
   chartTitle: {
     fontFamily: "Montserrat",
     fontWeight: 900,
-    fontSize: 15,
+    fontSize: 18,
   },
   monthYearHeader: {
     fontSize: 18,
@@ -281,11 +282,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     width: '100%',
     // backgroundColor: 'blue'
-  },  
+  },
   transactionContainer: {
     borderRadius: 5,
   },
-  transactionHeader:{
+  transactionHeader: {
     // width: '100%',
     backgroundColor: '#D5E5EB',
     paddingHorizontal: 10,
@@ -307,17 +308,21 @@ const styles = StyleSheet.create({
     height: 50
   },
   leftColumn: {
-    flex: 1,
+    flex: 2,
+    width: '100%',
   },
   rightColumn: {
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center', // Align items vertically in the center
+    width: '100%',
   },
   description: {
     fontSize: 16,
-    fontWeight: 900,
-    fontFamily: 'Roboto'
+    fontWeight: '900',
+    fontFamily: 'Roboto',
+    maxWidth: '100%', // Ensure it doesn't exceed parent width
+     // Vertically center the text
   },
   date: {
     fontSize: 12,
@@ -389,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   filterModalHeaderText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   filterModalContent: {
@@ -433,14 +438,15 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontWeight: 'bold',
     fontSize: 22,
+    marginTop: 30,
     paddingBottom: 10,
     textTransform: 'uppercase',
   },
   transactionPopupContainer: {
     flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   transactionPopup: {
     width: 300,
@@ -452,43 +458,53 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
-},
-popupText: {
+  },
+  popupText: {
     fontSize: 18,
     marginBottom: 5,
     marginTop: 5,
     padding: 5,
-    fontSize: 20,
+    fontSize: 18,
     paddingLeft: 10,
-},
-actionButton: {
+  },
+  actionButton: {
     marginTop: 10,
     padding: 10,
     backgroundColor: '#2196F3',
     borderRadius: 5,
     alignItems: 'center',
     width: '40%'
-},
-closeButtonText: {
+  },
+  closeButtonText: {
     color: 'white',
     fontSize: 16,
-},
-closeButton: {
-  position: 'absolute',
-  top: 10, // Adjust this value to position the button vertically
-  right: 10, // Adjust this value to position the button horizontally
-  backgroundColor: '#A9A9A9',
-  padding: 10,
-  borderRadius: 5,
-},
-detailContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginBottom: 10,
-},
-popupIcon:{
-  fontSize: 25
-}
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10, // Adjust this value to position the button vertically
+    right: 10, // Adjust this value to position the button horizontally
+    backgroundColor: '#A9A9A9',
+    padding: 10,
+    borderRadius: 5,
+    zIndex: 99
+  },
+  detailContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  popupIcon: {
+    fontSize: 25
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // top: '50%',
+    height: 700,
+    // backgroundColor: 'red',
+  // transform: [{ translateY: 100 }]
+  }
 });
 
 export default styles;

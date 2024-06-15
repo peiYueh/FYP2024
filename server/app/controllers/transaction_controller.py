@@ -8,34 +8,27 @@ def newTransaction(db):
     userID = "665094c0c1a89d9d19d13606"
 
     data = request.get_json().get('transactionData')
-    transactionType = data.get('transactionType')
-    amount = data.get('amount')
-    description = data.get('description')
-    try:
-        # Parse the date field to a datetime object with format dd/mm/yyyy
-        transaction_date = datetime.strptime(data.get('date'), '%d/%m/%Y')
-        # Convert the datetime object to UTC timezone
-        # transaction_date = transaction_date.astimezone(tzinfo=timezone.utc)
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid date format. Expected format: dd/mm/yyyy"}), 400
-
-    category = data.get('category')
-    incomeType = data.get('incomeType')
-    incomeTaxability = data.get('incomeTaxability')
-    savingInterestRate =data.get('savingInterestRate')
+    transactionType = data.get('transaction_type')
+    amount = data.get('transaction_amount')
+    description = data.get('transaction_description')
+    category = data.get('transaction_category')
+    incomeType = data.get('income_type')
+    incomeTaxability = data.get('income_taxability')
+    savingInterestRate =data.get('interest_rate')
+    transaction_date = data.get('transaction_date')
     # handle unrelated data
     if transactionType == 0:
-        #expense
-        incomeType = "-"
-        incomeTaxability = "-"
-        savingInterestRate = "-"
+        incomeType = False
+        incomeTaxability = False
+        savingInterestRate = 0
+        amount = 0 - amount
     elif transactionType == 1:
         category = "-"
-        savingInterestRate = "-"
+        savingInterestRate = 0
     elif transactionType == 2:
         category = "-"
-        incomeType = "-"
-        incomeTaxability = "-"
+        incomeType = False
+        incomeTaxability = False
     transaction = {
         'user_id': userID,
         'transaction_type': transactionType,
@@ -57,7 +50,7 @@ def editTransaction(db):
     data = request.get_json()
     print(data)
     userID = "665094c0c1a89d9d19d13606"
-    transaction_id = data.get('_id')
+    transaction_id = data.get('transaction_id')
 
     if not transaction_id:
         print("Trans ID not found")
@@ -68,34 +61,28 @@ def editTransaction(db):
         transaction_id = ObjectId(transaction_id)
     except Exception as e:
         return jsonify({"error": "Invalid Transaction ID format"}), 400
-    transactionType = data.get('transactionType')
-    amount = data.get('amount')
-    description = data.get('description')
-    try:
-        # Parse the date field to a datetime object with format dd/mm/yyyy
-        transaction_date = datetime.strptime(data.get('date'), '%d/%m/%Y')
-        # Convert the datetime object to UTC timezone
-        # transaction_date = transaction_date.astimezone(tzinfo=timezone.utc)
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid date format. Expected format: dd/mm/yyyy"}), 400
-
-    category = data.get('category')
-    incomeType = data.get('incomeType')
-    incomeTaxability = data.get('incomeTaxability')
-    savingInterestRate =data.get('savingInterestRate')
+    transactionType = data.get('transaction_type')
+    amount = data.get('transaction_amount')
+    description = data.get('transaction_description')
+    category = data.get('transaction_category')
+    incomeType = data.get('income_type')
+    incomeTaxability = data.get('income_taxability')
+    savingInterestRate =data.get('interest_rate')
+    transaction_date = data.get('transaction_date')
     # handle unrelated data
     if transactionType == 0:
         #expense
-        incomeType = "-"
-        incomeTaxability = "-"
-        savingInterestRate = "-"
+        incomeType = False
+        incomeTaxability = False
+        savingInterestRate = 0
+        amount = 0 - amount
     elif transactionType == 1:
         category = "-"
-        savingInterestRate = "-"
+        savingInterestRate = 0
     elif transactionType == 2:
         category = "-"
-        incomeType = "-"
-        incomeTaxability = "-"
+        incomeType = False
+        incomeTaxability = False
     transaction = {
         '_id': transaction_id,
         'user_id': userID,
@@ -112,3 +99,20 @@ def editTransaction(db):
     transaction_model = Transaction(db)
     transaction_model.update_transaction(transaction)
     return jsonify({"message": "Data updated successfully"}), 201
+
+def getTransactions(db):
+    # user_id = request.args.get('userId')  # Get the userId from query parameters
+    user_id = "665094c0c1a89d9d19d13606"
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+    transaction_model = Transaction(db)
+    
+    transactions = transaction_model.get_transaction(user_id)
+    # Convert ObjectId to string
+    for transaction in transactions:
+        if '_id' in transaction:
+            transaction['_id'] = str(transaction['_id'])
+
+    print("Transaction hereeeeeeeeeeeeeeeeeeee")
+    print(transactions)
+    return jsonify(transactions)

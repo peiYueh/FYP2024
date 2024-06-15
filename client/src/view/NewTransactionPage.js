@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Pressable, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, Keyboard, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useTheme, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { useNavigation } from '@react-navigation/native';
@@ -19,9 +19,9 @@ const NewTransactionPage = () => {
     const [transactionDescription, setTransactionDescription] = useState("");
     const [transactionDate, settransactionDate] = useState(new Date().toLocaleDateString('en-GB'));
     const [transactionCategory, setTransactionCategory] = useState("");
-    const [incomeType, setIncomeType] = useState('');
+    const [incomeType, setIncomeType] = useState(true);
     const [incomeTaxability, setIncomeTaxability] = useState(false);
-    const [savingInterestRate, setSavingInterestRate] = useState(null);
+    const [savingInterestRate, setSavingInterestRate] = useState(0);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -83,36 +83,35 @@ const NewTransactionPage = () => {
         }
 
         const transactionData = {
-            amount,
-            description: transactionDescription,
-            date: transactionDate,
-            category: transactionCategory,
-            incomeType,
-            incomeTaxability,
-            savingInterestRate,
-            transactionType
+            transaction_amount: parseFloat(amount.replace(/,/g, '')),
+            transaction_type: transactionType,
+            transaction_description: transactionDescription,
+            transaction_date: transactionDate,
+            transaction_category: transactionCategory,
+            income_type: incomeType || false,
+            income_taxability: incomeTaxability,
+            interest_rate: parseInt(savingInterestRate) || 0
         };
         // Here you can add the logic to submit the transactionData to your server or save it locally.
-        showMessage({
-            message: "Transaction Created!",
-            description: "Your transaction has been added",
-            type: "success",
-        });
-        // Optionally, you can navigate back or reset the form after submission
-        // navigation.goBack();
+
         setLoading(true);
         try {
             const response = await axios.post(API_BASE_URL + '/newTransaction', {
                 transactionData
             });
             console.log('Sign up successful!', response.data);
-            alert('New Transaction Added!');
+            // alert('New Transaction Added!');
             // navigation.navigate('LoginPage')
         } catch (error) {
             console.error('Error Adding New Transaction', error);
             alert('Please try again.');
         } finally {
             setLoading(false); // Set loading to false regardless of login success or failure
+            showMessage({
+                message: "Transaction Created!",
+                description: "Your transaction has been added",
+                type: "success",
+            });
         }
     };
 
@@ -185,69 +184,67 @@ const NewTransactionPage = () => {
     }, []);
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.onPrimary }]}>
-            <Text
-                style={[
-                    styles.pageHeading,
-                    {
-                        color: theme.colors.primary,
-                    },
-                ]}
-            >
-                New Transaction
-            </Text>
-            <View style={styles.content}>
-                <TextInput
-                    style={styles.transactionInput}
-                    value={amount}
-                    onChangeText={handleAmountChange}
-                    keyboardType="numeric"
-                    placeholder="0.00"
-                    placeholderTextColor="#aaa"
-                />
-                <Text style={{ position: 'absolute', top: 35, right: 10, fontWeight: 'bold' }}>MYR</Text>
-                <View style={styles.optionsRow}>
-                    {['EXPENSE', 'INCOME', 'SAVING'].map((option, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[
-                                styles.option,
-                                transactionType === index && styles.transactionType,
-                            ]}
-                            onPress={() => setType(index)}
-                        >
-                            <Text style={transactionType === index ? styles.selectedText : styles.optionText}>
-                                {option}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </View>
-            <View style={{ flex: 0.8, height: 300 }}>
-                {renderTransactionType()}
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
+            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+                <View style={[styles.container, { backgroundColor: theme.colors.onPrimary }]}>
+                    <View style={styles.content}>
+                        <TextInput
+                            style={styles.transactionInput}
+                            value={amount}
+                            onChangeText={handleAmountChange}
+                            keyboardType="numeric"
+                            placeholder="0.00"
+                            placeholderTextColor="#aaa"
+                        />
+                        <Text style={{ position: 'absolute', top: 35, right: 10, fontWeight: 'bold' }}>MYR</Text>
+                        <View style={styles.optionsRow}>
+                            {['EXPENSE', 'INCOME', 'SAVING'].map((option, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[
+                                        styles.option,
+                                        transactionType === index && styles.transactionType,
+                                    ]}
+                                    onPress={() => setType(index)}
+                                >
+                                    <Text style={transactionType === index ? styles.selectedText : styles.optionText}>
+                                        {option}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                    <View style={{ flex: 0.8, height: 300 }}>
+                        {renderTransactionType()}
 
-            </View>
-            {!keyboardVisible && transactionType !== "" && (
-                <Pressable
-                    style={({ pressed }) => ({
-                        backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                        padding: 10,
-                        borderRadius: 25,
-                        width: 300,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'auto',
-                        alignSelf: 'center',
-                    })}
-                    onPress={handleSubmit}
-                >
-                    <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save</Text>
-                </Pressable>
-            )}
-            {(loading &&
-                <LoadingIndicator theme={theme} />
-            )}
-        </View>
+                    </View>
+                    {!keyboardVisible && transactionType !== "" && (
+                        <Pressable
+                            style={({ pressed }) => ({
+                                backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
+                                padding: 10,
+                                borderRadius: 25,
+                                width: 300,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                pointerEvents: 'auto',
+                                alignSelf: 'center',
+                            })}
+                            onPress={handleSubmit}
+                        >
+                            <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save</Text>
+                        </Pressable>
+                    )}
+                    {(loading &&
+                        <LoadingIndicator theme={theme} />
+                    )}
+                </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
@@ -255,11 +252,11 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
     const theme = useTheme();
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    const today = new Date().toLocaleDateString('en-GB');
+    const today = new Date();
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
-        settransactionDateTouched(true);
+        // settransactionDateTouched(true);
         hideDatePicker();
     };
 
@@ -315,11 +312,11 @@ const IncomeComponent = ({ transactionDescription, setTransactionDescription, tr
     const theme = useTheme();
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    const today = new Date().toLocaleDateString('en-GB');
+    const today = new Date();
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
-        settransactionDateTouched(true);
+        // settransactionDateTouched(true);
         hideDatePicker();
     };
     return (
@@ -348,11 +345,11 @@ const IncomeComponent = ({ transactionDescription, setTransactionDescription, tr
                 onValueChange={setIncomeType}
                 buttons={[
                     {
-                        value: 'active',
+                        value: true,
                         label: 'Active Income',
                     },
                     {
-                        value: 'passive',
+                        value: false,
                         label: 'Passive Income',
                     },
                 ]}
@@ -397,14 +394,15 @@ const SavingComponent = ({ transactionDescription, setTransactionDescription, tr
     const theme = useTheme();
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
-    const today = new Date().toLocaleDateString('en-GB');
+    const today = new Date();
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
-        settransactionDateTouched(true);
+        // settransactionDateTouched(true);
         hideDatePicker();
     };
     return (
+
         <View style={styles.transactionComponent}>
             <TextInput style={styles.transactionDetailInput}
                 label="Description"
