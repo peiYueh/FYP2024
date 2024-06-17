@@ -364,7 +364,7 @@ const MyTransactionPage = () => {
     );
 
     return (
-        <ScrollView contentContainer Style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background }}>
             {loading ? (
                 renderLoadingIndicator() // Render loading indicator if data is still fetching
             ) : (<>

@@ -1,6 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import { AppLoading } from "expo";
 const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -49,6 +50,11 @@ const styles = StyleSheet.create({
   heading: {
     fontFamily: "Montserrat",
     fontSize: 40,
+    fontWeight: "bold",
+  },
+  subHeading: {
+    fontFamily: "Montserrat",
+    fontSize: 20,
     fontWeight: "bold",
   },
   pageHeading: {
@@ -322,7 +328,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     fontFamily: 'Roboto',
     maxWidth: '100%', // Ensure it doesn't exceed parent width
-     // Vertically center the text
+    // Vertically center the text
   },
   date: {
     fontSize: 12,
@@ -503,8 +509,53 @@ const styles = StyleSheet.create({
     // top: '50%',
     height: 700,
     // backgroundColor: 'red',
-  // transform: [{ translateY: 100 }]
-  }
+    // transform: [{ translateY: 100 }]
+  },
+  totalLiabilityContainer: {
+    width: '90%',
+    backgroundColor: '#D5E5EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    borderRadius: 10,
+  },
+  scrollViewContent: {
+    width: width,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addLiabilityButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    margin: 10,
+    width: '90%'
+  },
+  liabilityFact: {
+        marginTop: 0, // Remove top margin
+        paddingTop: 0, // Remove top padding
+        alignSelf: 'stretch',
+    },
+    swiperContainer: {
+        height: 250, // Set a fixed height for the Swiper container
+        marginTop: 0, // Remove top margin
+        paddingTop: 0, // Remove top padding
+        
+    },
+    slide: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 250, // Ensure each slide matches the height of the Swiper container
+    },
+    image: {
+        width: '100%', // Make the image take up the full width of its container
+        height: '100%', // Ensure the image takes up the full height of its container
+        resizeMode: 'contain',
+    },
 });
 
 export default styles;

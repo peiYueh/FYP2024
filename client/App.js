@@ -21,6 +21,8 @@ import { Montserrat } from "@expo-google-fonts/montserrat";
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
+import MyLiabilityPage from "./src/view/MyLiabilityPage";
+import NewLiabilityPage from "./src/view/NewLiabilityPage";
 
 
 
@@ -104,7 +106,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="My Transaction">
+        <Stack.Navigator initialRouteName="New Liabilities">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -140,9 +142,19 @@ const App = () => {
             component={EditTransactionPage}
             options={{ headerShown: true }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ExpenseTree"
             component={ExpenseTree}
+            options={{ headerShown: true }}
+          /> */}
+          <Stack.Screen
+            name="My Liabilities"
+            component={MyLiabilityPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="New Liabilities"
+            component={NewLiabilityPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

@@ -16,14 +16,14 @@ const generateZigzagPoints = (width, height, numZigzags) => {
   return points;
 };
 
-const ZigzagPattern = ({ width, positionTop, numZigzags = 20 }) => {
-  const height = 25; // height of the zigzag pattern
+const ZigzagPattern = ({ width, numZigzags = 20 }) => {
+  const height = 20; // height of the zigzag pattern
   const points = generateZigzagPoints(width, height, numZigzags);
 
   return (
-    <View style={{ position: 'absolute', top: positionTop -2, left: 40 }}>
-      <Svg height={height} width={width + 10}>
-        <Polygon points={points} fill="rgb(220, 228, 232)" />
+    <View style={{ position: 'absolute', bottom: -20, left: 0 }}>
+      <Svg height={height} width={width}>
+        <Polygon points={points} fill="#e1f5fe" />
       </Svg>
     </View>
   );
