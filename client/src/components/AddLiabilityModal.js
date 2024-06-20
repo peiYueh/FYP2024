@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Button, Portal, TextInput } from 'react-native-paper';
-// import { useTheme, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
+import { useTheme, Button, Portal, TextInput } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
+import LoadingIndicator from './loading-component';
+import { API_BASE_URL } from '../../config';
+import axios from 'axios';
 
 const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
+  const theme = useTheme();
   const [liabilityName, setLiabilityName] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
   const [interestRate, setInterestRate] = useState('');
@@ -15,11 +18,73 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
   const [lenderInfo, setLenderInfo] = useState('');
   const [purpose, setPurpose] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const showDatePicker = () => setDatePickerVisibility(true);
   const hideDatePicker = () => setDatePickerVisibility(false);
 
-  const handleAddLiability = () => {
+  const validateInputs = () => {
+    let valid = true;
+    let tempErrors = {};
+
+    if (!liabilityName.trim()) {
+      tempErrors.liabilityName = 'Liability name is required';
+      valid = false;
+    }
+    if (!totalAmount || isNaN(totalAmount)) {
+      tempErrors.totalAmount = 'Valid total amount is required';
+      valid = false;
+    }
+    if (!interestRate || isNaN(interestRate)) {
+      tempErrors.interestRate = 'Valid interest rate is required';
+      valid = false;
+    }
+    if (!term || isNaN(term)) {
+      tempErrors.term = 'Valid term is required';
+      valid = false;
+    }
+    if (!monthlyPayment || isNaN(monthlyPayment)) {
+      tempErrors.monthlyPayment = 'Valid monthly payment is required';
+      valid = false;
+    }
+    if (!dueDate) {
+      tempErrors.dueDate = 'Due date is required';
+      valid = false;
+    }
+    if (!lenderInfo.trim()) {
+      tempErrors.lenderInfo = 'Lender information is required';
+      valid = false;
+    }
+    if (!purpose.trim()) {
+      tempErrors.purpose = 'Purpose is required';
+      valid = false;
+    }
+
+    setErrors(tempErrors);
+    return valid;
+  };
+
+  const handleConfirm = (params) => {
+    setDueDate(params.date);
+    hideDatePicker();
+  };
+
+  const resetFields = () => {
+    setLiabilityName('');
+    setTotalAmount('');
+    setInterestRate('');
+    setTerm('');
+    setMonthlyPayment('');
+    setDueDate(null);
+    setLenderInfo('');
+    setPurpose('');
+    setErrors({});
+  };
+
+  const handleAddLiability = async () => {
+    if (!validateInputs()) return;
+
     const newLiability = {
       name: liabilityName,
       totalAmount: parseFloat(totalAmount),
@@ -31,23 +96,20 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       purpose: purpose,
     };
 
-    onSubmit(newLiability);
-
-    // Reset input fields and close modal
-    setLiabilityName('');
-    setTotalAmount('');
-    setInterestRate('');
-    setTerm('');
-    setMonthlyPayment('');
-    setDueDate(null);
-    setLenderInfo('');
-    setPurpose('');
-    onClose();
-  };
-
-  const handleConfirm = (params) => {
-    setDueDate(params.date);
-    hideDatePicker();
+    setLoading(true);
+    try {
+      const response = await axios.post(API_BASE_URL + '/newLiability', newLiability);
+      console.log('Response:', response.data);
+      Alert.alert('Success', 'Liability added successfully');
+      onSubmit(newLiability); // Assuming this is where you handle adding the liability to some list or state
+      resetFields();
+      onClose();
+    } catch (error) {
+      console.error('Error adding liability:', error);
+      Alert.alert('Error', 'Failed to add liability');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,24 +126,33 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           value={liabilityName}
           onChangeText={setLiabilityName}
           left={<TextInput.Icon icon="rename-box" />}
+          error={!!errors.liabilityName}
         />
+        {errors.liabilityName && <Text style={styles.errorText}>{errors.liabilityName}</Text>}
 
         <View style={styles.rowContainer}>
-          <TextInput
-            style={[styles.input, styles.halfWidthInput]}
-            placeholder="Total Amount"
-            keyboardType="numeric"
-            value={totalAmount}
-            onChangeText={setTotalAmount}
-          />
-
-          <TextInput
-            style={[styles.input, styles.halfWidthInput]}
-            placeholder="Interest Rate (%)"
-            keyboardType="numeric"
-            value={interestRate}
-            onChangeText={setInterestRate}
-          />
+          <View style={styles.halfWidth}>
+            <TextInput
+              style={styles.input}
+              placeholder="Total Amount"
+              keyboardType="numeric"
+              value={totalAmount}
+              onChangeText={setTotalAmount}
+              error={!!errors.totalAmount}
+            />
+            {errors.totalAmount && <Text style={styles.errorText}>{errors.totalAmount}</Text>}
+          </View>
+          <View style={styles.halfWidth}>
+            <TextInput
+              style={styles.input}
+              placeholder="Interest Rate (%)"
+              keyboardType="numeric"
+              value={interestRate}
+              onChangeText={setInterestRate}
+              error={!!errors.interestRate}
+            />
+            {errors.interestRate && <Text style={styles.errorText}>{errors.interestRate}</Text>}
+          </View>
         </View>
 
         <TextInput
@@ -91,7 +162,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           value={term}
           onChangeText={setTerm}
           left={<TextInput.Icon icon="calendar-clock" />}
+          error={!!errors.term}
         />
+        {errors.term && <Text style={styles.errorText}>{errors.term}</Text>}
 
         <TextInput
           style={styles.input}
@@ -100,7 +173,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           value={monthlyPayment}
           onChangeText={setMonthlyPayment}
           left={<TextInput.Icon icon="cash-multiple" />}
+          error={!!errors.monthlyPayment}
         />
+        {errors.monthlyPayment && <Text style={styles.errorText}>{errors.monthlyPayment}</Text>}
 
         <Pressable style={styles.datePickerButton} onPress={showDatePicker}>
           <TextInput
@@ -109,8 +184,10 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
             value={dueDate ? dueDate.toLocaleDateString() : ''}
             style={{ fontSize: 12 }}
             left={<TextInput.Icon icon="update" />}
+            error={!!errors.dueDate}
           />
         </Pressable>
+        {errors.dueDate && <Text style={styles.errorText}>{errors.dueDate}</Text>}
 
         <Portal>
           <DatePickerModal
@@ -129,7 +206,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           value={lenderInfo}
           onChangeText={setLenderInfo}
           left={<TextInput.Icon icon="credit-card-fast-outline" />}
+          error={!!errors.lenderInfo}
         />
+        {errors.lenderInfo && <Text style={styles.errorText}>{errors.lenderInfo}</Text>}
 
         <TextInput
           style={styles.input}
@@ -137,11 +216,15 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           value={purpose}
           onChangeText={setPurpose}
           left={<TextInput.Icon icon="wallet-outline" />}
+          error={!!errors.purpose}
         />
+        {errors.purpose && <Text style={styles.errorText}>{errors.purpose}</Text>}
 
         <TouchableOpacity style={styles.addButton} onPress={handleAddLiability}>
           <Text style={styles.addButtonText}>Add Liability</Text>
         </TouchableOpacity>
+
+        {loading && <LoadingIndicator theme={theme} />}
       </View>
     </Modal>
   );
@@ -170,23 +253,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    // padding: 10,
     width: '100%',
-    marginBottom: 10,
-    height: 50
+    marginTop: 10,
+    height: 50,
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    // marginBottom: 15,
   },
-  halfWidthInput: {
-    width: '46%', // Adjust as per your preference
+  halfWidth: {
+    width: '48%',
   },
   datePickerButton: {
     width: '100%',
-    marginBottom: 10,
+    marginTop: 10,
   },
   addButton: {
     backgroundColor: 'blue',
@@ -194,12 +275,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '100%',
     alignItems: 'center',
-    marginTop: 15
+    marginTop: 15,
   },
   addButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 10,
+    marginLeft: 5,
+    marginBottom: 5,
   },
 });
 

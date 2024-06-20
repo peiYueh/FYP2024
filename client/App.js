@@ -22,7 +22,7 @@ import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
 import MyLiabilityPage from "./src/view/MyLiabilityPage";
-import NewLiabilityPage from "./src/view/NewLiabilityPage";
+import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
 
 
 
@@ -106,7 +106,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="New Liabilities">
+        <Stack.Navigator initialRouteName="My Liabilities">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -153,8 +153,8 @@ const App = () => {
             options={{ headerShown: true }}
           />
           <Stack.Screen
-            name="New Liabilities"
-            component={NewLiabilityPage}
+            name="Liability Detail"
+            component={LiabilityDetailPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

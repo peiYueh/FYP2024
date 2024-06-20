@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions
+from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates
 from app.db import get_db
 from app import create_app
 
@@ -51,6 +52,25 @@ def get_transactions():
     print("getting transaction")
     db = get_db()
     return getTransactions(db)
+
+
+@app.route('/newLiability', methods=['POST'])
+def add_liability():
+    print("Adding Liability")
+    db = get_db()
+    return newLiability(db)
+
+@app.route('/liabilities', methods=['GET'])
+def get_liability():
+    print("getting Liability")
+    db = get_db()
+    return getLiabilities(db)
+
+@app.route('/paymentDates', methods=['GET'])
+def get_payment_date():
+    print("HELLOO")
+    db = get_db()
+    return getPaymentDates(db)
 
 
 
