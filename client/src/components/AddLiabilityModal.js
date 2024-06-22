@@ -82,8 +82,27 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
     setErrors({});
   };
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    let month = d.getMonth() + 1;
+    let day = d.getDate();
+  
+    // Add leading zeros if month or day is less than 10
+    if (month < 10) {
+      month = `0${month}`;
+    }
+    if (day < 10) {
+      day = `0${day}`;
+    }
+  
+    return `${day}/${month}/${year}`;
+  };
+
   const handleAddLiability = async () => {
     if (!validateInputs()) return;
+
+    const formattedDueDate = dueDate ? formatDate(dueDate) : null;
 
     const newLiability = {
       name: liabilityName,
@@ -91,7 +110,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       interestRate: parseFloat(interestRate),
       term: parseInt(term),
       monthlyPayment: parseFloat(monthlyPayment),
-      dueDate: dueDate,
+      dueDate: formattedDueDate,
       lenderInfo: lenderInfo,
       purpose: purpose,
     };
@@ -181,7 +200,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           <TextInput
             editable={false}
             placeholder="Select Payment Due Date"
-            value={dueDate ? dueDate.toLocaleDateString() : ''}
+            value={dueDate ? formatDate(dueDate) : ''}
             style={{ fontSize: 12 }}
             left={<TextInput.Icon icon="update" />}
             error={!!errors.dueDate}

@@ -49,8 +49,8 @@ const DetailedView = ({ route, navigation }) => {
             return false;
         }
 
-        if (!due_date || due_date.trim().length === 0) {
-            Alert.alert('Invalid Input', 'Please enter a due date.');
+        if (!isValidDate(due_date)) {
+            Alert.alert('Invalid Input', 'Please enter a valid due date (DD/MM/YYYY format).');
             return false;
         }
 
@@ -65,6 +65,28 @@ const DetailedView = ({ route, navigation }) => {
         }
 
         return true;
+    };
+
+    const isValidDate = (dateString) => {
+        // Check for format DD/MM/YYYY
+        const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
+        if (!datePattern.test(dateString)) {
+            return false;
+        }
+    
+        // Validate actual date values
+        const parts = dateString.split('/');
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // Month is zero-based
+        const year = parseInt(parts[2], 10);
+        
+        const dateObj = new Date(year, month, day);
+    
+        return (
+            dateObj.getFullYear() === year &&
+            dateObj.getMonth() === month &&
+            dateObj.getDate() === day
+        );
     };
 
     // Function to handle input changes in edit mode
@@ -92,6 +114,14 @@ const DetailedView = ({ route, navigation }) => {
         } finally {
             setLoading(false); // Set loading to false when fetching ends (success or error)
         }
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
     };
 
     // Calculate remaining amount based on paymentDates
@@ -318,7 +348,7 @@ const DetailedView = ({ route, navigation }) => {
                                     onChangeText={(text) => handleChange('due_date', text)}
                                 />
                             ) : (
-                                <Text style={styles.value}>{liabilityData.due_date ? new Date(liabilityData.due_date).toLocaleDateString() : 'N/A'}</Text>
+                                <Text style={styles.value}>{liabilityData.due_date}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
