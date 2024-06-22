@@ -23,3 +23,12 @@ class Transaction:
     def get_transaction(self, user_id):
         print("in model")
         return list(self.collection.find({'user_id': user_id}))  # Filter transactions by userId
+    
+    def delete_transaction(self, transaction_id):
+        try:
+            obj_id = ObjectId(transaction_id)
+            result = self.collection.delete_one({'_id': obj_id})
+            return result.deleted_count > 0
+        except Exception as e:
+            print(f"Error deleting transaction: {e}")
+            return False

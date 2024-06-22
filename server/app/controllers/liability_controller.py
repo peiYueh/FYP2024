@@ -109,3 +109,25 @@ def editLiability(db):
     liability_model.update_liability(liability)
 
     return jsonify({"message": "Data updated successfully"}), 200
+
+def deletePaymentUpdate(db, payment_id):
+    liability_model = Liability(db)
+    try:
+        if liability_model.delete_payment_update(payment_id):
+            return jsonify({'message': 'Payment deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Payment not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    
+def deleteLiability(db, liability_id):
+    liability_model = Liability(db)
+    try:
+        if liability_model.delete_liability(liability_id):
+            # delete its payment also
+            liability_model.delete_payment_with_liability(liability_id)
+            return jsonify({'message': 'Liability deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Liability not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500

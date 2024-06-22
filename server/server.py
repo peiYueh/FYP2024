@@ -3,8 +3,8 @@ from flask import Flask
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
-from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions
-from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability
+from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction
+from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.db import get_db
 from app import create_app
 
@@ -84,6 +84,23 @@ def edit_liability():
     data = request.json
     db = get_db()
     return editLiability(db)
+
+@app.route('/transactions/<string:transaction_id>', methods=['DELETE'])
+def delete_transaction(transaction_id):
+    db = get_db()
+    return deleteTransaction(db, transaction_id)
+
+@app.route('/deletePaymentUpdate/<string:payment_id>', methods=['DELETE'])
+def delete_payment(payment_id):
+    db = get_db()
+    return deletePaymentUpdate(db, payment_id)
+
+@app.route('/deleteLiability/<string:liability_id>', methods=['DELETE'])
+def delete_liability(liability_id):
+    db = get_db()
+    return deleteLiability(db, liability_id)
+
+
 
 
 if __name__ == "__main__":

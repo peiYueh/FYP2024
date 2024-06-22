@@ -8,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import TransactionLinechart from '../components/transaction-linechart';
 import { API_BASE_URL } from '../../config';
 import axios from 'axios';
+import LoadingIndicator from '../components/loading-component';
+import { showMessage } from "react-native-flash-message";
 
 const MyTransactionPage = () => {
     const theme = useTheme();
@@ -24,6 +26,7 @@ const MyTransactionPage = () => {
     const [showFilterModal, setShowFilterModal] = useState(false);
     const [dataFetched, setDataFetched] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
 
     const parseDate = (dateStr) => {
         const [day, month, year] = dateStr.split('/');
@@ -129,9 +132,29 @@ const MyTransactionPage = () => {
         );
     };
 
-    const performDelete = () => {
-        // Perform delete action here
-        navigation.goBack();
+    const performDelete = async () => {
+        setDeleting(true)
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/transactions/${selectedTransaction._id}`);
+            console.log('Delete response:', response.data);
+            // Remove the deleted transaction from transactionData state
+            setTransactionData(prevTransactions =>
+                prevTransactions.filter(transaction => transaction._id !== selectedTransaction._id)
+            );
+
+            // Close the transaction popup
+            toggleTransactionPopup();
+            showMessage({
+                message: "Transaction Deleted!",
+                description: "Your transaction has been deleted",
+                type: "success",
+            });
+        } catch (error) {
+            console.error('Error deleting transaction:', error);
+            // Handle error, show alert, etc.
+        } finally {
+            setDeleting(false)
+        }
     };
 
     const renderTransactionPopup = () => {
@@ -194,6 +217,9 @@ const MyTransactionPage = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
+                    {(deleting &&
+                        <LoadingIndicator theme={theme} />
+                    )}
                 </View>
             </Modal>
         );

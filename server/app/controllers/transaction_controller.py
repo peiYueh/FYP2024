@@ -116,3 +116,16 @@ def getTransactions(db):
     print("Transaction hereeeeeeeeeeeeeeeeeeee")
     print(transactions)
     return jsonify(transactions)
+
+def deleteTransaction(db, transaction_id):
+    transaction_model = Transaction(db)
+    
+    # transactions = transaction_model.get_transaction(user_id)
+    try:
+        if transaction_model.delete_transaction(transaction_id):
+            return jsonify({'message': 'Transaction deleted successfully'}), 200
+        else:
+            return jsonify({'message': 'Transaction not found'}), 404
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+    

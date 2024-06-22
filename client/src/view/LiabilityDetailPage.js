@@ -73,15 +73,15 @@ const DetailedView = ({ route, navigation }) => {
         if (!datePattern.test(dateString)) {
             return false;
         }
-    
+
         // Validate actual date values
         const parts = dateString.split('/');
         const day = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1; // Month is zero-based
         const year = parseInt(parts[2], 10);
-        
+
         const dateObj = new Date(year, month, day);
-    
+
         return (
             dateObj.getFullYear() === year &&
             dateObj.getMonth() === month &&
@@ -127,6 +127,16 @@ const DetailedView = ({ route, navigation }) => {
     // Calculate remaining amount based on paymentDates
     const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liabilityData.liability_amount);
 
+    const handleAmountChange = (inputAmount) => {
+        const paymentAmount = parseFloat(inputAmount);
+        if (paymentAmount > remainingAmount) {
+            setUpdateAmount(remainingAmount.toFixed(2));
+            Alert.alert('Amount Adjusted', `The payment amount has been adjusted to the remaining liability amount of ${remainingAmount.toFixed(2)}`);
+        } else {
+            setUpdateAmount(inputAmount);
+        }
+    };
+
     // Function to handle saving edited data
     const handleSave = async () => {
         try {
@@ -162,9 +172,23 @@ const DetailedView = ({ route, navigation }) => {
     };
 
     // Function to handle deletion of payment
-    const handleDeletePayment = (index) => {
+    const handleDeletePayment = async (payment_id, index) => {
         const updatedPayments = paymentDates.filter((_, i) => i !== index);
         setPaymentDates(updatedPayments);
+        try {
+            const response = await axios.delete(API_BASE_URL + `/deletePaymentUpdate/${payment_id}`);
+            // if (response.status === 200) {
+            //     // Update the frontend state to remove the deleted payment
+            //     const updatedPayments = paymentDates.filter((_, i) => i !== index);
+            //     setPaymentDates(updatedPayments);
+            //     Alert.alert('Success', 'Payment date deleted successfully');
+            // } else {
+            //     Alert.alert('Error', 'Failed to delete payment date');
+            // }
+        } catch (error) {
+            console.error('Error deleting payment date:', error);
+            Alert.alert('Error', 'Failed to delete payment date');
+        }
     };
 
     // Function to handle updating liability payment
@@ -206,7 +230,6 @@ const DetailedView = ({ route, navigation }) => {
                                     await axios.post(API_BASE_URL + `/newTransaction`, {
                                         transactionData
                                     });
-                                    Alert.alert('Update Successful', 'The update has been added to expenses.');
                                 } catch (expenseError) {
                                     console.error('Error adding update to expenses:', expenseError);
                                     Alert.alert('Error', 'Failed to add the update to expenses.');
@@ -226,6 +249,38 @@ const DetailedView = ({ route, navigation }) => {
         } finally {
             setUpdating(false); // Set updating to false when the update ends (success or error)
         }
+    };
+
+    const handleDeleteLiability = async () => {
+        Alert.alert(
+            'Confirm Delete',
+            'Are you sure you want to delete this liability?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            const response = await axios.delete(API_BASE_URL + `/deleteLiability/${liabilityData._id}`);
+                            if (response.status === 200) {
+                                showMessage({
+                                    message: "Liability Deleted!",
+                                    description: "Your liability has been deleted",
+                                    type: "success",
+                                });
+                                navigation.goBack(); // Navigate back to the previous screen
+                            } else {
+                                Alert.alert('Error', 'Failed to delete liability');
+                            }
+                        } catch (error) {
+                            console.error('Error deleting liability:', error);
+                            Alert.alert('Error', 'Failed to delete liability');
+                        }
+                    },
+                },
+            ]
+        );
     };
 
     // State for selected date in calendar
@@ -255,7 +310,12 @@ const DetailedView = ({ route, navigation }) => {
                                         onPress={handleSave}
                                         style={styles.editIcon}
                                     />
-
+                                    <IconButton
+                                        icon="delete"
+                                        size={20}
+                                        onPress={() => handleDeleteLiability()}
+                                        style={styles.deleteIcon}
+                                    />
                                     <IconButton
                                         icon="close-circle-outline"
                                         size={20}
@@ -265,6 +325,7 @@ const DetailedView = ({ route, navigation }) => {
                                         }}
                                         style={styles.cancelIcon} // Add appropriate styling if needed
                                     />
+
                                 </>
                             ) : (
                                 <>
@@ -396,7 +457,7 @@ const DetailedView = ({ route, navigation }) => {
                                         <IconButton
                                             icon="delete"
                                             size={20}
-                                            onPress={() => handleDeletePayment(index)}
+                                            onPress={() => handleDeletePayment(payment._id, index)}
                                             style={styles.deleteIcon}
                                         />
                                     )}
@@ -415,41 +476,45 @@ const DetailedView = ({ route, navigation }) => {
                     </View>
                 </View>
             </View>
-            <View style={styles.calendarContainer}>
-                <Calendar
-                    markedDates={{
-                        [selectedDate]: { selected: true, selectedColor: 'blue' }
-                    }}
-                    onDayPress={handleDayPress}
-                    maxDate={today} // Limit date selection to today and earlier
-                />
-            </View>
-            {selectedDate && (
-                <View style={styles.updateLiability}>
-                    <View style={styles.selectedDateContainer}>
-                        <Text style={styles.selectedDateText}>
-                            Selected Date: {new Date(selectedDate).toLocaleDateString()}
-                        </Text>
-                    </View>
-                    <View style={styles.paymentRow}>
-                        <Text style={styles.paymentLabel}>Payment Amount: </Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Amount"
-                            keyboardType="numeric"
-                            value={updateAmount}
-                            onChangeText={setUpdateAmount}
-                            left={<TextInput.Icon icon="cash-multiple" />}
+            {remainingAmount > 0 && (
+                <>
+                    <View style={styles.calendarContainer}>
+                        <Calendar
+                            markedDates={{
+                                [selectedDate]: { selected: true, selectedColor: 'blue' }
+                            }}
+                            onDayPress={handleDayPress}
+                            maxDate={today} // Limit date selection to today and earlier
                         />
                     </View>
-                    {updating ? ( // Display loading spinner while updating
-                        <ActivityIndicator size="large" color={theme.colors.primary} />
-                    ) : (
-                        <TouchableOpacity style={styles.updateLiabilityButton} onPress={handleUpdateLiability}>
-                            <Text style={styles.updateButtonText}>Update</Text>
-                        </TouchableOpacity>
+                    {selectedDate && (
+                        <View style={styles.updateLiability}>
+                            <View style={styles.selectedDateContainer}>
+                                <Text style={styles.selectedDateText}>
+                                    Selected Date: {new Date(selectedDate).toLocaleDateString()}
+                                </Text>
+                            </View>
+                            <View style={styles.paymentRow}>
+                                <Text style={styles.paymentLabel}>Payment Amount: </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Amount"
+                                    keyboardType="numeric"
+                                    value={updateAmount}
+                                    onChangeText={handleAmountChange}
+                                    left={<TextInput.Icon icon="cash-multiple" />}
+                                />
+                            </View>
+                            {updating ? ( // Display loading spinner while updating
+                                <ActivityIndicator size="large" color={theme.colors.primary} />
+                            ) : (
+                                <TouchableOpacity style={styles.updateLiabilityButton} onPress={handleUpdateLiability}>
+                                    <Text style={styles.updateButtonText}>Update</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     )}
-                </View>
+                </>
             )}
         </ScrollView>
     );

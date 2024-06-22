@@ -29,7 +29,7 @@ const MyLiabilityPage = () => {
                 name: item.liability_name,
                 amount: item.liability_amount,
                 details: item
-            }));
+            })).sort((a, b) => b.amount - a.amount);
             setItems(fetchedItems);
         } catch (error) {
             console.error('Error fetching liabilities:', error);
@@ -83,39 +83,50 @@ const MyLiabilityPage = () => {
 
     // Calculate the number of empty rows needed to fill the table
     const emptyRows = Array.from({ length: itemsPerPage - displayedItems.length });
+    const calculateTotalLiability = () => {
+        return items.reduce((total, item) => total + item.amount, 0);
+    };
 
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.background }]}>
             {/* Liability table */}
             <View style={styles.totalLiabilityContainer}>
                 <Text style={styles.subHeading}>Total Liabilities</Text>
-                <Text style={styles.heading}>RM 35, 000</Text>
+                <Text style={styles.heading}>RM {calculateTotalLiability().toLocaleString()}</Text>
             </View>
 
             <View style={{ position: 'relative', width: '90%', paddingTop: 10 }}>
                 <View style={{ height: 300, backgroundColor: theme.colors.surface, borderRadius: 10 }}>
                     <DataTable>
+
                         <DataTable.Header style={{ backgroundColor: '#D5E5EB', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
                             <DataTable.Title style={{ flex: 3 }} textStyle={{ fontWeight: 'bold' }}>Liability</DataTable.Title>
                             <DataTable.Title style={{ flex: 2 }} textStyle={{ fontWeight: 'bold' }} numeric>Remaining Amount</DataTable.Title>
                         </DataTable.Header>
-                        {loading && (
-                            <View style={{
-                                backgroundColor: theme.colors.inverseOnSurface,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                zIndex: 1,
-                            }}>
-                                <ActivityIndicator size="large" color={theme.colors.primary} />
-                            </View>
-                            
-                        )}
+
                         <ScrollView>
+                            {loading && (
+                                <View style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    zIndex: 1,
+                                }}>
+                                    <ActivityIndicator size="large" color={theme.colors.primary} />
+                                </View>
+                            )}
                             {displayedItems.map((item) => (
                                 <TouchableOpacity key={item.key} onPress={() => handleRowPress(item)}>
                                     <DataTable.Row style={{ backgroundColor: theme.colors.inverseOnSurface }}>
                                         <DataTable.Cell style={{ flex: 3 }}>{item.name}</DataTable.Cell>
-                                        <DataTable.Cell style={{ flex: 2 }} numeric>RM {item.amount}</DataTable.Cell>
+                                        <DataTable.Cell style={{ flex: 2 }} numeric>
+                                            {item.amount === 0 ? 'Cleared' : `RM ${item.amount}`}
+                                        </DataTable.Cell>
                                     </DataTable.Row>
                                 </TouchableOpacity>
                             ))}
