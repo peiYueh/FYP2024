@@ -19,13 +19,53 @@ const DetailedView = ({ route, navigation }) => {
     const today = new Date().toISOString().split('T')[0];
     const [saving, setSaving] = useState(false);
 
-    // const { _id, due_date, interest_rate, lender_info, liability_amount, liability_name, monthly_payment, purpose, term } = liability;
-
     // State to manage liability data
     const [liabilityData, setLiabilityData] = useState({ ...liability });
 
     // State to manage edited data during edit mode
     const [editedData, setEditedData] = useState({});
+
+    // Validation function to check if edited data is valid
+    const validateEditedData = () => {
+        const { liability_amount, interest_rate, term, monthly_payment, due_date, lender_info, purpose } = editedData;
+
+        if (!liability_amount || isNaN(parseFloat(liability_amount))) {
+            Alert.alert('Invalid Input', 'Please enter a valid liability amount.');
+            return false;
+        }
+
+        if (!interest_rate || isNaN(parseFloat(interest_rate))) {
+            Alert.alert('Invalid Input', 'Please enter a valid interest rate.');
+            return false;
+        }
+
+        if (!term || isNaN(parseInt(term, 10))) {
+            Alert.alert('Invalid Input', 'Please enter a valid term in months.');
+            return false;
+        }
+
+        if (!monthly_payment || isNaN(parseFloat(monthly_payment))) {
+            Alert.alert('Invalid Input', 'Please enter a valid monthly payment amount.');
+            return false;
+        }
+
+        if (!due_date || due_date.trim().length === 0) {
+            Alert.alert('Invalid Input', 'Please enter a due date.');
+            return false;
+        }
+
+        if (!lender_info || lender_info.trim().length === 0) {
+            Alert.alert('Invalid Input', 'Please enter lender information.');
+            return false;
+        }
+
+        if (!purpose || purpose.trim().length === 0) {
+            Alert.alert('Invalid Input', 'Please enter a purpose.');
+            return false;
+        }
+
+        return true;
+    };
 
     // Function to handle input changes in edit mode
     const handleChange = (key, value) => {
@@ -61,6 +101,11 @@ const DetailedView = ({ route, navigation }) => {
     const handleSave = async () => {
         try {
             setSaving(true); // Activate loading indicator
+
+            // Validate edited data
+            if (!validateEditedData()) {
+                return;
+            }
 
             // Make API call to update liability data
             const response = await axios.post(API_BASE_URL + '/editLiability', editedData);
@@ -100,7 +145,7 @@ const DetailedView = ({ route, navigation }) => {
         setUpdating(true);
         try {
             const response = await axios.post(API_BASE_URL + `/updatePayment`, {
-                liability_id: _id,
+                liability_id: liabilityData._id,
                 payment_date: selectedDate,
                 payment_amount: parseFloat(updateAmount),
             });
