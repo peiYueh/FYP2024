@@ -22,3 +22,13 @@ class Liability:
         print("HI")
         result = self.payment_dates_collection.insert_one(payment_update)
         return result.inserted_id
+    
+    def update_liability(self, liability):
+        liability_id = liability['_id']
+        liability.pop('_id')
+        result = self.collection.update_one({'_id': ObjectId(liability_id)}, {'$set': liability})
+
+        if result.matched_count > 0:
+            return {"message": "Transaction updated successfully"}, 200
+        else:
+            return {"error": "Transaction not found"}, 404

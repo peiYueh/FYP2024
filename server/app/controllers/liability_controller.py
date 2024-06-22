@@ -61,7 +61,7 @@ def getPaymentDates(db):
         if '_id' in payment:
             payment['_id'] = str(payment['_id'])
 
-    print(payment)
+    print(payments)
     return jsonify(payments)
 
 def newPaymentUpdate(db):
@@ -77,3 +77,35 @@ def newPaymentUpdate(db):
     # add to liability payment date
     inserted_id = liability_model.insert_payment_update(paymentUpdate)
     return jsonify(str(inserted_id))
+
+def editLiability(db):
+    data = request.get_json()
+    print(data)
+    liability_id = data.get('_id')
+
+    if not liability_id:
+        print("Liability ID not found")
+        return jsonify({"error": "Liability ID is required"}), 400
+
+    # Convert the liability_id to an ObjectId
+    try:
+        liability_id = ObjectId(liability_id)
+    except Exception as e:
+        return jsonify({"error": "Invalid Liability ID format"}), 400
+    
+    liability = {
+        '_id': liability_id,
+        'user_id' : data.get('user_id'),
+        'liability_name': data.get('liability_name'),
+        'liability_amount': data.get('liability_amount'),
+        'interest_rate': data.get('interest_rate'),
+        'term': data.get('term'),
+        'monthly_payment': data.get('monthly_payment'),
+        'due_date': data.get('due_date'),
+        'lender_info': data.get('lender_info'),
+        'purpose': data.get('purpose')
+    }
+    liability_model = Liability(db)
+    liability_model.update_liability(liability)
+
+    return jsonify({"message": "Data updated successfully"}), 200

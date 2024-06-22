@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Text, useTheme, TextInput, IconButton, Divider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ZigzagPattern from '../components/zigzag';
 import { Calendar } from 'react-native-calendars';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import LoadingIndicator from '../components/loading-component';
 
 const DetailedView = ({ route, navigation }) => {
     const { liability } = route.params;
@@ -17,28 +17,33 @@ const DetailedView = ({ route, navigation }) => {
     const [loading, setLoading] = useState(false); // State to track loading
     const [updating, setUpdating] = useState(false); // State to track update process
     const today = new Date().toISOString().split('T')[0];
-    const { _id, due_date, interest_rate, lender_info, liability_amount, liability_name, monthly_payment, purpose, term } = liability;
+    const [saving, setSaving] = useState(false);
+
+    // const { _id, due_date, interest_rate, lender_info, liability_amount, liability_name, monthly_payment, purpose, term } = liability;
+
     // State to manage liability data
     const [liabilityData, setLiabilityData] = useState({ ...liability });
+
+    // State to manage edited data during edit mode
+    const [editedData, setEditedData] = useState({});
+
     // Function to handle input changes in edit mode
     const handleChange = (key, value) => {
-        setLiabilityData({ ...liabilityData, [key]: value });
+        setEditedData({ ...editedData, [key]: value });
     };
 
+    // Effect to fetch payment dates on component mount
     useEffect(() => {
         fetchPaymentDates();
     }, []);
-    const [selectedDate, setSelectedDate] = useState(null);
 
-    const handleDayPress = (date) => {
-        setSelectedDate(date.dateString); // Update selected date
-    };
+    // Fetch payment dates from API
     const fetchPaymentDates = async () => {
         setLoading(true); // Set loading to true when fetching starts
 
         try {
             const response = await axios.get(API_BASE_URL + `/paymentDates`, {
-                params: { liability_id: _id }
+                params: { liability_id: liabilityData._id }
             });
 
             setPaymentDates(response.data);
@@ -50,17 +55,25 @@ const DetailedView = ({ route, navigation }) => {
     };
 
     // Calculate remaining amount based on paymentDates
-    const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liability_amount);
+    const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liabilityData.liability_amount);
 
     // Function to handle saving edited data
     const handleSave = async () => {
         try {
+            setSaving(true); // Activate loading indicator
+
             // Make API call to update liability data
-            const response = await axios.put(`${API_BASE_URL}/updateLiability/${liability._id}`, liabilityData);
+            const response = await axios.post(API_BASE_URL + '/editLiability', editedData);
             if (response.status === 200) {
                 // Handle success if necessary
                 Alert.alert('Success', 'Liability updated successfully!');
                 setEditMode(false); // Exit edit mode after saving
+
+                // Update liability data in the UI with the latest data
+                setLiabilityData({ ...editedData });
+
+                // Clear editedData after successful save
+                setEditedData({});
             } else {
                 // Handle other statuses if needed
                 Alert.alert('Error', 'Failed to update liability');
@@ -68,16 +81,18 @@ const DetailedView = ({ route, navigation }) => {
         } catch (error) {
             console.error('Error updating liability:', error);
             Alert.alert('Error', 'Failed to update liability');
+        } finally {
+            setSaving(false); // Deactivate loading indicator
         }
     };
 
+    // Function to handle deletion of payment
     const handleDeletePayment = (index) => {
         const updatedPayments = paymentDates.filter((_, i) => i !== index);
         setPaymentDates(updatedPayments);
     };
 
-
-
+    // Function to handle updating liability payment
     const handleUpdateLiability = async () => {
         if (!updateAmount || !selectedDate) {
             return; // Add validation if necessary
@@ -100,17 +115,18 @@ const DetailedView = ({ route, navigation }) => {
                         {
                             text: 'Yes',
                             onPress: async () => {
-                                // Navigate to the expense addition screen or handle the logic here
+                                // Handle logic for adding update to expenses
                                 const transactionData = {
                                     transaction_amount: parseFloat(updateAmount),
                                     transaction_type: 0,
-                                    transaction_description: liability_name + " payment update",
+                                    transaction_description: liabilityData.liability_name + " payment update",
                                     transaction_date: selectedDate,
                                     transaction_category: "Liability",
                                     income_type: false,
                                     income_taxability: false,
                                     interest_rate: 0
                                 };
+
                                 try {
                                     await axios.post(API_BASE_URL + `/newTransaction`, {
                                         transactionData
@@ -129,7 +145,6 @@ const DetailedView = ({ route, navigation }) => {
                     ]
                 );
                 setSelectedDate(null); // Reset the selected date
-
             }
         } catch (error) {
             console.error('Error updating payment:', error);
@@ -138,6 +153,13 @@ const DetailedView = ({ route, navigation }) => {
         }
     };
 
+    // State for selected date in calendar
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    // Handler for day press in calendar
+    const handleDayPress = (date) => {
+        setSelectedDate(date.dateString); // Update selected date
+    };
 
     return (
         <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, flexGrow: 1 }}>
@@ -146,20 +168,43 @@ const DetailedView = ({ route, navigation }) => {
                     <View style={styles.section}>
                         <View style={styles.row}>
                             {editMode ? (
-                                <TextInput
-                                    style={styles.headerText}
-                                    value={liabilityData.liability_name}
-                                    onChangeText={(text) => handleChange('liability_name', text)}
-                                />
+                                <>
+                                    <TextInput
+                                        style={styles.headerText}
+                                        value={editedData.liability_name || ""}
+                                        onChangeText={(text) => handleChange('liability_name', text)}
+                                    />
+                                    <IconButton
+                                        icon="content-save"
+                                        size={20}
+                                        onPress={handleSave}
+                                        style={styles.editIcon}
+                                    />
+
+                                    <IconButton
+                                        icon="close-circle-outline"
+                                        size={20}
+                                        onPress={() => {
+                                            setEditMode(false); // Exit edit mode
+                                            setEditedData({}); // Clear editedData
+                                        }}
+                                        style={styles.cancelIcon} // Add appropriate styling if needed
+                                    />
+                                </>
                             ) : (
-                                <Text style={styles.headerText}>{liability_name}</Text>
+                                <>
+                                    <Text style={styles.headerText}>{liabilityData.liability_name}</Text>
+                                    <IconButton
+                                        icon="pencil"
+                                        size={20}
+                                        onPress={() => {
+                                            setEditedData({ ...liabilityData });
+                                            setEditMode(true);
+                                        }}
+                                        style={styles.editIcon}
+                                    />
+                                </>
                             )}
-                            <IconButton
-                                icon={editMode ? "content-save" : "pencil"}
-                                size={20}
-                                onPress={editMode ? handleSave : () => setEditMode(true)}
-                                style={styles.editIcon}
-                            />
                         </View>
                         <Divider style={styles.divider} />
                         <View style={styles.row}>
@@ -168,12 +213,12 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.liability_amount.toString()}
+                                    value={editedData.liability_amount ? editedData.liability_amount.toString() : ''}
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleChange('liability_amount', parseFloat(text))}
                                 />
                             ) : (
-                                <Text style={styles.value}>${liability_amount.toFixed(2)}</Text>
+                                <Text style={styles.value}>${liabilityData.liability_amount.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -182,12 +227,12 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.interest_rate.toString()}
+                                    value={editedData.interest_rate ? editedData.interest_rate.toString() : ''}
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleChange('interest_rate', parseFloat(text))}
                                 />
                             ) : (
-                                <Text style={styles.value}>{interest_rate}%</Text>
+                                <Text style={styles.value}>{liabilityData.interest_rate}%</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -196,12 +241,12 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.term.toString()}
+                                    value={editedData.term ? editedData.term.toString() : ''}
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleChange('term', parseInt(text, 10))}
                                 />
                             ) : (
-                                <Text style={styles.value}>{term} months</Text>
+                                <Text style={styles.value}>{liabilityData.term} months</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -210,12 +255,12 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.monthly_payment.toString()}
+                                    value={editedData.monthly_payment ? editedData.monthly_payment.toString() : ''}
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleChange('monthly_payment', parseFloat(text))}
                                 />
                             ) : (
-                                <Text style={styles.value}>${monthly_payment.toFixed(2)}</Text>
+                                <Text style={styles.value}>${liabilityData.monthly_payment.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -224,11 +269,11 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.due_date}
+                                    value={editedData.due_date || liabilityData.due_date}
                                     onChangeText={(text) => handleChange('due_date', text)}
                                 />
                             ) : (
-                                <Text style={styles.value}>{due_date ? new Date(due_date).toLocaleDateString() : 'N/A'}</Text>
+                                <Text style={styles.value}>{liabilityData.due_date ? new Date(liabilityData.due_date).toLocaleDateString() : 'N/A'}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -237,11 +282,11 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.lender_info}
+                                    value={editedData.lender_info || ""}
                                     onChangeText={(text) => handleChange('lender_info', text)}
                                 />
                             ) : (
-                                <Text style={styles.value}>{lender_info}</Text>
+                                <Text style={styles.value}>{liabilityData.lender_info}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -250,13 +295,16 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={liabilityData.purpose}
+                                    value={editedData.purpose || ""}
                                     onChangeText={(text) => handleChange('purpose', text)}
                                 />
                             ) : (
-                                <Text style={styles.value}>{purpose}</Text>
+                                <Text style={styles.value}>{liabilityData.purpose}</Text>
                             )}
                         </View>
+                        {(saving &&
+                            <LoadingIndicator theme={theme} />
+                        )}
                     </View>
                     <Divider style={styles.divider} />
                     <View style={styles.section}>
@@ -291,7 +339,6 @@ const DetailedView = ({ route, navigation }) => {
                         </View>
                     </View>
                 </View>
-                {/* <ZigzagPattern width={'100%'} /> */}
             </View>
             <View style={styles.calendarContainer}>
                 <Calendar
