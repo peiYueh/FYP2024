@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { Text, useTheme, TextInput, IconButton, Divider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ZigzagPattern from '../components/zigzag';
@@ -15,13 +15,24 @@ const DetailedView = ({ route, navigation }) => {
     const [updateAmount, setUpdateAmount] = useState('');
     const [paymentDates, setPaymentDates] = useState([]);
     const [loading, setLoading] = useState(false); // State to track loading
-
+    const [updating, setUpdating] = useState(false); // State to track update process
+    const today = new Date().toISOString().split('T')[0];
     const { _id, due_date, interest_rate, lender_info, liability_amount, liability_name, monthly_payment, purpose, term } = liability;
+    // State to manage liability data
+    const [liabilityData, setLiabilityData] = useState({ ...liability });
+    // Function to handle input changes in edit mode
+    const handleChange = (key, value) => {
+        setLiabilityData({ ...liabilityData, [key]: value });
+    };
 
     useEffect(() => {
         fetchPaymentDates();
     }, []);
+    const [selectedDate, setSelectedDate] = useState(null);
 
+    const handleDayPress = (date) => {
+        setSelectedDate(date.dateString); // Update selected date
+    };
     const fetchPaymentDates = async () => {
         setLoading(true); // Set loading to true when fetching starts
 
@@ -41,16 +52,92 @@ const DetailedView = ({ route, navigation }) => {
     // Calculate remaining amount based on paymentDates
     const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liability_amount);
 
-    const handleSave = () => {
-        // Save updated liability data
-        // Here you can implement logic to update liability data via API or local state management
-        setEditMode(false);
+    // Function to handle saving edited data
+    const handleSave = async () => {
+        try {
+            // Make API call to update liability data
+            const response = await axios.put(`${API_BASE_URL}/updateLiability/${liability._id}`, liabilityData);
+            if (response.status === 200) {
+                // Handle success if necessary
+                Alert.alert('Success', 'Liability updated successfully!');
+                setEditMode(false); // Exit edit mode after saving
+            } else {
+                // Handle other statuses if needed
+                Alert.alert('Error', 'Failed to update liability');
+            }
+        } catch (error) {
+            console.error('Error updating liability:', error);
+            Alert.alert('Error', 'Failed to update liability');
+        }
     };
 
     const handleDeletePayment = (index) => {
         const updatedPayments = paymentDates.filter((_, i) => i !== index);
         setPaymentDates(updatedPayments);
     };
+
+
+
+    const handleUpdateLiability = async () => {
+        if (!updateAmount || !selectedDate) {
+            return; // Add validation if necessary
+        }
+        setUpdating(true);
+        try {
+            const response = await axios.post(API_BASE_URL + `/updatePayment`, {
+                liability_id: _id,
+                payment_date: selectedDate,
+                payment_amount: parseFloat(updateAmount),
+            });
+
+            if (response.status === 200) {
+                fetchPaymentDates(); // Re-fetch payment dates to update the UI
+                setUpdateAmount(''); // Reset the update amount input
+                Alert.alert(
+                    'Update Successful',
+                    'Do you want to add this update to expenses?',
+                    [
+                        {
+                            text: 'Yes',
+                            onPress: async () => {
+                                // Navigate to the expense addition screen or handle the logic here
+                                const transactionData = {
+                                    transaction_amount: parseFloat(updateAmount),
+                                    transaction_type: 0,
+                                    transaction_description: liability_name + " payment update",
+                                    transaction_date: selectedDate,
+                                    transaction_category: "Liability",
+                                    income_type: false,
+                                    income_taxability: false,
+                                    interest_rate: 0
+                                };
+                                try {
+                                    await axios.post(API_BASE_URL + `/newTransaction`, {
+                                        transactionData
+                                    });
+                                    Alert.alert('Update Successful', 'The update has been added to expenses.');
+                                } catch (expenseError) {
+                                    console.error('Error adding update to expenses:', expenseError);
+                                    Alert.alert('Error', 'Failed to add the update to expenses.');
+                                }
+                            }
+                        },
+                        {
+                            text: 'No',
+                            style: 'cancel'
+                        }
+                    ]
+                );
+                setSelectedDate(null); // Reset the selected date
+
+            }
+        } catch (error) {
+            console.error('Error updating payment:', error);
+        } finally {
+            setUpdating(false); // Set updating to false when the update ends (success or error)
+        }
+    };
+
 
     return (
         <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, flexGrow: 1 }}>
@@ -62,7 +149,7 @@ const DetailedView = ({ route, navigation }) => {
                                 <TextInput
                                     style={styles.headerText}
                                     value={liabilityData.liability_name}
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, name: text })}
+                                    onChangeText={(text) => handleChange('liability_name', text)}
                                 />
                             ) : (
                                 <Text style={styles.headerText}>{liability_name}</Text>
@@ -83,7 +170,7 @@ const DetailedView = ({ route, navigation }) => {
                                     style={styles.value}
                                     value={liabilityData.liability_amount.toString()}
                                     keyboardType="numeric"
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, liability_amount: parseFloat(text) })}
+                                    onChangeText={(text) => handleChange('liability_amount', parseFloat(text))}
                                 />
                             ) : (
                                 <Text style={styles.value}>${liability_amount.toFixed(2)}</Text>
@@ -97,7 +184,7 @@ const DetailedView = ({ route, navigation }) => {
                                     style={styles.value}
                                     value={liabilityData.interest_rate.toString()}
                                     keyboardType="numeric"
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, interest_rate: parseFloat(text) })}
+                                    onChangeText={(text) => handleChange('interest_rate', parseFloat(text))}
                                 />
                             ) : (
                                 <Text style={styles.value}>{interest_rate}%</Text>
@@ -111,7 +198,7 @@ const DetailedView = ({ route, navigation }) => {
                                     style={styles.value}
                                     value={liabilityData.term.toString()}
                                     keyboardType="numeric"
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, term: parseInt(text, 10) })}
+                                    onChangeText={(text) => handleChange('term', parseInt(text, 10))}
                                 />
                             ) : (
                                 <Text style={styles.value}>{term} months</Text>
@@ -125,7 +212,7 @@ const DetailedView = ({ route, navigation }) => {
                                     style={styles.value}
                                     value={liabilityData.monthly_payment.toString()}
                                     keyboardType="numeric"
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, monthly_payment: parseFloat(text) })}
+                                    onChangeText={(text) => handleChange('monthly_payment', parseFloat(text))}
                                 />
                             ) : (
                                 <Text style={styles.value}>${monthly_payment.toFixed(2)}</Text>
@@ -138,7 +225,7 @@ const DetailedView = ({ route, navigation }) => {
                                 <TextInput
                                     style={styles.value}
                                     value={liabilityData.due_date}
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, due_date: text })}
+                                    onChangeText={(text) => handleChange('due_date', text)}
                                 />
                             ) : (
                                 <Text style={styles.value}>{due_date ? new Date(due_date).toLocaleDateString() : 'N/A'}</Text>
@@ -151,7 +238,7 @@ const DetailedView = ({ route, navigation }) => {
                                 <TextInput
                                     style={styles.value}
                                     value={liabilityData.lender_info}
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, lender_info: text })}
+                                    onChangeText={(text) => handleChange('lender_info', text)}
                                 />
                             ) : (
                                 <Text style={styles.value}>{lender_info}</Text>
@@ -164,7 +251,7 @@ const DetailedView = ({ route, navigation }) => {
                                 <TextInput
                                     style={styles.value}
                                     value={liabilityData.purpose}
-                                    onChangeText={(text) => setLiabilityData({ ...liabilityData, purpose: text })}
+                                    onChangeText={(text) => handleChange('purpose', text)}
                                 />
                             ) : (
                                 <Text style={styles.value}>{purpose}</Text>
@@ -200,7 +287,7 @@ const DetailedView = ({ route, navigation }) => {
                     <View style={styles.section}>
                         <View style={[styles.row, { justifyContent: 'space-between' }]}>
                             <Text style={styles.remainingLabel}>Remaining Amount:</Text>
-                                <Text style={styles.remainingValue}>RM {remainingAmount.toFixed(2)}</Text>
+                            <Text style={styles.remainingValue}>RM {remainingAmount.toFixed(2)}</Text>
                         </View>
                     </View>
                 </View>
@@ -208,33 +295,38 @@ const DetailedView = ({ route, navigation }) => {
             </View>
             <View style={styles.calendarContainer}>
                 <Calendar
-                    // Customize calendar appearance and behavior as needed
-                    markedDates={{}} // You can add marking logic here if needed
+                    markedDates={{
+                        [selectedDate]: { selected: true, selectedColor: 'blue' }
+                    }}
+                    onDayPress={handleDayPress}
+                    maxDate={today} // Limit date selection to today and earlier
                 />
             </View>
-            {editMode && (
+            {selectedDate && (
                 <View style={styles.updateLiability}>
+                    <View style={styles.selectedDateContainer}>
+                        <Text style={styles.selectedDateText}>
+                            Selected Date: {new Date(selectedDate).toLocaleDateString()}
+                        </Text>
+                    </View>
                     <View style={styles.paymentRow}>
-                        <Text style={styles.paymentLabel}>Payment Amount:</Text>
+                        <Text style={styles.paymentLabel}>Payment Amount: </Text>
                         <TextInput
                             style={styles.input}
                             placeholder="Amount"
                             keyboardType="numeric"
                             value={updateAmount}
                             onChangeText={setUpdateAmount}
+                            left={<TextInput.Icon icon="cash-multiple" />}
                         />
                     </View>
-                    <TouchableOpacity
-                        style={styles.updateLiabilityButton}
-                        onPress={() => {
-                            // Handle updating liability logic
-                            // For example, you can update paymentDates with new entries or update remainingAmount
-                            // Ensure to implement the logic based on your application requirements
-                            console.log("Update Liability Button Pressed");
-                        }}
-                    >
-                        <Text style={styles.updateLiabilityText}>Update Liability</Text>
-                    </TouchableOpacity>
+                    {updating ? ( // Display loading spinner while updating
+                        <ActivityIndicator size="large" color={theme.colors.primary} />
+                    ) : (
+                        <TouchableOpacity style={styles.updateLiabilityButton} onPress={handleUpdateLiability}>
+                            <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             )}
         </ScrollView>
@@ -366,6 +458,19 @@ const styles = StyleSheet.create({
     },
     deleteIcon: {
         marginLeft: 10,
+    },
+    selectedDateContainer: {
+        marginTop: 10,
+        alignItems: 'center',
+        backgroundColor: '#e1f5fe',
+        padding: 10,
+        borderRadius: 5,
+    },
+    selectedDateText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#01579b',
+        padding: 5
     },
 });
 

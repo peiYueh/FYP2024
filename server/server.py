@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions
-from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates
+from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate
 from app.db import get_db
 from app import create_app
 
@@ -71,6 +71,12 @@ def get_payment_date():
     print("HELLOO")
     db = get_db()
     return getPaymentDates(db)
+
+@app.route('/updatePayment', methods=['POST'])
+def new_payment_update():
+    data = request.json
+    db = get_db()
+    return newPaymentUpdate(db)
 
 
 

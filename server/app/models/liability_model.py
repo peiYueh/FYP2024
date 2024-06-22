@@ -17,3 +17,8 @@ class Liability:
     def get_liabilities_date(self, liability_id):
         print("gettttinggg")
         return list(self.payment_dates_collection.find({'liability_id': liability_id}))
+    
+    def insert_payment_update(self, payment_update):
+        print("HI")
+        result = self.payment_dates_collection.insert_one(payment_update)
+        return result.inserted_id

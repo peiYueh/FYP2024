@@ -1,5 +1,6 @@
 from flask import request, jsonify, session
 from app.models.liability_model import Liability
+from app.models.transaction_model import Transaction
 from bson import ObjectId
 from datetime import datetime, timezone
 
@@ -62,3 +63,17 @@ def getPaymentDates(db):
 
     print(payment)
     return jsonify(payments)
+
+def newPaymentUpdate(db):
+    print("Editing")
+    data = request.get_json()
+    print(data)
+    paymentUpdate = {
+        'liability_id':data.get('liability_id'),
+        'payment_date':data.get('payment_date'),
+        'payment_amount':data.get('payment_amount'),
+    }
+    liability_model = Liability(db)
+    # add to liability payment date
+    inserted_id = liability_model.insert_payment_update(paymentUpdate)
+    return jsonify(str(inserted_id))
