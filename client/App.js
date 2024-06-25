@@ -23,6 +23,7 @@ import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
 import MyLiabilityPage from "./src/view/MyLiabilityPage";
 import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
+import NewGoalPage from "./src/view/NewGoalPage";
 
 
 
@@ -106,7 +107,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="My Liabilities">
+        <Stack.Navigator initialRouteName="New Goal">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -142,11 +143,11 @@ const App = () => {
             component={EditTransactionPage}
             options={{ headerShown: true }}
           />
-          {/* <Stack.Screen
-            name="ExpenseTree"
-            component={ExpenseTree}
+          <Stack.Screen
+            name="New Goal"
+            component={NewGoalPage}
             options={{ headerShown: true }}
-          /> */}
+          />
           <Stack.Screen
             name="My Liabilities"
             component={MyLiabilityPage}
