@@ -5,6 +5,7 @@ from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
+from app.controllers.scenario_controller import newGoal
 from app.db import get_db
 from app import create_app
 
@@ -100,7 +101,11 @@ def delete_liability(liability_id):
     db = get_db()
     return deleteLiability(db, liability_id)
 
-
+@app.route('/newGoal', methods=['POST'])
+def add_goal():
+    print("Adding Goal")
+    db = get_db()
+    return newGoal(db)
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ const NewGoalPage = () => {
     const [targetAge, setTargetAge] = useState('');
     const [goalDescription, setGoalDescription] = useState('');
     const [menuVisible, setMenuVisible] = useState(false);
-
+    const [goalData, setGoalData] = useState([]);
     const [showDropDown, setShowDropDown] = useState(false);
 
     const itemList = [
@@ -33,16 +33,40 @@ const NewGoalPage = () => {
     const renderGoalComponent = () => {
         switch (goalType) {
             case 0:
-                return <BuyProperty />;
+                return <BuyProperty setGoalData={setGoalData}/>;
             case 1:
-                return <BuyVehicle />;
+                return <BuyVehicle setGoalData={setGoalData}/>;
             case 2:
-                return <Traveling />;
+                return <Traveling setGoalData={setGoalData}/>;
             case 3:
-                return <CustomGoal />;
+                return <CustomGoal setGoalData={setGoalData}/>;
             default:
                 return null;
         }
+    };
+    const handleAddGoal = () => {
+        const goalPayload = {
+            goal_type: goalType,
+            goal_description: goalDescription,
+            target_age: targetAge,
+            component_data: goalData  // Assuming goalData contains specific details related to the selected goal type
+        };
+        console.log(goalPayload)
+        axios.post(API_BASE_URL + '/newGoal', {goalPayload})
+        .then(response => {
+            console.log('Goal Data:', response.data);
+            showMessage({
+                message: "Goal added successfully!",
+                type: "success",
+            });
+        })
+        .catch(error => {
+            console.error('Error adding goal:', error);
+            showMessage({
+                message: "Failed to add goal!",
+                type: "danger",
+            });
+        });
     };
 
     return (
@@ -92,6 +116,22 @@ const NewGoalPage = () => {
                         <View style={styles.goalComponent}>
                             {renderGoalComponent()}
                         </View>
+                        <Pressable
+                            style={({ pressed }) => ({
+                                backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
+                                padding: 10,
+                                borderRadius: 25,
+                                width: 300,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                pointerEvents: 'auto',
+                                alignSelf: 'center',
+                                marginTop: 10
+                            })}
+                            onPress={handleAddGoal}
+                        >
+                            <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Add to Goal</Text>
+                        </Pressable>
                     </View>
                 </View>
             </ScrollView>
@@ -184,7 +224,7 @@ const styles = {
     }
 };
 
-const BuyProperty = () => {
+const BuyProperty = ({ setGoalData }) => {
     const theme = useTheme();
     const [propertyPrice, setPropertyPrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -245,6 +285,18 @@ const BuyProperty = () => {
         { key: 'Principal', value: parseFloat(principal.toFixed(2)), color: theme.colors.primary, text: 'RM ' + principal.toFixed(2) },
         { key: 'Interest', value: parseFloat(interest.toFixed(2)), color: theme.colors.tertiary, text: 'RM ' + interest.toFixed(2) },
     ];
+
+    useEffect(() => {
+        setGoalData({
+            propertyPrice,
+            downPaymentPercentage,
+            downPaymentAmount,
+            loanPeriodYears,
+            interestRate,
+            monthlyPayment,
+        });
+    }, [propertyPrice, downPaymentPercentage, downPaymentAmount, loanPeriodYears, interestRate, monthlyPayment]);
+
 
 
     return (
@@ -314,30 +366,12 @@ const BuyProperty = () => {
                     </View>
 
                 )}
-                {showPieChart && (
-                    <Pressable
-                        style={({ pressed }) => ({
-                            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                            padding: 10,
-                            borderRadius: 25,
-                            width: 300,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            pointerEvents: 'auto',
-                            alignSelf: 'center',
-                            marginTop: 10
-                        })}
-                        onPress={() => console.log("saving")}
-                    >
-                        <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Add to Goal</Text>
-                    </Pressable>
-                )}
             </View>
         </ScrollView>
     );
 };
 
-const BuyVehicle = () => {
+const BuyVehicle = ({ setGoalData }) => {
     const theme = useTheme();
     const [vehiclePrice, setVehiclePrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -355,6 +389,18 @@ const BuyVehicle = () => {
     useEffect(() => {
         calculateMonthlyPayment();
     }, [interestRate, loanPeriodYears, vehiclePrice, downPaymentAmount]);
+
+    useEffect(() => {
+        setGoalData({
+            vehiclePrice,
+            downPaymentPercentage,
+            downPaymentAmount,
+            loanPeriodYears,
+            interestRate,
+            monthlyPayment,
+        });
+    }, [vehiclePrice, downPaymentPercentage, downPaymentAmount, loanPeriodYears, interestRate, monthlyPayment]);
+
 
     const calculateDownPayment = () => {
         const price = parseFloat(vehiclePrice);
@@ -467,29 +513,11 @@ const BuyVehicle = () => {
                     </View>
 
                 )}
-                {showPieChart && (
-                    <Pressable
-                        style={({ pressed }) => ({
-                            backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                            padding: 10,
-                            borderRadius: 25,
-                            width: 300,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            pointerEvents: 'auto',
-                            alignSelf: 'center',
-                            marginTop: 10
-                        })}
-                        onPress={() => console.log("saving")}
-                    >
-                        <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Add to Goal</Text>
-                    </Pressable>
-                )}
             </View>
         </ScrollView>
     );
 }
-const Traveling = () => {
+const Traveling = ({ setGoalData }) => {
     const theme = useTheme();
     const [overallCost, setOverallCost] = useState('');
     const [detailedCosts, setDetailedCosts] = useState({
@@ -512,6 +540,14 @@ const Traveling = () => {
             setOverallCost(text);
         }
     };
+
+    useEffect(() => {
+        setGoalData({
+            overallCost,
+            detailedCosts,
+        });
+    }, [overallCost, detailedCosts]);
+
 
     const handleDetailedCostChange = (field, value) => {
         setDetailedCosts(prevCosts => ({
@@ -586,33 +622,24 @@ const Traveling = () => {
                     </View>
                 )}
             </View>
-            <Pressable
-                style={({ pressed }) => ({
-                    backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                    padding: 10,
-                    borderRadius: 25,
-                    width: 300,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    pointerEvents: 'auto',
-                    alignSelf: 'center',
-                    marginTop: 10
-                })}
-                onPress={() => console.log("saving")}
-            >
-                <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Add to Goal</Text>
-            </Pressable>
         </ScrollView>
         // </KeyboardAvoidingView>
     );
 };
-const CustomGoal = () => {
+const CustomGoal = ({ setGoalData }) => {
     const theme = useTheme();
     const [goalCost, setGoalCost] = useState('');
 
     const handleGoalCostChange = (text) => {
         setGoalCost(text);
     };
+
+    useEffect(() => {
+        setGoalData({
+            goalCost,
+        });
+    }, [goalCost]);
+
 
     return (
         <ScrollView>
@@ -625,22 +652,7 @@ const CustomGoal = () => {
                     style={styles.input}
                 />
             </View>
-            <Pressable
-                style={({ pressed }) => ({
-                    backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                    padding: 10,
-                    borderRadius: 25,
-                    width: 300,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    pointerEvents: 'auto',
-                    alignSelf: 'center',
-                    marginTop: 10
-                })}
-                onPress={() => console.log("saving")}
-            >
-                <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Add to Goal</Text>
-            </Pressable>
+            
         </ScrollView>
 
     )
