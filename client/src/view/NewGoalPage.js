@@ -33,40 +33,140 @@ const NewGoalPage = () => {
     const renderGoalComponent = () => {
         switch (goalType) {
             case 0:
-                return <BuyProperty setGoalData={setGoalData}/>;
+                return <BuyProperty setGoalData={setGoalData} />;
             case 1:
-                return <BuyVehicle setGoalData={setGoalData}/>;
+                return <BuyVehicle setGoalData={setGoalData} />;
             case 2:
-                return <Traveling setGoalData={setGoalData}/>;
+                return <Traveling setGoalData={setGoalData} />;
             case 3:
-                return <CustomGoal setGoalData={setGoalData}/>;
+                return <CustomGoal setGoalData={setGoalData} />;
             default:
                 return null;
         }
     };
     const handleAddGoal = () => {
+        // validate data
+        // Validate targetAge
+        if (isNaN(targetAge) || targetAge <= 0) {
+            showMessage({
+                message: "Please enter a valid target age.",
+                type: "danger",
+            });
+            return;
+        }
+
+        // Validate goalDescription
+        if (!goalDescription.trim()) {
+            showMessage({
+                message: "Please enter a goal description.",
+                type: "danger",
+            });
+            return;
+        }
+
+        // Validate goalData based on goalType
+        if (goalType === 0) { // Buy Property
+            const { propertyPrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
+            if (isNaN(propertyPrice) || propertyPrice <= 0) {
+                showMessage({
+                    message: "Please enter a valid property price.",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 10 || downPaymentPercentage > 100) {
+                showMessage({
+                    message: "Down payment percentage should be more than 10% and less than 100%.",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
+                showMessage({
+                    message: "Please enter a valid loan period (1-35 years).",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(interestRate) || interestRate <= 0 || interestRate > 99) {
+                showMessage({
+                    message: "Please enter a valid interest rate (1-99%).",
+                    type: "danger",
+                });
+                return;
+            }
+        } else if (goalType === 1) { // Buy Vehicle
+            const { vehiclePrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
+            if (isNaN(vehiclePrice) || vehiclePrice <= 0) {
+                showMessage({
+                    message: "Please enter a valid vehicle price.",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 0 || downPaymentPercentage >100) {
+                showMessage({
+                    message: "Down payment percentage should be more than 10% and less than 100%.",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
+                showMessage({
+                    message: "Please enter a valid loan period (1-35 years).",
+                    type: "danger",
+                });
+                return;
+            }
+            if (isNaN(interestRate) || interestRate <= 0 || interestRate > 99) {
+                showMessage({
+                    message: "Please enter a valid interest rate (1-99%).",
+                    type: "danger",
+                });
+                return;
+            }
+        } else if (goalType === 2) { // Traveling
+            const { overallCost } = goalData;
+            if (isNaN(overallCost) || overallCost <= 0) {
+                showMessage({
+                    message: "Please enter a valid overall traveling cost.",
+                    type: "danger",
+                });
+                return;
+            }
+        } else if (goalType === 3) { // Custom Goal
+            const { goalCost } = goalData;
+            if (isNaN(goalCost) || goalCost <= 0) {
+                showMessage({
+                    message: "Please enter a valid cost.",
+                    type: "danger",
+                });
+                return;
+            }
+        }
+
         const goalPayload = {
             goal_type: goalType,
             goal_description: goalDescription,
             target_age: targetAge,
             component_data: goalData  // Assuming goalData contains specific details related to the selected goal type
         };
-        console.log(goalPayload)
-        axios.post(API_BASE_URL + '/newGoal', {goalPayload})
-        .then(response => {
-            console.log('Goal Data:', response.data);
-            showMessage({
-                message: "Goal added successfully!",
-                type: "success",
+        
+        axios.post(API_BASE_URL + '/newGoal', { goalPayload })
+            .then(response => {
+                console.log('Goal Data:', response.data);
+                showMessage({
+                    message: "Goal added successfully!",
+                    type: "success",
+                });
+            })
+            .catch(error => {
+                console.error('Error adding goal:', error);
+                showMessage({
+                    message: "Failed to add goal!",
+                    type: "danger",
+                });
             });
-        })
-        .catch(error => {
-            console.error('Error adding goal:', error);
-            showMessage({
-                message: "Failed to add goal!",
-                type: "danger",
-            });
-        });
     };
 
     return (
@@ -241,7 +341,7 @@ const BuyProperty = ({ setGoalData }) => {
 
     useEffect(() => {
         calculateMonthlyPayment();
-    }, [interestRate, loanPeriodYears, propertyPrice, downPaymentAmount]);
+    }, [interestRate, loanPeriodYears, propertyPrice, downPaymentAmount, downPaymentPercentage]);
 
     const calculateDownPayment = () => {
         const price = parseFloat(propertyPrice);
@@ -255,14 +355,22 @@ const BuyProperty = ({ setGoalData }) => {
     };
 
     const calculateMonthlyPayment = () => {
+        if (!isNaN(downPaymentPercentage) && downPaymentPercentage > 100) {
+            setDownPaymentPercentage('100');
+        }
+
+        if (!isNaN(interestRate) && interestRate > 99) {
+            setInterestRate('99');
+        }
+
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
+            setLoanPeriodYears('35');
+        }
+
         const P = parseFloat(propertyPrice) - parseFloat(downPaymentAmount);
         const r = parseFloat(interestRate) / 100 / 12;
         let n = parseFloat(loanPeriodYears) * 12;
 
-        if (!isNaN(n) && n / 12 > 35) {
-            n = 35 * 12;  // Limit loan period to 35 years
-            setLoanPeriodYears('35');  // Update the input field to 35
-        }
 
         if (!isNaN(P) && !isNaN(r) && !isNaN(n) && r !== 0) {
             const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
@@ -388,7 +496,7 @@ const BuyVehicle = ({ setGoalData }) => {
 
     useEffect(() => {
         calculateMonthlyPayment();
-    }, [interestRate, loanPeriodYears, vehiclePrice, downPaymentAmount]);
+    }, [interestRate, loanPeriodYears, vehiclePrice, downPaymentAmount, downPaymentPercentage]);
 
     useEffect(() => {
         setGoalData({
@@ -414,14 +522,21 @@ const BuyVehicle = ({ setGoalData }) => {
     };
 
     const calculateMonthlyPayment = () => {
+        console.log("hi")
+        if (!isNaN(downPaymentPercentage) && downPaymentPercentage > 100) {
+            setDownPaymentPercentage('100');
+        }
+
+        if (!isNaN(downPaymentPercentage) && downPaymentPercentage < 99) {
+            setDownPaymentPercentage('10');
+        }
+
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
+            setLoanPeriodYears('35');
+        }
         const P = parseFloat(vehiclePrice) - parseFloat(downPaymentAmount);
         const r = parseFloat(interestRate) / 100 / 12;
         let n = parseFloat(loanPeriodYears) * 12;
-
-        if (!isNaN(n) && n / 12 > 35) {
-            n = 35 * 12;  // Limit loan period to 35 years
-            setLoanPeriodYears('35');  // Update the input field to 35
-        }
 
         if (!isNaN(P) && !isNaN(r) && !isNaN(n) && r !== 0) {
             const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
@@ -519,7 +634,7 @@ const BuyVehicle = ({ setGoalData }) => {
 }
 const Traveling = ({ setGoalData }) => {
     const theme = useTheme();
-    const [overallCost, setOverallCost] = useState('');
+    const [overallCost, setOverallCost] = useState(0);
     const [detailedCosts, setDetailedCosts] = useState({
         transport: '',
         food: '',
@@ -528,16 +643,16 @@ const Traveling = ({ setGoalData }) => {
     });
     const [enterDetailedCosts, setEnterDetailedCosts] = useState(false);
 
-    useEffect(() => {
-        if (enterDetailedCosts) {
-            const total = totalDetailedCost();
-            setOverallCost(total.toFixed(2));
-        }
-    }, [detailedCosts, enterDetailedCosts]);
+    // useEffect(() => {
+    //     if (enterDetailedCosts) {
+    //         const total = totalDetailedCost();
+    //         setOverallCost(total.toFixed(2));
+    //     }
+    // }, [detailedCosts, enterDetailedCosts]);
 
     const handleOverallCostChange = (text) => {
         if (!enterDetailedCosts) {
-            setOverallCost(text);
+            setOverallCost(parseFloat(text) || 0);
         }
     };
 
@@ -550,32 +665,31 @@ const Traveling = ({ setGoalData }) => {
 
 
     const handleDetailedCostChange = (field, value) => {
-        setDetailedCosts(prevCosts => ({
-            ...prevCosts,
-            [field]: value
-        }));
+        const numericValue = parseFloat(value) || 0;
+        setDetailedCosts(prevCosts => {
+            const updatedCosts = { ...prevCosts, [field]: value };
+            const totalDetailedCost = Object.values(updatedCosts)
+                .map(val => parseFloat(val) || 0)
+                .reduce((acc, curr) => acc + curr, 0);
+            setOverallCost(totalDetailedCost.toFixed(2));
+            return updatedCosts;
+        });
     };
 
     const handleToggleDetailedCosts = () => {
         setEnterDetailedCosts(!enterDetailedCosts);
-    };
-
-    const totalDetailedCost = () => {
-        const { transport, food, accommodation, activities } = detailedCosts;
-        return (
-            parseFloat(transport) || 0 +
-            parseFloat(food) || 0 +
-            parseFloat(accommodation) || 0 +
-            parseFloat(activities) || 0
-        );
+        if (enterDetailedCosts) {
+            // Reset detailed costs when hiding detailed costs section
+            setDetailedCosts({
+                transport: '',
+                food: '',
+                accommodation: '',
+                activities: ''
+            });
+        }
     };
 
     return (
-        // <KeyboardAvoidingView
-        //     style={{ flex: 1 }}
-        //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        //     keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-        // >
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
             <View style={styles.content}>
                 <TextInput
@@ -587,7 +701,7 @@ const Traveling = ({ setGoalData }) => {
                     editable={!enterDetailedCosts}
                 />
                 <Button onPress={handleToggleDetailedCosts}>
-                    {enterDetailedCosts ? "Hide Detailed Costs" : "Enter Detailed Costs"}
+                    {enterDetailedCosts ? "Hide and Remove Detailed Costs" : "Enter Detailed Costs"}
                 </Button>
                 {enterDetailedCosts && (
                     <View style={styles.detailedCostContainer}>
@@ -626,6 +740,7 @@ const Traveling = ({ setGoalData }) => {
         // </KeyboardAvoidingView>
     );
 };
+
 const CustomGoal = ({ setGoalData }) => {
     const theme = useTheme();
     const [goalCost, setGoalCost] = useState('');
@@ -652,7 +767,7 @@ const CustomGoal = ({ setGoalData }) => {
                     style={styles.input}
                 />
             </View>
-            
+
         </ScrollView>
 
     )
