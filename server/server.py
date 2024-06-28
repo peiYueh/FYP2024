@@ -5,7 +5,7 @@ from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
-from app.controllers.scenario_controller import newGoal
+from app.controllers.scenario_controller import newGoal, getGoal, editGoal
 from app.db import get_db
 from app import create_app
 
@@ -107,6 +107,43 @@ def add_goal():
     db = get_db()
     return newGoal(db)
 
+@app.route('/goal/<goal_id>', methods=['GET'])
+def get_goal(goal_id):
+    db = get_db()
+    return getGoal(db, goal_id)
+
+@app.route('/editGoal', methods=['POST'])
+def edit_goal():
+    print("EDITING")
+    data = request.json
+    db = get_db()
+    return editGoal(db)
+
+# @app.route('/goal/<goal_id>', methods=['PUT'])
+# def update_goal(goal_id):
+#     try:
+#         updated_goal = request.json['updatedGoal']
+#         result = goals_collection.update_one(
+#             {"_id": ObjectId(goal_id)},
+#             {"$set": updated_goal}
+#         )
+#         if result.matched_count:
+#             return jsonify({"message": "Goal updated successfully"}), 200
+#         else:
+#             return jsonify({"error": "Goal not found"}), 404
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+
+# @app.route('/goal/<goal_id>', methods=['DELETE'])
+# def delete_goal(goal_id):
+#     try:
+#         result = goals_collection.delete_one({"_id": ObjectId(goal_id)})
+#         if result.deleted_count:
+#             return jsonify({"message": "Goal deleted successfully"}), 200
+#         else:
+#             return jsonify({"error": "Goal not found"}), 404
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
