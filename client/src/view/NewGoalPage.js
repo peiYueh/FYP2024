@@ -151,6 +151,13 @@ const NewGoalPage = () => {
             target_age: targetAge,
             component_data: goalData  // Assuming goalData contains specific details related to the selected goal type
         };
+
+        if (goalPayload.goal_type == 2) {
+            console.log("Goal 2 total amount: " + goalPayload.component_data.overallCost);
+        } else if (goalPayload.goal_type == 3) {
+            console.log("Goal 3 total amount: " + goalPayload.component_data.goalCost);
+        }
+
         
         axios.post(API_BASE_URL + '/newGoal', { goalPayload })
             .then(response => {

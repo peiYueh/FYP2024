@@ -164,6 +164,8 @@ def editGoal(db):
         activities = detailedCosts.get('activities') or "-"
         food = detailedCosts.get('food') or "-"
         transport  = detailedCosts.get('transport') or "-"
+        print("HEHREere")
+        print(type(totalAmount))
         goal = {
             '_id': goal_id,
             'user_id': userID,

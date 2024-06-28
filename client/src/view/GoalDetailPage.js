@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Pressable, SafeAreaView, Alert } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Pressable, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { useTheme, TextInput, Button, Menu, Provider, Surface } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { showMessage } from "react-native-flash-message";
@@ -25,6 +25,9 @@ const ViewGoalPage = () => {
     const [showDropDown, setShowDropDown] = useState(false);
     const [editedData, setEditedData] = useState({})
 
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+
     const itemList = [
         { label: 'Buy Property', value: 0 },
         { label: 'Buy Vehicle', value: 1 },
@@ -34,6 +37,7 @@ const ViewGoalPage = () => {
 
     useEffect(() => {
         const fetchGoalData = async () => {
+            setLoading(true)
             try {
                 const response = await axios.get(`${API_BASE_URL}/goal/${goalId}`);
                 const goal = response.data;
@@ -78,6 +82,8 @@ const ViewGoalPage = () => {
             } catch (error) {
                 console.error('Error fetching goal:', error);
                 // setLoading(false);
+            } finally {
+                setLoading(false)
             }
         };
 
@@ -107,7 +113,19 @@ const ViewGoalPage = () => {
             target_age: targetAge,
             component_data: editedData
         };
+        console.log(updatedGoal)
 
+        // set component -> total amount -> to float
+
+        if (updatedGoal.goal_type == 2) {
+            console.log("Goal 2 total amount: " + updatedGoal.component_data.overallCost);
+            updatedGoal.component_data.overallCost = parseFloat(updatedGoal.component_data.overallCost).toFixed(2);
+        } else if (updatedGoal.goal_type == 3) {
+            console.log("Goal 3 total amount: " + updatedGoal.component_data.goalCost);
+            updatedGoal.component_data.goalCost = parseFloat(updatedGoal.component_data.goalCost).toFixed(2);
+        }
+    
+        setSaving(true)
         try {
             // Make API call to update liability data
             const response = await axios.post(API_BASE_URL + '/editGoal', updatedGoal);
@@ -124,13 +142,9 @@ const ViewGoalPage = () => {
             console.error('Error updating goal:', error);
             Alert.alert('Error', 'Failed to update goal');
         } finally {
-            // setSaving(false); // Deactivate loading indicator
+            setSaving(false); // Deactivate loading indicator
         }
     };
-
-    // if (loading) {
-    //     return <LoadingIndicator />;
-    // }
 
     return (
         <KeyboardAvoidingView
@@ -143,60 +157,67 @@ const ViewGoalPage = () => {
                 keyboardShouldPersistTaps='handled'
             >
                 <View style={[styles.container, { backgroundColor: theme.colors.onPrimary }]}>
-                    <View style={styles.content}>
-                        <View style={styles.row}>
+                    {loading ? ( // Display loading spinner while updating
+                        <ActivityIndicator size="large" color={theme.colors.primary} />
+                    ) : (
+                        <View style={styles.content}>
+                            <View style={styles.row}>
+                                <TextInput
+                                    label="Target Age"
+                                    value={targetAge}
+                                    onChangeText={setTargetAge}
+                                    keyboardType="numeric"
+                                    style={[styles.input, styles.targetAgeInput]}
+                                    editable
+                                />
+                                <Surface style={styles.containerStyle}>
+                                    <SafeAreaView style={styles.safeContainerStyle}>
+                                        <DropDown
+                                            label={"Goal Type"}
+                                            mode={"outlined"}
+                                            visible={showDropDown}
+                                            showDropDown={() => setShowDropDown(true)}
+                                            onDismiss={() => setShowDropDown(false)}
+                                            value={goalType}
+                                            setValue={setGoalType}
+                                            list={itemList}
+                                        />
+                                        <View style={styles.spacerStyle} />
+                                    </SafeAreaView>
+                                </Surface>
+                            </View>
                             <TextInput
-                                label="Target Age"
-                                value={targetAge}
-                                onChangeText={setTargetAge}
-                                keyboardType="numeric"
-                                style={[styles.input, styles.targetAgeInput]}
-                                editable
+                                label="Goal Description"
+                                value={goalDescription}
+                                onChangeText={setGoalDescription}
+                                multiline
+                                style={styles.input}
                             />
-                            <Surface style={styles.containerStyle}>
-                                <SafeAreaView style={styles.safeContainerStyle}>
-                                    <DropDown
-                                        label={"Goal Type"}
-                                        mode={"outlined"}
-                                        visible={showDropDown}
-                                        showDropDown={() => setShowDropDown(true)}
-                                        onDismiss={() => setShowDropDown(false)}
-                                        value={goalType}
-                                        setValue={setGoalType}
-                                        list={itemList}
-                                    />
-                                    <View style={styles.spacerStyle} />
-                                </SafeAreaView>
-                            </Surface>
+                            <View style={styles.goalComponent}>
+                                {goalData && renderGoalComponent()}
+                            </View>
+                            <Pressable
+                                style={({ pressed }) => ({
+                                    backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
+                                    padding: 10,
+                                    borderRadius: 25,
+                                    width: 300,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    pointerEvents: 'auto',
+                                    alignSelf: 'center',
+                                    marginTop: 10
+                                })}
+                                onPress={handleSaveGoal}
+                            >
+                                <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save Goal</Text>
+                            </Pressable>
                         </View>
-                        <TextInput
-                            label="Goal Description"
-                            value={goalDescription}
-                            onChangeText={setGoalDescription}
-                            multiline
-                            style={styles.input}
-                        />
-                        <View style={styles.goalComponent}>
-                            {goalData && renderGoalComponent()}
-                        </View>
-                        <Pressable
-                            style={({ pressed }) => ({
-                                backgroundColor: pressed ? 'rgba(0, 0, 0, 0.3)' : theme.colors.primary,
-                                padding: 10,
-                                borderRadius: 25,
-                                width: 300,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                pointerEvents: 'auto',
-                                alignSelf: 'center',
-                                marginTop: 10
-                            })}
-                            onPress={handleSaveGoal}
-                        >
-                            <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Save Goal</Text>
-                        </Pressable>
-                    </View>
+                    )}
                 </View>
+                {(saving &&
+                    <LoadingIndicator theme={theme} />
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -294,10 +315,10 @@ const BuyProperty = ({ goalData, setEditedData }) => {
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
     const [loanPeriodYears, setLoanPeriodYears] = useState('');
     const [interestRate, setInterestRate] = useState('');
-    const [downPaymentAmount, setDownPaymentAmount] = useState(0);
-    const [monthlyPayment, setMonthlyPayment] = useState(0);
-    const [principal, setPrincipal] = useState(0);
-    const [interest, setInterest] = useState(0);
+    const [downPaymentAmount, setDownPaymentAmount] = useState('');
+    const [monthlyPayment, setMonthlyPayment] = useState('');
+    const [principal, setPrincipal] = useState('');
+    const [interest, setInterest] = useState('');
     const [showPieChart, setShowPieChart] = useState(false);
     const [dataLoaded, setDataLoaded] = useState(false)
 
@@ -463,12 +484,12 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
     const theme = useTheme();
     const [vehiclePrice, setVehiclePrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
-    const [downPaymentAmount, setDownPaymentAmount] = useState(0);
+    const [downPaymentAmount, setDownPaymentAmount] = useState('');
     const [loanPeriodYears, setLoanPeriodYears] = useState('');
     const [interestRate, setInterestRate] = useState('');
-    const [monthlyPayment, setMonthlyPayment] = useState(0);
-    const [principal, setPrincipal] = useState(0);
-    const [interest, setInterest] = useState(0);
+    const [monthlyPayment, setMonthlyPayment] = useState('');
+    const [principal, setPrincipal] = useState('');
+    const [interest, setInterest] = useState('');
     const [showPieChart, setShowPieChart] = useState(false);
 
     const [dataLoaded, setDataLoaded] = useState(false)
@@ -632,7 +653,7 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
 
 const Traveling = ({ goalData, setEditedData }) => {
     const theme = useTheme();
-    const [overallCost, setOverallCost] = useState(0);
+    const [overallCost, setOverallCost] = useState('');
     const [detailedCosts, setDetailedCosts] = useState({
         transport: '',
         food: '',
@@ -643,31 +664,28 @@ const Traveling = ({ goalData, setEditedData }) => {
 
     const [dataLoaded, setDataLoaded] = useState(false)
 
+    useEffect(() => {
+        if (detailedCosts.transport != '' || detailedCosts.food != '' || detailedCosts.accommodation != '' || detailedCosts.activities != '') {
+            setEnterDetailedCosts(true);
+        }
+    }, [detailedCosts]);
+
 
     useEffect(() => {
         if (goalData && Object.keys(goalData).length > 0) {
             // console.log(goalData)
-            setOverallCost(goalData.total_amount || '0');
-            details = {
-                transport: goalData.transport != '-' ? goalData.transport : '',
-                food: goalData.food_and_beverage != '-' ? goalData.food_and_beverage : '',
-                accommodation: goalData.accommodation_cost != '-' ? goalData.accommodation_cost : '',
-                activities: goalData.activities_cost != '-' ? goalData.activities_cost : ''
-            }
+            setOverallCost(goalData.total_amount);
+            console.log(overallCost)
+            const details = {
+                transport: goalData?.transport !== '-' ? goalData.transport : '',
+                food: goalData?.food_and_beverage !== '-' ? goalData.food_and_beverage : '',
+                accommodation: goalData?.accommodation_cost !== '-' ? goalData.accommodation_cost : '',
+                activities: goalData?.activities_cost !== '-' ? goalData.activities_cost : ''
+            };
             setDetailedCosts(details);
-            if (detailedCosts.transport !== "" || detailedCosts.food != "" || detailedCosts.accommodation != "" || detailedCosts.activities != "") {
-                setEnterDetailedCosts(true);
-            }
             setDataLoaded(true)
         }
     }, [goalData]);
-
-    // useEffect(() => {
-    //     if (enterDetailedCosts) {
-    //         const total = totalDetailedCost();
-    //         setOverallCost(total.toFixed(2));
-    //     }
-    // }, [detailedCosts, enterDetailedCosts]);
 
     const handleOverallCostChange = (text) => {
         if (!enterDetailedCosts) {

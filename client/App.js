@@ -108,7 +108,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="View Goal">
+        <Stack.Navigator initialRouteName="New Goal">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
