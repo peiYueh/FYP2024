@@ -10,7 +10,6 @@ import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 import EditTransactionPage from "./src/view/EditTransactionPage";
-import ExpenseTree from "./src/view/ExpenseTree";
 
 
 import { registerTranslation } from 'react-native-paper-dates'
@@ -108,7 +107,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="New Goal">
+        <Stack.Navigator initialRouteName="NewTransactionPage">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}

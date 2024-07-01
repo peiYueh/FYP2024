@@ -260,6 +260,24 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
         hideDatePicker();
     };
 
+    const handleClassify = () => {
+        fetch(API_BASE_URL+'/classify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ transactionDescription }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            setTransactionCategory(data.category);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      };
+
+
     return (
         <View style={styles.transactionComponent}>
             <TextInput style={styles.transactionDetailInput}
@@ -267,7 +285,7 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
                 left={<TextInput.Icon icon="fountain-pen" />}
                 value={transactionDescription}
                 onChangeText={(text) => setTransactionDescription(text)}
-
+                onBlur={handleClassify}
             />
             <Pressable
                 onPress={showDatePicker}

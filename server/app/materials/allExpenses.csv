@@ -1,0 +1,1211 @@
+Date,Description,Category,Amount
+2022-01-01,Grocery shopping,Food,-75.00
+2022-01-02,Bus fare,Transportation,-2.50
+2022-01-03,New kitchen utensils,Household,-35.00
+2022-01-04,Netflix subscription,Subscription,-12.99
+2022-01-05,Stock investment,Investment,-500.00
+2022-01-06,Pharmacy purchase,Health,-20.00
+2022-01-07,Birthday gift for spouse,Family,-100.00
+2022-01-08,New shoes,Apparel,-80.00
+2022-01-09,Skincare products,Beauty,-45.00
+2022-01-10,College textbook,Education,-120.00
+2022-01-11,New Year celebration expenses,Festivals,-200.00
+2022-01-12,Online bank transfer fee,Money transfer,-5.00
+2022-01-13,Museum entrance fee,Culture,-15.00
+2022-01-14,Travel agency fee,Tourism,-300.00
+2022-01-15,Haircut and shave,Grooming,-25.00
+2022-01-16,Passport renewal,Documents,-100.00
+2022-01-17,Dinner with friends,Social Life,-60.00
+2022-01-18,Weekly grocery run,Food,-85.00
+2022-01-19,Taxi fare,Transportation,-15.00
+2022-01-20,New bed sheets,Household,-50.00
+2022-01-21,Amazon Prime subscription,Subscription,-14.99
+2022-01-22,Mutual fund investment,Investment,-250.00
+2022-01-23,Vitamins and supplements,Health,-30.00
+2022-01-24,Family movie night,Family,-40.00
+2022-01-25,Winter coat,Apparel,-150.00
+2022-01-26,Makeup products,Beauty,-60.00
+2022-01-27,Online course fee,Education,-200.00
+2022-01-28,Christmas party expenses,Festivals,-300.00
+2022-01-29,Money transfer to friend,Money transfer,-50.00
+2022-01-30,Art gallery ticket,Culture,-25.00
+2022-01-31,Flight booking,Tourism,-500.00
+2022-02-01,Beard trim,Grooming,-15.00
+2022-02-02,Driver's license renewal,Documents,-30.00
+2022-02-03,Bar night out,Social Life,-100.00
+2022-02-04,Weekend grocery shopping,Food,-95.00
+2022-02-05,Subway fare,Transportation,-2.75
+2022-02-06,New kitchen appliances,Household,-200.00
+2022-02-07,Spotify subscription,Subscription,-9.99
+2022-02-08,Retirement fund investment,Investment,-600.00
+2022-02-09,Doctor's appointment,Health,-80.00
+2022-02-10,Family dinner out,Family,-120.00
+2022-02-11,Summer dress,Apparel,-60.00
+2022-02-12,Hair care products,Beauty,-35.00
+2022-02-13,School supplies,Education,-50.00
+2022-02-14,Valentine's day gifts,Festivals,-100.00
+2022-02-15,Wire transfer fee,Money transfer,-10.00
+2022-02-16,Theater show tickets,Culture,-60.00
+2022-02-17,Hotel reservation,Tourism,-200.00
+2022-02-18,Manicure,Grooming,-20.00
+2022-02-19,Notary fee,Documents,-25.00
+2022-02-20,Coffee date,Social Life,-30.00
+2022-02-21,Snacks,Food,-10.00
+2022-02-22,Uber ride,Transportation,-18.00
+2022-02-23,Living room decor,Household,-85.00
+2022-02-24,Magazine subscription,Subscription,-5.99
+2022-02-25,Cryptocurrency investment,Investment,-400.00
+2022-02-26,Eye check-up,Health,-50.00
+2022-02-27,Family picnic,Family,-70.00
+2022-02-28,Jacket,Apparel,-120.00
+2022-03-01,Perfume,Beauty,-55.00
+2022-03-02,Online course materials,Education,-75.00
+2022-03-03,Easter celebration,Festivals,-180.00
+2022-03-04,Money transfer to family,Money transfer,-200.00
+2022-03-05,Opera tickets,Culture,-90.00
+2022-03-06,Vacation booking,Tourism,-800.00
+2022-03-07,Shaving kit,Grooming,-35.00
+2022-03-08,Birth certificate copy,Documents,-15.00
+2022-03-09,Night out with colleagues,Social Life,-90.00
+2022-03-10,Fruit and vegetables,Food,-40.00
+2022-03-11,Train ticket,Transportation,-25.00
+2022-03-12,New curtains,Household,-60.00
+2022-03-13,Hulu subscription,Subscription,-11.99
+2022-03-14,Real estate investment,Investment,-1500.00
+2022-03-15,Fitness equipment,Health,-100.00
+2022-03-16,Child's school fee,Family,-300.00
+2022-03-17,Work clothes,Apparel,-200.00
+2022-03-18,Facial treatment,Beauty,-70.00
+2022-03-19,Exam fee,Education,-150.00
+2022-03-20,Halloween party,Festivals,-250.00
+2022-03-21,Wire transfer to friend,Money transfer,-100.00
+2022-03-22,History museum entrance,Culture,-20.00
+2022-03-23,City tour,Tourism,-45.00
+2022-03-24,Nail polish,Grooming,-12.00
+2022-03-25,Document notarization,Documents,-10.00
+2022-03-26,Club membership fee,Social Life,-50.00
+2022-03-27,Bakery goods,Food,-25.00
+2022-03-28,Gasoline,Transportation,-40.00
+2022-03-29,Table lamp,Household,-30.00
+2022-03-30,Newspaper subscription,Subscription,-4.99
+2022-03-31,Mutual funds,Investment,-350.00
+2022-04-01,Yoga class,Health,-15.00
+2022-04-02,Family reunion expenses,Family,-500.00
+2022-04-03,Jeans,Apparel,-75.00
+2022-04-04,Spa day,Beauty,-150.00
+2022-04-05,Online workshop,Education,-40.00
+2022-04-06,Diwali celebration,Festivals,-300.00
+2022-04-07,Money transfer to sibling,Money transfer,-80.00
+2022-04-08,Art exhibition,Culture,-30.00
+2022-04-09,Weekend getaway,Tourism,-600.00
+2022-04-10,Shampoo and conditioner,Grooming,-18.00
+2022-04-11,Legal document copy,Documents,-25.00
+2022-04-12,Cocktail party,Social Life,-200.00
+2022-04-13,Organic food,Food,-55.00
+2022-04-14,Bike maintenance,Transportation,-50.00
+2022-04-15,Vacuum cleaner,Household,-150.00
+2022-04-16,Podcast subscription,Subscription,-6.99
+2022-04-17,Precious metals,Investment,-700.00
+2022-04-18,Medicine,Health,-25.00
+2022-04-19,Anniversary dinner,Family,-150.00
+2022-04-20,Sportswear,Apparel,-100.00
+2022-04-21,Manicure and pedicure,Beauty,-40.00
+2022-04-22,Books,Education,-60.00
+2022-04-23,Fourth of July fireworks,Festivals,-120.00
+2022-04-24,International money transfer,Money transfer,-60.00
+2022-04-25,Music concert,Culture,-85.00
+2022-04-26,Adventure trip,Tourism,-900.00
+2022-04-27,Razor blades,Grooming,-10.00
+2022-04-28,Government fee for document,Documents,-30.00
+2022-04-29,Birthday party,Social Life,-300.00
+2022-04-30,Restaurant lunch,Food,-35.00
+2022-05-01,Bus ticket,Transportation,-12.00
+2022-05-02,Home improvement tools,Household,-65.00
+2022-05-03,Online magazine subscription,Subscription,-3.99
+2022-05-04,Tech stocks,Investment,-400.00
+2022-05-05,Medical supplies,Health,-45.00
+2022-05-06,Family holiday trip,Family,-700.00
+2022-05-07,Sports shoes,Apparel,-90.00
+2022-05-08,Hair color,Beauty,-20.00
+2022-05-09,Workshop materials,Education,-50.00
+2022-05-10,New Year's Eve party,Festivals,-400.00
+2022-05-11,Domestic money transfer,Money transfer,-20.00
+2022-05-12,Film festival tickets,Culture,-45.00
+2022-05-13,Mountain trekking,Tourism,-550.00
+2022-05-14,Shaving cream,Grooming,-7.00
+2022-05-15,Certified document,Documents,-35.00
+2022-05-16,Group dinner,Social Life,-150.00
+2022-05-17,Weekly groceries,Food,-100.00
+2022-05-18,Car rental,Transportation,-75.00
+2022-05-19,Bedding set,Household,-120.00
+2022-05-20,Streaming service subscription,Subscription,-9.99
+2022-05-21,Government bonds,Investment,-800.00
+2022-05-22,Medical consultation,Health,-60.00
+2022-05-23,Family photoshoot,Family,-180.00
+2022-05-24,Jacket,Apparel,-200.00
+2022-05-25,Skincare routine,Beauty,-35.00
+2022-05-26,Online seminar,Education,-20.00
+2022-05-27,Spring festival,Festivals,-250.00
+2022-05-28,Wire transfer to coworker,Money transfer,-40.00
+2022-05-29,Music festival,Culture,-100.00
+2022-05-30,Beach holiday,Tourism,-900.00
+2022-05-31,Razor,Grooming,-12.00
+2022-06-01,Document processing,Documents,-20.00
+2022-06-02,Social gathering,Social Life,-110.00
+2022-06-03,Organic vegetables,Food,-25.00
+2022-06-04,Parking fee,Transportation,-5.00
+2022-06-05,Room decor,Household,-45.00
+2022-06-06,Magazine subscription,Subscription,-6.99
+2022-06-07,Real estate fund,Investment,-1000.00
+2022-06-08,Health supplements,Health,-75.00
+2022-06-09,Children's clothing,Family,-60.00
+2022-06-10,T-shirt,Apparel,-25.00
+2022-06-11,Cosmetics,Beauty,-40.00
+2022-06-12,Tuition fee,Education,-400.00
+2022-06-13,Halloween decorations,Festivals,-80.00
+2022-06-14,Money transfer to account,Money transfer,-20.00
+2022-06-15,Art museum tickets,Culture,-25.00
+2022-06-16,City tour guide,Tourism,-100.00
+2022-06-17,Hair conditioner,Grooming,-10.00
+2022-06-18,Document translation,Documents,-30.00
+2022-06-19,Friend's wedding gift,Social Life,-80.00
+2022-06-20,Daily groceries,Food,-45.00
+2022-06-21,Tram fare,Transportation,-3.00
+2022-06-22,Laundry detergent,Household,-15.00
+2022-06-23,Video streaming subscription,Subscription,-7.99
+2022-06-24,Investment in bonds,Investment,-500.00
+2022-06-25,Health check-up,Health,-150.00
+2022-06-26,Family trip expenses,Family,-800.00
+2022-06-27,Summer hat,Apparel,-25.00
+2022-06-28,Beauty treatment,Beauty,-80.00
+2022-06-29,Textbook,Education,-75.00
+2022-06-30,Festival food,Festivals,-50.00
+2022-07-01,Money transfer fee,Money transfer,-15.00
+2022-07-02,Theater tickets,Culture,-45.00
+2022-07-03,Resort booking,Tourism,-750.00
+2022-07-04,Electric shaver,Grooming,-30.00
+2022-07-05,Document fee,Documents,-10.00
+2022-07-06,Social club membership,Social Life,-40.00
+2022-07-07,Weekly fruits,Food,-30.00
+2022-07-08,Taxi fare,Transportation,-20.00
+2022-07-09,Kitchenware,Household,-50.00
+2022-07-10,Digital newspaper subscription,Subscription,-5.99
+2022-07-11,Equity funds,Investment,-600.00
+2022-07-12,Health insurance premium,Health,-200.00
+2022-07-13,Family weekend outing,Family,-150.00
+2022-07-14,Winter boots,Apparel,-150.00
+2022-07-15,Facial mask,Beauty,-20.00
+2022-07-16,Online certification course,Education,-200.00
+2022-07-17,Holiday party,Festivals,-300.00
+2022-07-18,Money transfer for rent,Money transfer,-500.00
+2022-07-19,Book fair entry,Culture,-10.00
+2022-07-20,Vacation rental,Tourism,-600.00
+2022-07-21,Body lotion,Grooming,-15.00
+2022-07-22,Document legalisation,Documents,-50.00
+2022-07-23,Pub night,Social Life,-75.00
+2022-07-24,Grocery haul,Food,-80.00
+2022-07-25,Train fare,Transportation,-35.00
+2022-07-26,New cutlery,Household,-25.00
+2022-07-27,News subscription,Subscription,-7.99
+2022-07-28,Investment in shares,Investment,-900.00
+2022-07-29,Fitness membership,Health,-60.00
+2022-07-30,Family gifts,Family,-200.00
+2022-07-31,Jacket purchase,Apparel,-100.00
+2022-08-01,Hair care,Beauty,-50.00
+2022-08-02,School tuition,Education,-1000.00
+2022-08-03,New Year gifts,Festivals,-150.00
+2022-08-04,International wire transfer,Money transfer,-50.00
+2022-08-05,Opera show,Culture,-80.00
+2022-08-06,Flight tickets,Tourism,-1200.00
+2022-08-07,Beard trimmer,Grooming,-20.00
+2022-08-08,Document preparation,Documents,-40.00
+2022-08-09,Friends' reunion,Social Life,-100.00
+2022-08-10,Bakery shopping,Food,-30.00
+2022-08-11,Gas refill,Transportation,-60.00
+2022-08-12,Vacuum bags,Household,-10.00
+2022-08-13,Magazine renewal,Subscription,-4.99
+2022-08-14,Mutual fund SIP,Investment,-300.00
+2022-08-15,Health supplements order,Health,-50.00
+2022-08-16,Family holiday,Family,-500.00
+2022-08-17,New blazer,Apparel,-90.00
+2022-08-18,Salon visit,Beauty,-75.00
+2022-08-19,College fee,Education,-600.00
+2022-08-20,Diwali sweets,Festivals,-75.00
+2022-08-21,Money transfer to partner,Money transfer,-300.00
+2022-08-22,Art show entry,Culture,-20.00
+2022-08-23,Holiday travel,Tourism,-1500.00
+2022-08-24,Shaving gel,Grooming,-8.00
+2022-08-25,Legal documentation,Documents,-50.00
+2022-08-26,Community event,Social Life,-30.00
+2022-08-27,Weekly shop,Food,-70.00
+2022-08-28,Bus ride,Transportation,-5.00
+2022-08-29,Living room setup,Household,-90.00
+2022-08-30,Monthly subscription,Subscription,-10.00
+2022-08-31,Stock purchase,Investment,-450.00
+2022-09-01,Medical bill,Health,-100.00
+2022-09-02,Family weekend trip,Family,-300.00
+2022-09-03,Trousers,Apparel,-45.00
+2022-09-04,Face wash,Beauty,-15.00
+2022-09-05,Online study material,Education,-40.00
+2022-09-06,Eid celebration,Festivals,-200.00
+2022-09-07,Transfer fee,Money transfer,-10.00
+2022-09-08,Live concert,Culture,-60.00
+2022-09-09,Safari trip,Tourism,-900.00
+2022-09-10,Aftershave,Grooming,-12.00
+2022-09-11,Document translation fee,Documents,-30.00
+2022-09-12,Social meetup,Social Life,-50.00
+2022-09-13,Dairy products,Food,-20.00
+2022-09-14,Cab fare,Transportation,-30.00
+2022-09-15,Storage boxes,Household,-25.00
+2022-09-16,Reading subscription,Subscription,-8.99
+2022-09-17,Investment in ETFs,Investment,-550.00
+2022-09-18,Gym session,Health,-25.00
+2022-09-19,Family brunch,Family,-70.00
+2022-09-20,Workout gear,Apparel,-50.00
+2022-09-21,Hair dye,Beauty,-25.00
+2022-09-22,Educational app,Education,-10.00
+2022-09-23,Festival shopping,Festivals,-250.00
+2022-09-24,Money transfer for groceries,Money transfer,-40.00
+2022-09-25,Theater show,Culture,-50.00
+2022-09-26,Tour package,Tourism,-1100.00
+2022-09-27,Beard oil,Grooming,-15.00
+2022-09-28,Document notarization fee,Documents,-20.00
+2022-09-29,Friends' dinner,Social Life,-120.00
+2022-09-30,Groceries,Food,-100.00
+2022-10-01,Subway ticket,Transportation,-2.75
+2022-10-02,New desk,Household,-200.00
+2022-10-03,Online news subscription,Subscription,-6.99
+2022-10-04,Mutual fund,Investment,-250.00
+2022-10-05,Doctor's visit,Health,-80.00
+2022-10-06,Family celebration,Family,-250.00
+2022-10-07,Winter jacket,Apparel,-150.00
+2022-10-08,Cosmetic products,Beauty,-50.00
+2022-10-09,Online classes,Education,-60.00
+2022-10-10,Festival donations,Festivals,-150.00
+2022-10-11,Money transfer for bills,Money transfer,-120.00
+2022-10-12,Art class,Culture,-70.00
+2022-10-13,Weekend trip,Tourism,-700.00
+2022-10-14,Trimmer,Grooming,-25.00
+2022-10-15,Document verification,Documents,-15.00
+2022-10-16,Evening out,Social Life,-90.00
+2022-10-17,Fresh produce,Food,-35.00
+2022-10-18,Bus fare,Transportation,-2.50
+2022-10-19,Wall art,Household,-45.00
+2022-10-20,Online publication,Subscription,-4.99
+2022-10-21,Equity investment,Investment,-300.00
+2022-10-22,Health supplements,Health,-25.00
+2022-10-23,Family day out,Family,-200.00
+2022-10-24,Summer clothes,Apparel,-80.00
+2022-10-25,Nail polish,Beauty,-10.00
+2022-10-26,Exam registration,Education,-100.00
+2022-10-27,Christmas presents,Festivals,-300.00
+2022-10-28,Wire transfer to friend,Money transfer,-50.00
+2022-10-29,Music class,Culture,-30.00
+2022-10-30,Holiday planning,Tourism,-600.00
+2022-10-31,Shaving foam,Grooming,-8.00
+2022-11-01,Document approval,Documents,-20.00
+2022-11-02,Dinner party,Social Life,-70.00
+2022-11-03,Beverages,Food,-20.00
+2022-11-04,Parking ticket,Transportation,-10.00
+2022-11-05,Storage solutions,Household,-30.00
+2022-11-06,Digital magazine,Subscription,-6.99
+2022-11-07,Fixed deposits,Investment,-400.00
+2022-11-08,Health check,Health,-120.00
+2022-11-09,Family vacation,Family,-800.00
+2022-11-10,Suit,Apparel,-250.00
+2022-11-11,Facial,Grooming,-35.00
+2022-11-12,Workshop enrollment,Education,-80.00
+2022-11-13,Diwali gifts,Festivals,-300.00
+2022-11-14,Transfer for rent,Money transfer,-500.00
+2022-11-15,Theater play,Culture,-45.00
+2022-11-16,Travel insurance,Tourism,-100.00
+2022-11-17,Hair wax,Grooming,-12.00
+2022-11-18,Document review,Documents,-10.00
+2022-11-19,Weekend gathering,Social Life,-60.00
+2022-11-20,Breakfast items,Food,-15.00
+2022-11-21,Train fare,Transportation,-20.00
+2022-11-22,Home decor,Household,-70.00
+2022-11-23,Online content subscription,Subscription,-9.99
+2022-11-24,Government bonds,Investment,-600.00
+2022-11-25,Medical insurance,Health,-200.00
+2022-11-26,Family celebration expenses,Family,-300.00
+2022-11-27,Sports gear,Apparel,-100.00
+2022-11-28,Beauty products,Beauty,-30.00
+2022-11-29,Online training,Education,-50.00
+2022-11-30,Christmas tree,Festivals,-80.00
+2022-12-01,Transfer for tuition,Money transfer,-200.00
+2022-12-02,Historical site visit,Culture,-25.00
+2022-12-03,Travel booking,Tourism,-700.00
+2022-12-04,Razor blades,Grooming,-10.00
+2022-12-05,Legal document copy,Documents,-15.00
+2022-12-06,Friends' night out,Social Life,-80.00
+2022-12-07,Fruits,Food,-20.00
+2022-12-08,Ride share fare,Transportation,-25.00
+2022-12-09,Home cleaning supplies,Household,-40.00
+2022-12-10,Monthly service subscription,Subscription,-8.99
+2022-12-11,Real estate,Investment,-1500.00
+2022-12-12,Health insurance,Health,-250.00
+2022-12-13,Family photo session,Family,-100.00
+2022-12-14,Jacket,Apparel,-90.00
+2022-12-15,Cosmetic cream,Beauty,-25.00
+2022-12-16,School exam fee,Education,-200.00
+2022-12-17,Diwali decorations,Festivals,-150.00
+2022-12-18,Wire transfer for groceries,Money transfer,-40.00
+2022-12-19,Art gallery visit,Culture,-20.00
+2022-12-20,Holiday resort booking,Tourism,-850.00
+2022-12-21,Electric shaver,Grooming,-35.00
+2022-12-22,Document processing fee,Documents,-25.00
+2022-12-23,Friends' gathering,Social Life,-50.00
+2022-12-24,Organic vegetables,Food,-25.00
+2022-12-25,Taxi ride,Transportation,-18.00
+2022-12-26,Home improvement,Household,-80.00
+2022-12-27,Digital content subscription,Subscription,-5.99
+2022-12-28,Investment in mutual funds,Investment,-300.00
+2022-12-29,Doctor's visit fee,Health,-100.00
+2022-12-30,Family entertainment,Family,-200.00
+2022-12-31,Winter coat,Apparel,-180.00
+2023-01-01,New Year's brunch,Food,-80.00
+2023-01-02,Cab fare,Transportation,-15.00
+2023-01-03,Cleaning supplies,Household,-40.00
+2023-01-04,Online streaming subscription,Subscription,-12.99
+2023-01-05,Stock investment,Investment,-300.00
+2023-01-06,Pharmacy visit,Health,-30.00
+2023-01-07,Family outing,Family,-150.00
+2023-01-08,Jeans,Apparel,-60.00
+2023-01-09,Spa day,Beauty,-100.00
+2023-01-10,Online course fee,Education,-50.00
+2023-01-11,Winter festival,Festivals,-200.00
+2023-01-12,International wire transfer,Money transfer,-25.00
+2023-01-13,Theater visit,Culture,-40.00
+2023-01-14,Weekend getaway,Tourism,-600.00
+2023-01-15,Shaving kit,Grooming,-25.00
+2023-01-16,Document notarization,Documents,-15.00
+2023-01-17,Friends' meetup,Social Life,-70.00
+2023-01-18,Grocery shopping,Food,-100.00
+2023-01-19,Metro ticket,Transportation,-5.00
+2023-01-20,Home repair tools,Household,-70.00
+2023-01-21,Music subscription,Subscription,-9.99
+2023-01-22,Mutual fund investment,Investment,-400.00
+2023-01-23,Dentist visit,Health,-120.00
+2023-01-24,Family picnic,Family,-80.00
+2023-01-25,Sweater,Apparel,-45.00
+2023-01-26,Manicure,Beauty,-30.00
+2023-01-27,Tuition fee,Education,-150.00
+2023-01-28,Cultural event tickets,Festivals,-50.00
+2023-01-29,Money transfer to sibling,Money transfer,-100.00
+2023-01-30,Museum visit,Culture,-25.00
+2023-01-31,Travel insurance,Tourism,-50.00
+2023-02-01,Electric trimmer,Grooming,-35.00
+2023-02-02,Document certification,Documents,-20.00
+2023-02-03,Social night out,Social Life,-90.00
+2023-02-04,Vegetables,Food,-25.00
+2023-02-05,Car wash,Transportation,-20.00
+2023-02-06,Table lamp,Household,-30.00
+2023-02-07,Magazine subscription,Subscription,-7.99
+2023-02-08,Bond investment,Investment,-500.00
+2023-02-09,Health insurance premium,Health,-250.00
+2023-02-10,Family movie night,Family,-60.00
+2023-02-11,Summer dress,Apparel,-70.00
+2023-02-12,Facial treatment,Beauty,-45.00
+2023-02-13,Textbook purchase,Education,-100.00
+2023-02-14,Valentine's Day gifts,Festivals,-200.00
+2023-02-15,Money transfer to parents,Money transfer,-300.00
+2023-02-16,Book fair tickets,Culture,-15.00
+2023-02-17,Travel booking,Tourism,-450.00
+2023-02-18,Hair gel,Grooming,-10.00
+2023-02-19,Document fee,Documents,-10.00
+2023-02-20,Dinner with friends,Social Life,-120.00
+2023-02-21,Weekly groceries,Food,-85.00
+2023-02-22,Train ticket,Transportation,-25.00
+2023-02-23,Kitchen utensils,Household,-35.00
+2023-02-24,Online reading subscription,Subscription,-6.99
+2023-02-25,ETF purchase,Investment,-600.00
+2023-02-26,Fitness check-up,Health,-90.00
+2023-02-27,Family park visit,Family,-50.00
+2023-02-28,Trousers,Apparel,-55.00
+2023-03-01,Beauty products,Beauty,-30.00
+2023-03-02,School supplies,Education,-20.00
+2023-03-03,Holiday decorations,Festivals,-75.00
+2023-03-04,Money transfer for utilities,Money transfer,-60.00
+2023-03-05,Art gallery,Culture,-30.00
+2023-03-06,City tour,Tourism,-300.00
+2023-03-07,Razor blades,Grooming,-12.00
+2023-03-08,Legal document preparation,Documents,-40.00
+2023-03-09,Group lunch,Social Life,-100.00
+2023-03-10,Fruit shopping,Food,-25.00
+2023-03-11,Bus pass,Transportation,-50.00
+2023-03-12,Living room carpet,Household,-120.00
+2023-03-13,Monthly magazine subscription,Subscription,-5.99
+2023-03-14,Real estate investment,Investment,-2000.00
+2023-03-15,Pharmacy order,Health,-60.00
+2023-03-16,Family dining out,Family,-70.00
+2023-03-17,Shoes,Apparel,-90.00
+2023-03-18,Cosmetics,Beauty,-35.00
+2023-03-19,Online learning,Education,-100.00
+2023-03-20,Easter gifts,Festivals,-150.00
+2023-03-21,Wire transfer for rent,Money transfer,-500.00
+2023-03-22,Symphony tickets,Culture,-50.00
+2023-03-23,Adventure trip,Tourism,-700.00
+2023-03-24,Shaving cream,Grooming,-8.00
+2023-03-25,Document filing fee,Documents,-20.00
+2023-03-26,Game night with friends,Social Life,-60.00
+2023-03-27,Grocery store,Food,-110.00
+2023-03-28,Taxi service,Transportation,-30.00
+2023-03-29,New curtains,Household,-70.00
+2023-03-30,Video service subscription,Subscription,-10.99
+2023-03-31,Investment in gold,Investment,-1500.00
+2023-04-01,Health supplements,Health,-50.00
+2023-04-02,Family day out,Family,-150.00
+2023-04-03,Blazer,Apparel,-120.00
+2023-04-04,Hair treatment,Beauty,-60.00
+2023-04-05,Education software,Education,-200.00
+2023-04-06,Diwali sweets,Festivals,-80.00
+2023-04-07,Money transfer to friend,Money transfer,-50.00
+2023-04-08,Art exhibit entry,Culture,-20.00
+2023-04-09,Hotel booking,Tourism,-450.00
+2023-04-10,Aftershave lotion,Grooming,-10.00
+2023-04-11,Document processing,Documents,-25.00
+2023-04-12,Weekend party,Social Life,-90.00
+2023-04-13,Vegetable market,Food,-35.00
+2023-04-14,Car repair,Transportation,-250.00
+2023-04-15,Storage solutions,Household,-45.00
+2023-04-16,Digital service subscription,Subscription,-8.99
+2023-04-17,Mutual funds,Investment,-750.00
+2023-04-18,Doctor's visit,Health,-100.00
+2023-04-19,Family park entry,Family,-20.00
+2023-04-20,Sportswear,Apparel,-70.00
+2023-04-21,Makeup purchase,Beauty,-45.00
+2023-04-22,Online seminar,Education,-50.00
+2023-04-23,Halloween costumes,Festivals,-100.00
+2023-04-24,Money transfer for food,Money transfer,-40.00
+2023-04-25,Local theater show,Culture,-25.00
+2023-04-26,Travel expenses,Tourism,-300.00
+2023-04-27,Beard oil,Grooming,-15.00
+2023-04-28,Document notarization,Documents,-15.00
+2023-04-29,Social gathering,Social Life,-50.00
+2023-04-30,Meat purchase,Food,-45.00
+2023-05-01,Bus ticket,Transportation,-2.50
+2023-05-02,Home improvement items,Household,-80.00
+2023-05-03,Newspaper subscription,Subscription,-4.99
+2023-05-04,Stock trading,Investment,-600.00
+2023-05-05,Health check-up,Health,-150.00
+2023-05-06,Family dinner,Family,-90.00
+2023-05-07,Work pants,Apparel,-55.00
+2023-05-08,Beauty cream,Beauty,-25.00
+2023-05-09,Exam registration,Education,-200.00
+2023-05-10,Holiday shopping,Festivals,-250.00
+2023-05-11,Money transfer for bills,Money transfer,-120.00
+2023-05-12,Art supplies,Culture,-30.00
+2023-05-13,Travel insurance,Tourism,-60.00
+2023-05-14,Haircut,Grooming,-20.00
+2023-05-15,Document copying fee,Documents,-10.00
+2023-05-16,Group dinner,Social Life,-100.00
+2023-05-17,Bakery purchase,Food,-25.00
+2023-05-18,Taxi fare,Transportation,-15.00
+2023-05-19,Furniture,Household,-200.00
+2023-05-20,Online magazine,Subscription,-6.99
+2023-05-21,Bonds investment,Investment,-500.00
+2023-05-22,Medical consultation,Health,-100.00
+2023-05-23,Family movie outing,Family,-75.00
+2023-05-24,Shirt,Apparel,-40.00
+2023-05-25,Facial cleanser,Beauty,-15.00
+2023-05-26,Course material,Education,-50.00
+2023-05-27,Festival food,Festivals,-100.00
+2023-05-28,Wire transfer for rent,Money transfer,-500.00
+2023-05-29,Music event tickets,Culture,-45.00
+2023-05-30,Vacation package,Tourism,-1000.00
+2023-05-31,Razor,Grooming,-25.00
+2023-06-01,Legal documents,Documents,-30.00
+2023-06-02,Social event,Social Life,-80.00
+2023-06-03,Dairy products,Food,-20.00
+2023-06-04,Public transport card,Transportation,-50.00
+2023-06-05,Home decor,Household,-60.00
+2023-06-06,Online subscription,Subscription,-5.99
+2023-06-07,Real estate purchase,Investment,-2500.00
+2023-06-08,Health insurance,Health,-200.00
+2023-06-09,Family celebration,Family,-150.00
+2023-06-10,Shoes purchase,Apparel,-75.00
+2023-06-11,Skincare products,Beauty,-40.00
+2023-06-12,Online education course,Education,-150.00
+2023-06-13,Diwali sweets,Festivals,-100.00
+2023-06-14,Money transfer to relative,Money transfer,-200.00
+2023-06-15,Opera tickets,Culture,-100.00
+2023-06-16,Weekend getaway,Tourism,-800.00
+2023-06-17,Shaving set,Grooming,-25.00
+2023-06-18,Document filing fee,Documents,-10.00
+2023-06-19,Brunch with friends,Social Life,-90.00
+2023-06-20,Groceries,Food,-95.00
+2023-06-21,Car rental,Transportation,-150.00
+2023-06-22,Home cleaning,Household,-45.00
+2023-06-23,Digital magazine subscription,Subscription,-8.99
+2023-06-24,Investment in ETFs,Investment,-300.00
+2023-06-25,Pharmacy,Health,-60.00
+2023-06-26,Family park visit,Family,-25.00
+2023-06-27,Jacket purchase,Apparel,-85.00
+2023-06-28,Makeup,Grooming,-35.00
+2023-06-29,School enrollment,Education,-300.00
+2023-06-30,Christmas gifts,Festivals,-200.00
+2023-07-01,Money transfer for shopping,Money transfer,-150.00
+2023-07-02,Concert visit,Culture,-75.00
+2023-07-03,Travel booking,Tourism,-900.00
+2023-07-04,Hair dye,Grooming,-15.00
+2023-07-05,Document processing fee,Documents,-20.00
+2023-07-06,Friends' dinner,Social Life,-120.00
+2023-07-07,Fruit market,Food,-35.00
+2023-07-08,Subway ride,Transportation,-2.75
+2023-07-09,New sofa,Household,-500.00
+2023-07-10,Streaming service,Subscription,-9.99
+2023-07-11,Stock purchase,Investment,-400.00
+2023-07-12,Health supplements,Health,-30.00
+2023-07-13,Family day trip,Family,-200.00
+2023-07-14,Sports attire,Apparel,-60.00
+2023-07-15,Skincare routine,Beauty,-40.00
+2023-07-16,Tuition fees,Education,-250.00
+2023-07-17,Diwali decorations,Festivals,-150.00
+2023-07-18,Money transfer for groceries,Money transfer,-40.00
+2023-07-19,Book fair entry,Culture,-20.00
+2023-07-20,Holiday package,Tourism,-1200.00
+2023-07-21,Beard trimmer,Grooming,-30.00
+2023-07-22,Document notarization fee,Documents,-25.00
+2023-07-23,Dinner with friends,Social Life,-100.00
+2023-07-24,Dairy shopping,Food,-20.00
+2023-07-25,Bus fare,Transportation,-5.00
+2023-07-26,Storage boxes,Household,-25.00
+2023-07-27,Online news subscription,Subscription,-6.99
+2023-07-28,Bonds investment,Investment,-700.00
+2023-07-29,Health screening,Health,-100.00
+2023-07-30,Family barbecue,Family,-50.00
+2023-07-31,Winter coat,Apparel,-150.00
+2023-08-01,Facial treatment,Beauty,-45.00
+2023-08-02,Online training,Education,-200.00
+2023-08-03,Christmas lights,Festivals,-50.00
+2023-08-04,Wire transfer for bills,Money transfer,-100.00
+2023-08-05,Museum visit,Culture,-30.00
+2023-08-06,Tour package,Tourism,-800.00
+2023-08-07,Aftershave lotion,Grooming,-20.00
+2023-08-08,Document review fee,Documents,-20.00
+2023-08-09,Party with friends,Social Life,-80.00
+2023-08-10,Meat shopping,Food,-40.00
+2023-08-11,Ride share,Transportation,-25.00
+2023-08-12,Home office setup,Household,-200.00
+2023-08-13,Monthly reading subscription,Subscription,-5.99
+2023-08-14,Investment in gold,Investment,-1000.00
+2023-08-15,Pharmacy visit,Health,-45.00
+2023-08-16,Family dinner out,Family,-70.00
+2023-08-17,Suit,Apparel,-250.00
+2023-08-18,Cosmetics purchase,Beauty,-50.00
+2023-08-19,College fees,Education,-400.00
+2023-08-20,Halloween costumes,Festivals,-80.00
+2023-08-21,Wire transfer for rent,Money transfer,-450.00
+2023-08-22,Opera show tickets,Culture,-75.00
+2023-08-23,Adventure trip,Tourism,-900.00
+2023-08-24,Hair gel,Grooming,-15.00
+2023-08-25,Document copy fee,Documents,-15.00
+2023-08-26,Friends' night out,Social Life,-120.00
+2023-08-27,Fruit purchase,Food,-20.00
+2023-08-28,Subway fare,Transportation,-2.50
+2023-08-29,Home decor items,Household,-80.00
+2023-08-30,Online subscription,Subscription,-7.99
+2023-08-31,Stock investment,Investment,-500.00
+2023-09-01,Health check-up,Health,-80.00
+2023-09-02,Family outing,Family,-100.00
+2023-09-03,Sneakers,Apparel,-90.00
+2023-09-04,Skincare products,Beauty,-35.00
+2023-09-05,Textbooks,Education,-150.00
+2023-09-06,Festival celebration, Festivals,-200.00
+2023-09-07,Money transfer to friend, Money transfer,-50.00
+2023-09-08,Art exhibition, Culture,-30.00
+2023-09-09,Travel expenses, Tourism,-500.00
+2023-09-10,Shaving kit, Grooming,-25.00
+2023-09-11,Document certification, Documents,-15.00
+2023-09-12,Social gathering, Social Life,-70.00
+2023-09-13,Grocery shopping, Food,-80.00
+2023-09-14,Cab fare, Transportation,-15.00
+2023-09-15,Cleaning supplies, Household,-40.00
+2023-09-16,Online streaming subscription, Subscription,-12.99
+2023-09-17,Stock investment, Investment,-300.00
+2023-09-18,Pharmacy visit, Health,-30.00
+2023-09-19,Family outing, Family,-150.00
+2023-09-20,Jeans, Apparel,-60.00
+2023-09-21,Spa day, Beauty,-100.00
+2023-09-22,Online course fee, Education,-50.00
+2023-09-23,Winter festival, Festivals,-200.00
+2023-09-24,International wire transfer, Money transfer,-25.00
+2023-09-25,Theater visit, Culture,-40.00
+2023-09-26,Weekend getaway, Tourism,-600.00
+2023-09-27,Shaving kit, Grooming,-25.00
+2023-09-28,Document notarization, Documents,-15.00
+2023-09-29,Friends' meetup, Social Life,-70.00
+2023-09-30,Grocery shopping, Food,-100.00
+2023-10-01,Metro ticket, Transportation,-5.00
+2023-10-02,Home repair tools, Household,-70.00
+2023-10-03,Music subscription, Subscription,-9.99
+2023-10-04,Bond investment, Investment,-500.00
+2023-10-05,Health insurance premium, Health,-250.00
+2023-10-06,Family movie night, Family,-60.00
+2023-10-07,Summer dress, Apparel,-70.00
+2023-10-08,Facial treatment, Beauty,-45.00
+2023-10-09,Textbook purchase, Education,-100.00
+2023-10-10,Valentine's Day gifts, Festivals,-200.00
+2023-10-11,Money transfer to parents, Money transfer,-300.00
+2023-10-12,Book fair tickets, Culture,-15.00
+2023-10-13,Travel booking, Tourism,-450.00
+2023-10-14,Hair gel, Grooming,-10.00
+2023-10-15,Document fee, Documents,-10.00
+2023-10-16,Dinner with friends, Social Life,-120.00
+2023-10-17,Weekly groceries, Food,-85.00
+2023-10-18,Train ticket, Transportation,-25.00
+2023-10-19,Kitchen utensils, Household,-35.00
+2023-10-20,Online reading subscription, Subscription,-6.99
+2023-10-21,ETF purchase, Investment,-600.00
+2023-10-22,Fitness check-up, Health,-90.00
+2023-10-23,Family park visit, Family,-50.00
+2023-10-24,Trousers, Apparel,-55.00
+2023-10-25,Beauty products, Beauty,-30.00
+2023-10-26,School supplies, Education,-20.00
+2023-10-27,Holiday decorations, Festivals,-75.00
+2023-10-28,Money transfer for utilities, Money transfer,-60.00
+2023-10-29,Art gallery, Culture,-30.00
+2023-10-30,City tour, Tourism,-300.00
+2023-10-31,Razor blades, Grooming,-12.00
+2023-11-01,Legal document preparation, Documents,-40.00
+2023-11-02,Group lunch, Social Life,-100.00
+2023-11-03,Fruit shopping, Food,-25.00
+2023-11-04,Bus pass, Transportation,-50.00
+2023-11-05,Living room carpet, Household,-120.00
+2023-11-06,Monthly magazine subscription, Subscription,-5.99
+2023-11-07,Real estate investment, Investment,-2000.00
+2023-11-08,Pharmacy order, Health,-60.00
+2023-11-09,Family dining out, Family,-70.00
+2023-11-10,Shoes, Apparel,-90.00
+2023-11-11,Cosmetics, Beauty,-35.00
+2023-11-12,Online learning, Education,-100.00
+2023-11-13,Easter gifts, Festivals,-150.00
+2023-11-14,Money transfer to sibling, Money transfer,-100.00
+2023-11-15,Book fair tickets, Culture,-15.00
+2023-11-16,Travel booking, Tourism,-450.00
+2023-11-17,Hair gel, Grooming,-10.00
+2023-11-18,Document certification, Documents,-20.00
+2023-11-19,Social night out, Social Life,-90.00
+2023-11-20,Vegetables, Food,-25.00
+2023-11-21,Car wash, Transportation,-20.00
+2023-11-22,Table lamp, Household,-30.00
+2023-11-23,Magazine subscription, Subscription,-7.99
+2023-11-24,Bond investment, Investment,-500.00
+2023-11-25,Health insurance premium, Health,-250.00
+2023-11-26,Family movie night, Family,-60.00
+2023-11-27,Summer dress, Apparel,-70.00
+2023-11-28,Facial treatment, Beauty,-45.00
+2023-11-29,Textbook purchase, Education,-100.00
+2023-11-30,Valentine's Day gifts, Festivals,-200.00
+2023-12-01,Money transfer to parents, Money transfer,-300.00
+2023-12-02,Book fair tickets, Culture,-15.00
+2023-12-03,Travel booking, Tourism,-450.00
+2023-12-04,Hair gel, Grooming,-10.00
+2023-12-05,Document fee, Documents,-10.00
+2023-12-06,Dinner with friends, Social Life,-120.00
+2023-12-07,Weekly groceries, Food,-85.00
+2023-12-08,Train ticket, Transportation,-25.00
+2023-12-09,Kitchen utensils, Household,-35.00
+2023-12-10,Online reading subscription, Subscription,-6.99
+2023-12-11,ETF purchase, Investment,-600.00
+2023-12-12,Fitness check-up, Health,-90.00
+2023-12-13,Family park visit, Family,-50.00
+2023-12-14,Trousers, Apparel,-55.00
+2023-12-15,Beauty products, Beauty,-30.00
+2023-12-16,School supplies, Education,-20.00
+2023-12-17,Holiday decorations, Festivals,-75.00
+2023-12-18,Money transfer for utilities, Money transfer,-60.00
+2023-12-19,Art gallery, Culture,-30.00
+2023-12-20,City tour, Tourism,-300.00
+2023-12-21,Razor blades, Grooming,-12.00
+2023-12-22,Legal document preparation, Documents,-40.00
+2023-12-23,Group lunch, Social Life,-100.00
+2023-12-24,Fruit shopping, Food,-25.00
+2023-12-25,Bus pass, Transportation,-50.00
+2023-12-26,Living room carpet, Household,-120.00
+2023-12-27,Monthly magazine subscription, Subscription,-5.99
+2023-12-28,Real estate investment, Investment,-2000.00
+2023-12-29,Pharmacy order, Health,-60.00
+2023-12-30,Family dining out, Family,-70.00
+2024-01-01,Cosmetics,Beauty,-35.00
+2024-01-02,Online learning,Education,-100.00
+2024-01-03,Easter gifts,Festivals,-150.00
+2024-01-04,Money transfer to sibling,Money transfer,-100.00
+2024-01-05,Book fair tickets,Culture,-15.00
+2024-01-06,Travel booking,Tourism,-450.00
+2024-01-07,Hair gel,Grooming,-10.00
+2024-01-08,Document certification,Documents,-20.00
+2024-01-09,Social night out,Social Life,-90.00
+2024-01-10,Vegetables,Food,-25.00
+2024-01-11,Car wash,Transportation,-20.00
+2024-01-12,Table lamp,Household,-30.00
+2024-01-13,Magazine subscription,Subscription,-7.99
+2024-01-14,Bond investment,Investment,-500.00
+2024-01-15,Health insurance premium,Health,-250.00
+2024-01-16,Family movie night,Family,-60.00
+2024-01-17,Summer dress,Apparel,-70.00
+2024-01-18,Facial treatment,Beauty,-45.00
+2024-01-19,Textbook purchase,Education,-100.00
+2024-01-20,Valentine's Day gifts,Festivals,-200.00
+2024-01-21,Money transfer to parents,Money transfer,-300.00
+2024-01-22,Book fair tickets,Culture,-15.00
+2024-01-23,Travel booking,Tourism,-450.00
+2024-01-24,Hair gel,Grooming,-10.00
+2024-01-25,Document fee,Documents,-10.00
+2024-01-26,Dinner with friends,Social Life,-120.00
+2024-01-27,Weekly groceries,Food,-85.00
+2024-01-28,Train ticket,Transportation,-25.00
+2024-01-29,Kitchen utensils,Household,-35.00
+2024-01-30,Online reading subscription,Subscription,-6.99
+2024-01-31,ETF purchase,Investment,-600.00
+2024-02-01,Street food,Food,-20.00
+2024-02-02,Taxi ride,Transportation,-15.00
+2024-02-03,Cleaning supplies,Household,-30.00
+2024-02-04,Streaming service subscription,Subscription,-9.99
+2024-02-05,Stock investment,Investment,-500.00
+2024-02-06,Pharmacy visit,Health,-25.00
+2024-02-07,Family outing,Family,-100.00
+2024-02-08,Batik shirt,Apparel,-80.00
+2024-02-09,Spa treatment,Beauty,-90.00
+2024-02-10,Online course fee,Education,-50.00
+2024-02-11,Local cultural festival, Festivals,-150.00
+2024-02-12,International money transfer,Money transfer,-30.00
+2024-02-13,Theater performance, Culture,-50.00
+2024-02-14,Weekend beach getaway, Tourism,-400.00
+2024-02-15,Barber visit, Grooming,-15.00
+2024-02-16,Document notarization,Documents,-15.00
+2024-02-17,Meetup with friends, Social Life,-50.00
+2024-02-18,Market groceries,Food,-30.00
+2024-02-19,Public transport fare,Transportation,-10.00
+2024-02-20,Home decor,Household,-50.00
+2024-02-21,Music streaming subscription,Subscription,-8.99
+2024-02-22,Gold investment,Investment,-700.00
+2024-02-23,Dental check-up,Health,-80.00
+2024-02-24,Park visit with family,Family,-60.00
+2024-02-25,Traditional attire,Apparel,-120.00
+2024-02-26,Face mask,Beauty,-20.00
+2024-02-27,Language course fee,Education,-80.00
+2024-02-28,Celebration feast, Festivals,-200.00
+2024-02-29,Overseas remittance,Money transfer,-50.00
+2024-03-01,Art exhibition, Culture,-30.00
+2024-03-02,Island vacation, Tourism,-600.00
+2024-03-03,Barbershop visit, Grooming,-18.00
+2024-03-04,Document processing fee,Documents,-12.00
+2024-03-05,Community event, Social Life,-40.00
+2024-03-06,Street food,Food,-15.00
+2024-03-07,Ride-hailing service,Transportation,-8.00
+2024-03-08,Cleaning supplies,Household,-25.00
+2024-03-09,Streaming service subscription,Subscription,-9.99
+2024-03-10,Stock investment,Investment,-300.00
+2024-03-11,Pharmacy visit,Health,-20.00
+2024-03-12,Family outing,Family,-80.00
+2024-03-13,Batik dress,Apparel,-150.00
+2024-03-14,Spa treatment,Beauty,-100.00
+2024-03-15,Online course fee,Education,-60.00
+2024-03-16,Local cultural festival, Festivals,-100.00
+2024-03-17,International money transfer,Money transfer,-25.00
+2024-03-18,Theater performance, Culture,-40.00
+2024-03-19,Weekend retreat, Tourism,-350.00
+2024-03-20,Barber visit, Grooming,-12.00
+2024-03-21,Document notarization,Documents,-18.00
+2024-03-22,Meetup with friends, Social Life,-30.00
+2024-03-23,Market groceries,Food,-35.00
+2024-03-24,Public transport fare,Transportation,-7.00
+2024-03-25,Home decor,Household,-40.00
+2024-03-26,Music streaming subscription,Subscription,-7.99
+2024-03-27,Gold investment,Investment,-600.00
+2024-03-28,Dental check-up,Health,-70.00
+2024-03-29,Park visit with family,Family,-50.00
+2024-03-30,Traditional attire,Apparel,-100.00
+2024-03-31,Face mask,Beauty,-15.00
+2024-04-01,Nasi lemak breakfast,Food,-8.00
+2024-04-02,LRT ticket,Transportation,-5.00
+2024-04-03,Household cleaning products,Household,-20.00
+2024-04-04,Streaming service subscription,Subscription,-9.99
+2024-04-05,Stock investment,Investment,-400.00
+2024-04-06,Pharmacy visit,Health,-15.00
+2024-04-07,Family outing to the zoo,Family,-120.00
+2024-04-08,Baju kurung,Apparel,-200.00
+2024-04-09,Grab ride,Transportation,-12.00
+2024-04-10,Spa and massage,Beauty,-120.00
+2024-04-11,Online course fee,Education,-70.00
+2024-04-12,Local food festival, Festivals,-80.00
+2024-04-13,International money transfer,Money transfer,-35.00
+2024-04-14,Movie tickets, Culture,-25.00
+2024-04-15,Weekend getaway to Cameron Highlands, Tourism,-500.00
+2024-04-16,Barber visit, Grooming,-10.00
+2024-04-17,Document notarization,Documents,-20.00
+2024-04-18,Hangout at mamak stall, Social Life,-30.00
+2024-04-19,Nasi ayam lunch,Food,-12.00
+2024-04-20,LRT fare,Transportation,-3.50
+2024-04-21,Home essentials,Household,-30.00
+2024-04-22,Music streaming subscription,Subscription,-7.99
+2024-04-23,Gold investment,Investment,-800.00
+2024-04-24,Dental check-up,Health,-60.00
+2024-04-25,Picnic in the park,Family,-70.00
+2024-04-26,Baju Melayu,Apparel,-150.00
+2024-04-27,GrabCar ride,Transportation,-20.00
+2024-04-28,Facial treatment,Beauty,-80.00
+2024-04-29,Language course fee,Education,-90.00
+2024-04-30,Night market shopping, Festivals,-50.00
+2024-05-01,Overseas remittance,Money transfer,-40.00
+2024-05-02,Art exhibition, Culture,-30.00
+2024-05-03,Beach vacation, Tourism,-700.00
+2024-05-04,Barber visit, Grooming,-15.00
+2024-05-05,Document processing fee,Documents,-15.00
+2024-05-06,Coffee with friends, Social Life,-25.00
+2024-05-07,Nasi kerabu lunch,Food,-15.00
+2024-05-08,GrabFood delivery,Transportation,-8.00
+2024-05-09,Cleaning supplies,Household,-25.00
+2024-05-10,Streaming service subscription,Subscription,-8.99
+2024-05-11,Investment in unit trust,Investment,-600.00
+2024-05-12,Health supplements,Health,-40.00
+2024-05-13,Family karaoke night,Family,-90.00
+2024-05-14,Songkok,Apparel,-50.00
+2024-05-15,Grab ride to airport,Transportation,-30.00
+2024-05-16,Manicure and pedicure,Beauty,-60.00
+2024-05-17,Online course fee,Education,-80.00
+2024-05-18,Local arts and crafts festival, Festivals,-120.00
+2024-05-19,Money transfer to family,Money transfer,-50.00
+2024-05-20,Theater tickets, Culture,-40.00
+2024-05-21,Weekend trip to Penang, Tourism,-800.00
+2024-05-22,Shaving kit, Grooming,-20.00
+2024-05-23,Document notarization,Documents,-25.00
+2024-05-24,Dinner with colleagues, Social Life,-60.00
+2024-05-25,Roti canai breakfast,Food,-10.00
+2024-05-26,LRT token,Transportation,-2.00
+2024-05-27,Household groceries,Household,-40.00
+2024-05-28,Music streaming subscription,Subscription,-6.99
+2024-05-29,Gold investment,Investment,-500.00
+2024-05-30,General health check-up,Health,-50.00
+2024-05-31,Family bowling session,Family,-80.00
+2024-06-01,Sarong,Apparel,-80.00
+2024-06-02,Grab ride home,Transportation,-15.00
+2024-06-03,Beauty salon visit,Beauty,-100.00
+2024-06-04,Online course fee,Education,-60.00
+2024-06-05,Hari Raya open house, Festivals,-200.00
+2024-06-06,International money transfer,Money transfer,-30.00
+2024-06-07,Movie night, Culture,-20.00
+2024-06-08,Beach resort stay, Tourism,-1000.00
+2024-06-09,Haircut, Grooming,-12.00
+2024-06-10,Document certification,Documents,-18.00
+2024-06-11,Family gathering, Social Life,-50.00
+2024-06-12,Nasi dagang breakfast,Food,-8.00
+2024-06-13,LRT fare,Transportation,-3.00
+2024-06-14,Home cleaning supplies,Household,-35.00
+2024-06-15,Streaming service subscription,Subscription,-9.99
+2024-06-16,Investment in property,Investment,-10000.00
+2024-06-17,Dental check-up,Health,-70.00
+2024-06-18,Family picnic,Family,-60.00
+2024-06-19,Baju kebaya,Apparel,-180.00
+2024-06-20,Grab ride to mall,Transportation,-10.00
+2024-06-21,Facial and massage,Beauty,-150.00
+2024-06-22,Language course fee,Education,-100.00
+2024-06-23,Local food fair, Festivals,-150.00
+2024-06-24,Money transfer to friend,Money transfer,-20.00
+2024-06-25,Art gallery visit, Culture,-35.00
+2024-06-26,Island hopping tour, Tourism,-600.00
+2024-06-27,Barber visit, Grooming,-15.00
+2024-06-28,Document notarization,Documents,-20.00
+2024-06-29,Networking event, Social Life,-40.00
+2024-06-30,Banana leaf rice lunch,Food,-20.00
+2024-07-01,LRT token,Transportation,-2.00
+2024-07-02,Household essentials,Household,-30.00
+2024-07-03,Music streaming subscription,Subscription,-6.99
+2024-07-04,Investment in stocks,Investment,-800.00
+2024-07-05,Health check-up,Health,-50.00
+2024-07-06,Family movie night,Family,-70.00
+2024-07-07,Sampin,Apparel,-60.00
+2024-07-08,GrabFood delivery,Transportation,-8.00
+2024-07-09,Manicure and pedicure,Beauty,-70.00
+2024-07-10,Online course fee,Education,-80.00
+2024-07-11,Local cultural festival, Festivals,-100.00
+2024-07-12,International money transfer,Money transfer,-25.00
+2024-07-13,Theater tickets, Culture,-40.00
+2024-07-14,Weekend trip to Langkawi, Tourism,-1000.00
+2024-07-15,Shaving kit, Grooming,-20.00
+2024-07-16,Document notarization,Documents,-25.00
+2024-07-17,Meetup with friends, Social Life,-30.00
+2024-07-18,Street food dinner,Food,-15.00
+2024-07-19,LRT fare,Transportation,-3.00
+2024-07-20,Home cleaning supplies,Household,-35.00
+2024-07-21,Streaming service subscription,Subscription,-9.99
+2024-07-22,Gold investment,Investment,-600.00
+07-22,Traditional Malay attire,Apparel,-250.00
+07-23,Grab ride to friend's house,Transportation,-12.00
+07-24,Spa treatment,Beauty,-120.00
+07-25,Tuition fee,Education,-150.00
+07-26,Bazaar Ramadan shopping, Festivals,-80.00
+07-27,Money transfer to family,Money transfer,-50.00
+07-28,Concert tickets, Culture,-60.00
+07-29,Weekend trip to Melaka, Tourism,-400.00
+07-30,Barber visit, Grooming,-15.00
+07-31,Home decor purchase,Household,-50.00
+08-01,Nasi kandar lunch,Food,-12.00
+08-02,LRT fare,Transportation,-3.00
+08-03,Utility bill payment,Household,-100.00
+08-04,Subscription renewal,Subscription,-7.99
+08-05,Investment in gold,Investment,-500.00
+08-06,Dental check-up,Health,-80.00
+08-07,Family outing to theme park,Family,-200.00
+08-08,Baju raya shopping,Apparel,-300.00
+08-09,Grab ride to work,Transportation,-10.00
+08-10,Facial treatment,Beauty,-80.00
+08-11,Language course fee,Education,-90.00
+08-12,Hari Raya Aidiladha preparations, Festivals,-150.00
+08-13,Money transfer to friend,Money transfer,-30.00
+08-14,Art exhibition visit, Culture,-25.00
+08-15,Short getaway to Pulau Redang, Tourism,-600.00
+08-16,Haircut, Grooming,-18.00
+08-17,Document notarization,Documents,-20.00
+08-18,Coffee with friends, Social Life,-20.00
+08-19,Roti bakar breakfast,Food,-8.00
+08-20,LRT token,Transportation,-2.00
+08-21,Household groceries,Household,-40.00
+08-22,Streaming service subscription,Subscription,-8.99
+08-23,Investment in property,Investment,-12000.00
+08-24,Health supplements,Health,-50.00
+08-25,Family karaoke night,Family,-90.00
+08-26,Traditional Malay attire,Apparel,-180.00
+08-27,Grab ride to shopping mall,Transportation,-15.00
+08-28,Spa and massage session,Beauty,-150.00
+08-29,Online course fee,Education,-70.00
+08-30,Local food festival, Festivals,-120.00
+08-31,Money transfer to family,Money transfer,-50.00
+09-01,International money transfer,Money transfer,-40.00
+09-02,Movie night, Culture,-30.00
+09-03,Weekend trip to Penang, Tourism,-800.00
+09-04,Haircut, Grooming,-15.00
+09-05,Document processing fee,Documents,-15.00
+09-06,Gathering with relatives, Social Life,-50.00
+09-07,Nasi lemak breakfast,Food,-10.00
+09-08,LRT fare,Transportation,-3.50
+09-09,Home cleaning supplies,Household,-35.00
+09-10,Subscription renewal,Subscription,-6.99
+09-11,Investment in stocks,Investment,-1000.00
+09-12,Health check-up,Health,-60.00
+09-13,Family picnic,Family,-70.00
+09-14,Baju kurung shopping,Apparel,-200.00
+09-15,GrabFood delivery,Transportation,-8.00
+09-16,Manicure and pedicure,Beauty,-60.00
+09-17,Language course fee,Education,-80.00
+09-18,Local arts and crafts festival, Festivals,-100.00
+09-19,Money transfer to friend,Money transfer,-30.00
+09-20,Theater tickets, Culture,-40.00
+09-21,Weekend trip to Langkawi, Tourism,-1000.00
+09-22,Shaving kit, Grooming,-20.00
+09-23,Document notarization,Documents,-25.00
+09-24,Dinner with colleagues, Social Life,-60.00
+09-25,Roti canai breakfast,Food,-10.00
+09-26,LRT token,Transportation,-2.00
+09-27,Household groceries,Household,-40.00
+09-28,Music streaming subscription,Subscription,-6.99
+09-29,Investment in gold,Investment,-600.00
+09-30,General health check-up,Health,-50.00
+10-01,Family bowling session,Family,-80.00
+10-02,Sarong,Apparel,-80.00
+10-03,Grab ride home,Transportation,-15.00
+10-04,Spa treatment,Beauty,-100.00
+10-05,Tuition fee,Education,-150.00
+10-06,Bazaar shopping, Festivals,-80.00
+10-07,Money transfer to family,Money transfer,-50.00
+10-08,Concert tickets, Culture,-60.00
+10-09,Weekend trip to Melaka, Tourism,-400.00
+10-10,Barber visit, Grooming,-15.00
+10-11,Home decor purchase,Household,-50.00
+10-12,Nasi kandar lunch,Food,-12.00
+10-13,LRT fare,Transportation,-3.00
+10-14,Utility bill payment,Household,-100.00
+10-15,Subscription renewal,Subscription,-7.99
+10-16,Investment in gold,Investment,-500.00
+10-17,Dental check-up,Health,-80.00
+10-18,Family outing to theme park,Family,-200.00
+10-19,Baju raya shopping,Apparel,-300.00
+10-20,Grab ride to work,Transportation,-10.00
+10-21,Facial treatment,Beauty,-80.00
+10-22,Language course fee,Education,-90.00
+10-23,Hari Raya Aidiladha preparations, Festivals,-150.00
+10-24,Money transfer to friend,Money transfer,-30.00
+10-25,Art exhibition visit, Culture,-25.00
+10-26,Short getaway to Pulau Redang, Tourism,-600.00
+10-27,Haircut, Grooming,-18.00
+10-28,Document notarization,Documents,-20.00
+10-29,Coffee with friends, Social Life,-20.00
+10-30,Roti bakar breakfast,Food,-8.00
+10-31,LRT token,Transportation,-2.00
+11-01,Household groceries,Household,-40.00
+11-02,Streaming service subscription,Subscription,-8.99
+11-03,Investment in property,Investment,-12000.00
+11-04,Health supplements,Health,-50.00
+11-05,Family karaoke night,Family,-90.00
+11-06,Traditional Malay attire,Apparel,-180.00
+11-07,Grab ride to shopping mall,Transportation,-15.00
+11-08,Spa and massage session,Beauty,-150.00
+11-09,Online course fee,Education,-70.00
+11-10,Local food festival, Festivals,-120.00
+11-11,Money transfer to family,Money transfer,-50.00
+11-12,International money transfer,Money transfer,-40.00
+11-13,Movie night, Culture,-30.00
+11-14,Weekend trip to Penang, Tourism,-800.00
+11-15,Haircut, Grooming,-15.00
+11-16,Document processing fee,Documents,-15.00
+11-17,Gathering with relatives, Social Life,-50.00
+11-18,Nasi lemak breakfast,Food,-10.00
+11-19,LRT fare,Transportation,-3.50
+11-20,Home cleaning supplies,Household,-35.00
+11-21,Streaming service subscription,Subscription,-9.99
+11-22,Investment in stocks,Investment,-1000.00
+11-23,Health check-up,Health,-60.00
+11-24,Family picnic,Family,-70.00
+11-25,Baju kurung shopping,Apparel,-200.00
+11-26,GrabFood delivery,Transportation,-8.00
+11-27,Manicure and pedicure,Beauty,-60.00
+11-28,Language course fee,Education,-80.00
+11-29,Local arts and crafts festival, Festivals,-100.00
+11-30,Money transfer to friend,Money transfer,-30.00
+12-01,Theater tickets, Culture,-40.00
+12-02,Weekend trip to Langkawi, Tourism,-1000.00
+2024-07-14,Physiotherapy session,Health,-150.00
+2024-07-15,Vitamins purchase,Health,-30.00
+2024-07-16,Gym membership renewal,Health,-200.00
+2024-07-17,Doctor's consultation,Health,-80.00
+2024-07-18,Medical test,Health,-120.00
+2024-07-14,Family picnic,Family,-50.00
+2024-07-15,Family board game night,Family,-30.00
+2024-07-16,Family visit to amusement park,Family,-150.00
+2024-07-17,Family lunch outing,Family,-60.00
+2024-07-18,Family camping trip,Family,-200.00
+2024-07-19,Shoes purchase,Apparel,-80.00
+2024-07-20,Summer dress,Apparel,-50.00
+2024-07-21,Formal attire purchase,Apparel,-150.00
+2024-07-22,Sportswear purchase,Apparel,-100.00
+2024-07-23,Sunglasses purchase,Apparel,-70.00
+2024-07-19,Skincare products,Beauty,-35.00
+2024-07-20,Haircut and styling,Beauty,-45.00
+2024-07-21,Makeup purchase,Beauty,-25.00
+2024-07-22,Spa treatment,Beauty,-120.00
+2024-07-23,Facial mask purchase,Beauty,-15.00
+2024-07-24,Books purchase,Education,-70.00
+2024-07-25,Online course fee,Education,-90.00
+2024-07-26,Workshop registration,Education,-50.00
+2024-07-27,Language class fee,Education,-100.00
+2024-07-28,Exam registration,Education,-120.00
+2024-07-24,Music festival tickets,Festivals,-200.00
+2024-07-25,Traditional event celebration,Festivals,-100.00
+2024-07-26,Holiday decorations,Festivals,-80.00
+2024-07-27,Food festival entry,Festivals,-50.00
+2024-07-28,Cultural performance tickets,Festivals,-70.00
+2024-07-29,Stationery purchase,Education,-40.00
+2024-07-30,Online course subscription,Education,-60.00
+2024-07-31,Student association fee,Education,-20.00
+2024-08-01,Workshop materials,Education,-35.00
+2024-08-02,Textbook purchase,Education,-80.00
+2024-07-29,Annual festival tickets,Festivals,-150.00
+2024-07-30,Street food fair, Festivals,-50.00
+2024-07-31,Cultural parade, Festivals,-100.00
+2024-08-01,Fireworks display, Festivals,-80.00
+2024-08-02,Local music concert, Festivals,-120.00
+2024-07-29,Money transfer to relative,Money transfer,-30.00
+2024-07-30,Charity donation,Money transfer,-20.00
+2024-07-31,Loan repayment,Money transfer,-100.00
+2024-08-01,Gift for friend,Money transfer,-10.00
+2024-08-02,Family support,Money transfer,-50.00
+2024-07-29,Art exhibition visit,Culture,-25.00
+2024-07-30,Traditional dance show,Culture,-40.00
+2024-07-31,Museum entry,Culture,-15.00
+2024-08-01,Historical site visit,Culture,-30.00
+2024-08-02,Theatre performance,Culture,-50.00
+2024-07-29,Local tour guide, Tourism,-80.00
+2024-07-30,Theme park tickets, Tourism,-200.00
+2024-07-31,Beach excursion, Tourism,-150.00
+2024-08-01,Hiking trip, Tourism,-100.00
+2024-08-02,Boat ride, Tourism,-70.00
+2024-07-29,Barbershop visit, Grooming,-15.00
+2024-07-30,Manicure session, Grooming,-25.00
+2024-07-31,Beard trimming, Grooming,-10.00
+2024-08-01,Hair styling, Grooming,-30.00
+2024-08-02,Shaving kit purchase, Grooming,-20.00
+2024-07-29,Document notarization fee, Documents,-20.00
+2024-07-30,Legal document review, Documents,-30.00
+2024-07-29,Coffee with friends, Social Life,-15.00
+2024-08-03,Online course fee,Education,-100.00
+2024-08-04,Study materials,Education,-50.00
+2024-08-05,Student association dues,Education,-30.00
+2024-08-06,Workshop registration,Education,-60.00
+2024-08-07,Textbook purchase,Education,-80.00
+2024-08-03,Annual cultural festival, Festivals,-200.00
+2024-08-04,Traditional dance performance, Festivals,-50.00
+2024-08-05,Street food fair entry, Festivals,-30.00
+2024-08-06,Fireworks display tickets, Festivals,-80.00
+2024-08-07,Local music concert, Festivals,-100.00
+2024-08-03,Family remittance,Money transfer,-50.00
+2024-08-04,Charity donation,Money transfer,-20.00
+2024-08-05,Loan repayment,Money transfer,-80.00
+2024-08-06,Gift for relative,Money transfer,-20.00
+2024-08-07,Personal transfer,Money transfer,-30.00
+2024-08-03,Art gallery visit, Culture,-20.00
+2024-08-04,Theater play, Culture,-40.00
+2024-08-05,Museum entry, Culture,-15.00
+2024-08-06,Cultural exhibition, Culture,-25.00
+2024-08-07,Historical site visit, Culture,-20.00
+2024-08-03,Local sightseeing tour, Tourism,-50.00
+2024-08-04,Theme park visit, Tourism,-100.00
+2024-08-05,Beach outing, Tourism,-30.00
+2024-08-06,Hiking expedition, Tourism,-70.00
+2024-08-07,Boat cruise, Tourism,-50.00
+2024-08-03,Barbershop haircut, Grooming,-20.00
+2024-08-04,Manicure session, Grooming,-30.00
+2024-08-05,Beard grooming, Grooming,-10.00
+2024-08-06,Haircut and styling, Grooming,-40.00
+2024-08-07,Shaving supplies, Grooming,-10.00
+2024-08-03,Document certification, Documents,-30.00
+2024-08-04,Legal paperwork processing, Documents,-50.00
+2024-08-05,Notary services, Documents,-40.00
+2024-08-06,Document translation, Documents,-80.00
+2024-08-07,Document review, Documents,-50.00
+2024-08-03,Dinner with friends, Social Life,-80.00
+2024-08-04,Coffee meetup, Social Life,-20.00
+2024-08-05,Movie night, Social Life,-30.00
+2024-08-06,Birthday celebration, Social Life,-100.00
+2024-08-07,Networking event, Social Life,-70.00
+2024-08-08,Exam registration fee,Education,-120.00
+2024-08-09,Online course subscription,Education,-70.00
+2024-08-10,Workshop on advanced skills,Education,-150.00
+2024-08-11,Study abroad application fee,Education,-200.00
+2024-08-12,Library membership renewal,Education,-50.00
+2024-08-08,Annual cultural parade, Festivals,-180.00
+2024-08-09,Local music festival tickets, Festivals,-60.00
+2024-08-10,Food stalls at cultural fair, Festivals,-40.00
+2024-08-11,Traditional costume rental, Festivals,-70.00
+2024-08-12,Street art workshop, Festivals,-90.00
+2024-08-08,Overseas remittance,Money transfer,-100.00
+2024-08-09,Charitable contribution,Money transfer,-25.00
+2024-08-10,Loan repayment to friend,Money transfer,-50.00
+2024-08-11,Personal gift transfer,Money transfer,-15.00
+2024-08-12,Family support transfer,Money transfer,-40.00
+2024-08-08,Theater performance, Culture,-60.00
+2024-08-09,Art exhibition entry, Culture,-30.00
+2024-08-10,Historical site tour, Culture,-45.00
+2024-08-11,Traditional dance show, Culture,-50.00
+2024-08-12,Movie screening, Culture,-25.00
+2024-08-08,Guided city tour, Tourism,-80.00
+2024-08-09,Zoo visit, Tourism,-35.00
+2024-08-10,Adventure park activities, Tourism,-120.00
+2024-08-11,Local market exploration, Tourism,-25.00
+2024-08-12,Beach picnic, Tourism,-60.00
+2024-08-08,Spa session, Grooming,-50.00
+2024-08-09,Salon hair treatment, Grooming,-70.00
+2024-08-10,Beard trimming, Grooming,-15.00
+2024-08-11,Manicure and pedicure, Grooming,-40.00
+2024-08-12,Skincare products, Grooming,-20.00
+2024-08-08,Legal document filing, Documents,-60.00
+2024-08-09,Contract drafting services, Documents,-90.00
+2024-08-10,Notary public fees, Documents,-40.00
+2024-08-11,Document scanning services, Documents,-30.00
+2024-08-12,Certified copy issuance, Documents,-20.00
+2024-08-08,Restaurant dinner with friends, Social Life,-90.00
+2024-08-09,Bar meetup, Social Life,-40.00
+2024-08-10,Concert tickets, Social Life,-100.00
+2024-08-11,Birthday party expenses, Social Life,-120.00
+2024-08-12,Networking conference registration, Social Life,-150.00

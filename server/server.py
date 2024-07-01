@@ -1,11 +1,12 @@
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal
+from app.controllers.machine_learning_controller import classifyCategory
 from app.db import get_db
 from app import create_app
 
@@ -144,6 +145,19 @@ def edit_goal():
 #             return jsonify({"error": "Goal not found"}), 404
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
+
+@app.route('/classify', methods=['POST'])
+def classify_category():
+    if request.is_json:
+        print("HII")
+        data = request.get_json()
+        description = data.get('transactionDescription', '')
+        return classifyCategory(description)
+    else:
+        return jsonify({'error': 'Request content type must be application/json'}), 415
+
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
