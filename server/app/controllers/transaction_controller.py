@@ -129,3 +129,51 @@ def deleteTransaction(db, transaction_id):
     except Exception as e:
         return jsonify({'message': str(e)}), 500
     
+def categorizeTransactions(db):
+    user_id = "665094c0c1a89d9d19d13606"  # Replace with dynamic user ID retrieval
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+    
+    transaction_model = Transaction(db)
+    transactions = transaction_model.get_transaction(user_id)
+    
+    categorized_data = {
+        "passive_income": [],
+        "active_income": [],
+        "needs_expense": [],
+        "wants_expense": [],
+        "savings": []
+    }
+    
+    for transaction in transactions:
+        if '_id' in transaction:
+            transaction['_id'] = str(transaction['_id'])
+        
+        transaction_type = transaction.get('transaction_type')
+        category = transaction.get('transaction_category')
+
+        needs_categories = {
+            'Transportation', 'Household', 'Health', 'Food', 'Education',
+            'Documents', 'Family', 'Liability', 'Utilities'
+        }
+        
+        wants_categories = {
+            'Apparel', 'Beauty', 'Tourism', 'Subscription', 'Social Life',
+            'Money transfer', 'Investment', 'Grooming', 'Festivals', 'Culture'
+        }
+
+
+        if transaction_type == 1: 
+            if transaction.get('income_type') == True:  # Adjust condition based on your schema
+                categorized_data["active_income"].append(transaction)
+            else:
+                categorized_data["passive_income"].append(transaction)
+        elif transaction_type == 0:  # Assuming '0' denotes expense
+            if category in needs_categories:
+                categorized_data["needs_expense"].append(transaction)
+            else:
+                categorized_data["wants_expense"].append(transaction)
+        else:
+            categorized_data["savings"].append(transaction)
+    
+    return jsonify(categorized_data), 200

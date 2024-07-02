@@ -10,7 +10,7 @@ import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 import EditTransactionPage from "./src/view/EditTransactionPage";
-
+import incomeExpenseChart from "./src/components/income-expense-chart"
 
 import { registerTranslation } from 'react-native-paper-dates'
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -107,7 +107,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="NewTransactionPage">
+        <Stack.Navigator initialRouteName="bargraph">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -161,6 +161,11 @@ const App = () => {
           <Stack.Screen
             name="Liability Detail"
             component={LiabilityDetailPage}
+            options={{ headerShown: true }}
+          />
+          <Stack.Screen
+            name="bargraph"
+            component={incomeExpenseChart}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>

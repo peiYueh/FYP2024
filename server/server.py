@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted
-from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction
+from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal
 from app.controllers.machine_learning_controller import classifyCategory
@@ -156,7 +156,10 @@ def classify_category():
     else:
         return jsonify({'error': 'Request content type must be application/json'}), 415
 
-    
+@app.route('/categorizeTransaction', methods=['GET'])
+def categorize_transactions():
+    db = get_db()  # Replace with your method of obtaining the database connection
+    return categorizeTransactions(db)    
     
 
 if __name__ == "__main__":
