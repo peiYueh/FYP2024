@@ -1,5 +1,6 @@
 # from pymongo import MongoClient
 import bcrypt
+from bson.objectid import ObjectId
 
 class User:
     def __init__(self, db):
@@ -30,3 +31,6 @@ class User:
     def insert_get_started_data(self, data):
         result = self.basic_info_collection.insert_one(data)
         return result.inserted_id
+    
+    def get_account_by_id(self, user_id):
+        return self.collection.find_one({'_id': ObjectId(user_id)})

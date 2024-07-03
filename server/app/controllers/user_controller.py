@@ -47,3 +47,20 @@ def getStarted(db):
     inserted_id = user_DAO.insert_get_started_data(data['formData'])
 
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
+
+def getAccountDetails(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    user_DAO = User(db)
+    try:
+        user = user_DAO.get_account_by_id(user_id)
+        if user:
+            print(user)
+            user["_id"] = str(user["_id"])
+            for key, value in user.items():
+                if isinstance(value, bytes):
+                    user[key] = value.decode('utf-8')  # Decode bytes to string
+            return jsonify(user)
+        else:
+            return jsonify({"error": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

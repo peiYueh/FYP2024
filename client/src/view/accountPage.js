@@ -1,39 +1,63 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ImageBackground, Text, StyleSheet, TextInput } from 'react-native';
 import { IconButton, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IncomeExpenseChart from '../components/income-expense-chart';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const AccountPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
-    const [isEditMode, setIsEditMode] = React.useState(false); // State to toggle edit mode
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [userAccount, setUserAccount] = useState({
+        _id: '',
+        user_birthDate: '',
+        user_email: '',
+        user_gender: '',
+        user_name: '',
+        user_password: ''
+    });
 
     const toggleEditMode = () => {
         setIsEditMode(!isEditMode);
     };
 
+    const fetchUserAccount = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/userAccount`);
+            setUserAccount(response.data);
+        } catch (error) {
+            console.error('Error fetching user account:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserAccount();
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.card}>
                 <ImageBackground
-                    source={require('../../assets/background/card-background-2.png')}
+                    source={require('../../assets/background/card-background.png')}
                     style={styles.cardBackground}
                     imageStyle={{ borderRadius: 20 }}
                 >
-                    <Text style={styles.infoHeader}>John Doe</Text>
+                    <Text style={styles.infoHeader}>{userAccount.user_name}</Text>
                     <View style={styles.infoContainer}>
                         <View style={styles.infoRow}>
                             <Icon name="email" size={24} color="black" style={styles.icon} />
                             {isEditMode ? (
                                 <TextInput
                                     style={styles.infoText}
-                                    placeholder="johndoe@example.com"
+                                    value={userAccount.user_email}
+                                    onChangeText={(text) => setUserAccount({ ...userAccount, user_email: text })}
                                     autoFocus={true}
                                 />
                             ) : (
-                                <Text style={styles.infoText}>johndoe@example.com</Text>
+                                <Text style={styles.infoText}>{userAccount.user_email}</Text>
                             )}
                         </View>
                         <View style={styles.infoRow}>
@@ -41,10 +65,11 @@ const AccountPage = () => {
                             {isEditMode ? (
                                 <TextInput
                                     style={styles.infoText}
-                                    placeholder="01-Jan-1990"
+                                    value={userAccount.user_birthDate}
+                                    onChangeText={(text) => setUserAccount({ ...userAccount, user_birthDate: text })}
                                 />
                             ) : (
-                                <Text style={styles.infoText}>01-Jan-1990</Text>
+                                <Text style={styles.infoText}>{userAccount.user_birthDate}</Text>
                             )}
                         </View>
                         <View style={styles.infoRow}>
@@ -52,22 +77,23 @@ const AccountPage = () => {
                             {isEditMode ? (
                                 <TextInput
                                     style={styles.infoText}
-                                    placeholder="Male"
+                                    value={userAccount.user_gender}
+                                    onChangeText={(text) => setUserAccount({ ...userAccount, user_gender: text })}
                                 />
                             ) : (
-                                <Text style={styles.infoText}>Male</Text>
+                                <Text style={styles.infoText}>{userAccount.user_gender}</Text>
                             )}
                         </View>
                     </View>
                     <IconButton
                         icon={isEditMode ? 'content-save' : 'pencil'}
-                        size={isEditMode ? 25 : 25}
+                        size={25}
                         onPress={toggleEditMode}
                         style={styles.editButton}
                     />
                 </ImageBackground>
             </View>
-            <IncomeExpenseChart/>
+            <IncomeExpenseChart />
         </View>
     );
 }
@@ -79,7 +105,6 @@ const styles = StyleSheet.create({
     cardBackground: {
         width: '100%',
         height: '100%',
-        justifyContent: 'top',
         alignItems: 'center',
     },
     card: {
@@ -94,20 +119,20 @@ const styles = StyleSheet.create({
         height: 250
     },
     infoContainer: {
-        alignItems: 'flex-start', // Adjusted alignment for text input
+        alignItems: 'flex-start',
         paddingLeft: '10%'
     },
     infoRow: {
         flexDirection: 'row',
         marginVertical: 5,
-        alignItems: 'center', // Center items vertically
+        alignItems: 'center',
     },
     icon: {
         marginRight: 10,
     },
     infoText: {
         fontSize: 20,
-        flex: 1, // Take full width of parent
+        flex: 1,
     },
     infoHeader: {
         fontSize: 25,

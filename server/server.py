@@ -2,7 +2,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
-from app.controllers.user_controller import signup, login, getStarted
+from app.controllers.user_controller import signup, login, getStarted, getAccountDetails
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal
@@ -24,6 +24,11 @@ def signup_route():
     db = get_db()  # Get the database connection
     data = request.json  # Access JSON data from request body
     return signup(db)
+
+@app.route('/userAccount', methods=['GET'])
+def account_route():
+    db = get_db()  # Get the database connection
+    return getAccountDetails(db)
 
 @app.route('/login', methods=['POST'])
 def login_route():
