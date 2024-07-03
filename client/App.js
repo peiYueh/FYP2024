@@ -25,6 +25,7 @@ import MyLiabilityPage from "./src/view/MyLiabilityPage";
 import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
 import NewGoalPage from "./src/view/NewGoalPage";
 import GoalDetailPage from "./src/view/GoalDetailPage";
+import AccountPage from "./src/view/accountPage"
 
 
 
@@ -108,7 +109,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="piechart">
+        <Stack.Navigator initialRouteName="My Account">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -165,8 +166,8 @@ const App = () => {
             options={{ headerShown: true }}
           />
           <Stack.Screen
-            name="piechart"
-            component={expenseDistributionChart}
+            name="My Account"
+            component={AccountPage}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>
