@@ -11,6 +11,7 @@ import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 import EditTransactionPage from "./src/view/EditTransactionPage";
 import incomeExpenseChart from "./src/components/income-expense-chart"
+import expenseDistributionChart from "./src/components/expense-distribution-piechart"
 
 import { registerTranslation } from 'react-native-paper-dates'
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -107,7 +108,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="bargraph">
+        <Stack.Navigator initialRouteName="piechart">
           <Stack.Screen
             name="LandingPage"
             component={LandingPage}
@@ -164,8 +165,8 @@ const App = () => {
             options={{ headerShown: true }}
           />
           <Stack.Screen
-            name="bargraph"
-            component={incomeExpenseChart}
+            name="piechart"
+            component={expenseDistributionChart}
             options={{ headerShown: true }}
           />
         </Stack.Navigator>
