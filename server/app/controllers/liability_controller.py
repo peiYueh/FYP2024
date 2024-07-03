@@ -1,6 +1,6 @@
 from flask import request, jsonify, session
-from app.dao.liability_model import Liability
-from app.dao.transaction_model import Transaction
+from server.app.dao.liabilityDAO import Liability
+from server.app.dao.transactionDAO import Transaction
 from bson import ObjectId
 from datetime import datetime, timezone
 
@@ -30,8 +30,8 @@ def newLiability(db):
         'purpose': purpose
     }
 
-    liability_model = Liability(db)
-    liability_id = liability_model.insert_liability(liability)
+    liability_DAO = Liability(db)
+    liability_id = liability_DAO.insert_liability(liability)
 
     return jsonify(str(liability_id))
 
@@ -40,9 +40,9 @@ def getLiabilities(db):
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     
-    liability_model = Liability(db)
+    liability_DAO = Liability(db)
     
-    liabilities = liability_model.get_liabilities(user_id)
+    liabilities = liability_DAO.get_liabilities(user_id)
     # Convert ObjectId to string
     for liability in liabilities:
         if '_id' in liability:
@@ -54,8 +54,8 @@ def getLiabilities(db):
 def getPaymentDates(db):
     liability_id = request.args.get('liability_id')
     print(liability_id)
-    liability_model = Liability(db)
-    payments = liability_model.get_liabilities_date(liability_id)
+    liability_DAO = Liability(db)
+    payments = liability_DAO.get_liabilities_date(liability_id)
 
     for payment in payments:
         if '_id' in payment:
@@ -73,9 +73,9 @@ def newPaymentUpdate(db):
         'payment_date':data.get('payment_date'),
         'payment_amount':data.get('payment_amount'),
     }
-    liability_model = Liability(db)
+    liability_DAO = Liability(db)
     # add to liability payment date
-    inserted_id = liability_model.insert_payment_update(paymentUpdate)
+    inserted_id = liability_DAO.insert_payment_update(paymentUpdate)
     return jsonify(str(inserted_id))
 
 def editLiability(db):
@@ -105,15 +105,15 @@ def editLiability(db):
         'lender_info': data.get('lender_info'),
         'purpose': data.get('purpose')
     }
-    liability_model = Liability(db)
-    liability_model.update_liability(liability)
+    liability_DAO = Liability(db)
+    liability_DAO.update_liability(liability)
 
     return jsonify({"message": "Data updated successfully"}), 200
 
 def deletePaymentUpdate(db, payment_id):
-    liability_model = Liability(db)
+    liability_DAO = Liability(db)
     try:
-        if liability_model.delete_payment_update(payment_id):
+        if liability_DAO.delete_payment_update(payment_id):
             return jsonify({'message': 'Payment deleted successfully'}), 200
         else:
             return jsonify({'message': 'Payment not found'}), 404
@@ -121,11 +121,11 @@ def deletePaymentUpdate(db, payment_id):
         return jsonify({'message': str(e)}), 500
     
 def deleteLiability(db, liability_id):
-    liability_model = Liability(db)
+    liability_DAO = Liability(db)
     try:
-        if liability_model.delete_liability(liability_id):
+        if liability_DAO.delete_liability(liability_id):
             # delete its payment also
-            liability_model.delete_payment_with_liability(liability_id)
+            liability_DAO.delete_payment_with_liability(liability_id)
             return jsonify({'message': 'Liability deleted successfully'}), 200
         else:
             return jsonify({'message': 'Liability not found'}), 404

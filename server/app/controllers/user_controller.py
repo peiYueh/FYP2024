@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from app.dao.user_model import User
+from server.app.dao.userDAO import User
 from werkzeug.security import generate_password_hash, check_password_hash
 import bcrypt
 
@@ -19,8 +19,8 @@ def signup(db):
     if not username or not email or not password or not birthDate or not gender:
         return jsonify({'error': 'Missing required fields'}), 400
 
-    user_model = User(db)
-    result = user_model.create_user(username, email, password, birthDate, gender)
+    user_DAO = User(db)
+    result = user_DAO.create_user(username, email, password, birthDate, gender)
     
     if 'error' in result:
         return jsonify(result), 400
@@ -33,8 +33,8 @@ def login(db):
     email = data.get('email')
     password = data.get('password')
     print(email)
-    user_model = User(db)
-    user = user_model.get_user_by_email(email)
+    user_DAO = User(db)
+    user = user_DAO.get_user_by_email(email)
     print(user)
     if user and bcrypt.checkpw(password.encode('utf-8'), user['user_password']):
         user_id = user['_id']
@@ -46,7 +46,7 @@ def login(db):
 def getStarted(db):
     data = request.get_json()
 
-    user_model = User(db)
-    inserted_id = user_model.insert_get_started_data(data['formData'])
+    user_DAO = User(db)
+    inserted_id = user_DAO.insert_get_started_data(data['formData'])
 
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201

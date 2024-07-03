@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from app.dao.transaction_model import Transaction
+from server.app.dao.transactionDAO import Transaction
 from bson import ObjectId
 from datetime import datetime, timedelta
 
@@ -41,8 +41,8 @@ def newTransaction(db):
         'interest_rate': savingInterestRate
     }
 
-    transaction_model = Transaction(db)
-    inserted_id = transaction_model.insert_transaction(transaction)
+    transaction_DAO = Transaction(db)
+    inserted_id = transaction_DAO.insert_transaction(transaction)
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
 def editTransaction(db):
@@ -95,9 +95,8 @@ def editTransaction(db):
         'income_taxability': incomeTaxability,
         'interest_rate': savingInterestRate
     }
-    print("GOing to model")
-    transaction_model = Transaction(db)
-    transaction_model.update_transaction(transaction)
+    transaction_DAO = Transaction(db)
+    transaction_DAO.update_transaction(transaction)
     return jsonify({"message": "Data updated successfully"}), 201
 
 def getTransactions(db):
@@ -105,9 +104,9 @@ def getTransactions(db):
     user_id = "665094c0c1a89d9d19d13606"
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
-    transaction_model = Transaction(db)
+    transaction_DAO = Transaction(db)
     
-    transactions = transaction_model.get_transaction(user_id)
+    transactions = transaction_DAO.get_transaction(user_id)
     # Convert ObjectId to string
     for transaction in transactions:
         if '_id' in transaction:
@@ -118,11 +117,11 @@ def getTransactions(db):
     return jsonify(transactions)
 
 def deleteTransaction(db, transaction_id):
-    transaction_model = Transaction(db)
+    transaction_DAO = Transaction(db)
     
-    # transactions = transaction_model.get_transaction(user_id)
+    # transactions = transaction_DAO.get_transaction(user_id)
     try:
-        if transaction_model.delete_transaction(transaction_id):
+        if transaction_DAO.delete_transaction(transaction_id):
             return jsonify({'message': 'Transaction deleted successfully'}), 200
         else:
             return jsonify({'message': 'Transaction not found'}), 404
@@ -134,8 +133,8 @@ def categorizeTransactions(db):
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     
-    transaction_model = Transaction(db)
-    transactions = transaction_model.get_transaction(user_id)
+    transaction_DAO = Transaction(db)
+    transactions = transaction_DAO.get_transaction(user_id)
 
     # Calculate the start and end date for the last month
     today = datetime.today()

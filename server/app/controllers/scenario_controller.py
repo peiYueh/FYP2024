@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from app.dao.scenario_model import Scenario
+from server.app.dao.scenarioDAO import Scenario
 from bson import ObjectId
 
 def newGoal(db):
@@ -78,14 +78,14 @@ def newGoal(db):
             'goal_description': goalDescription,
             'total_amount': totalAmount
         }
-    scenario_model = Scenario(db)
-    inserted_id = scenario_model.insert_goal(goal)
+    scenario_DAO = Scenario(db)
+    inserted_id = scenario_DAO.insert_goal(goal)
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
 def getGoal(db, goal_id):
-    scenario_model = Scenario(db)
+    scenario_DAO = Scenario(db)
     try:
-        goal = scenario_model.get_goal_by_id(goal_id)
+        goal = scenario_DAO.get_goal_by_id(goal_id)
         print(goal)
         if goal:
             goal["_id"] = str(goal["_id"])
@@ -189,8 +189,8 @@ def editGoal(db):
             'total_amount': totalAmount
         }
 
-    scenario_model = Scenario(db)
+    scenario_DAO = Scenario(db)
     print("final goal")
     print(goal)
-    scenario_model.update_goal(goal)
+    scenario_DAO.update_goal(goal)
     return jsonify({"message": "Data updated successfully"}), 200
