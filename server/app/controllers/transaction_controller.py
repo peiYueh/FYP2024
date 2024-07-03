@@ -1,7 +1,7 @@
 from flask import request, jsonify, session
 from app.models.transaction_model import Transaction
 from bson import ObjectId
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 
 def newTransaction(db):
     print("Yes you are here")
@@ -136,7 +136,13 @@ def categorizeTransactions(db):
     
     transaction_model = Transaction(db)
     transactions = transaction_model.get_transaction(user_id)
-    
+
+    # Calculate the start and end date for the last month
+    today = datetime.today()
+    first_day_of_current_month = datetime(today.year, today.month, 1)
+    last_day_of_last_month = first_day_of_current_month - timedelta(days=1)
+    first_day_of_last_month = datetime(last_day_of_last_month.year, last_day_of_last_month.month, 1)
+
     categorized_data = {
         "passive_income": [],
         "active_income": [],
@@ -149,31 +155,34 @@ def categorizeTransactions(db):
         if '_id' in transaction:
             transaction['_id'] = str(transaction['_id'])
         
-        transaction_type = transaction.get('transaction_type')
-        category = transaction.get('transaction_category')
+        transaction_date = datetime.strptime(transaction['transaction_date'], '%Y-%m-%d')  # Adjust date format as necessary
 
-        needs_categories = {
-            'Transportation', 'Household', 'Health', 'Food', 'Education',
-            'Documents', 'Family', 'Liability', 'Utilities'
-        }
-        
-        wants_categories = {
-            'Apparel', 'Beauty', 'Tourism', 'Subscription', 'Social Life',
-            'Money transfer', 'Investment', 'Grooming', 'Festivals', 'Culture'
-        }
+        # Filter transactions for the last month
+        if first_day_of_last_month <= transaction_date <= last_day_of_last_month:
+            transaction_type = transaction.get('transaction_type')
+            category = transaction.get('transaction_category')
 
+            needs_categories = {
+                'Transportation', 'Household', 'Health', 'Food', 'Education',
+                'Documents', 'Family', 'Liability', 'Utilities'
+            }
 
-        if transaction_type == 1: 
-            if transaction.get('income_type') == True:  # Adjust condition based on your schema
-                categorized_data["active_income"].append(transaction)
+            wants_categories = {
+                'Apparel', 'Beauty', 'Tourism', 'Subscription', 'Social Life',
+                'Money transfer', 'Investment', 'Grooming', 'Festivals', 'Culture'
+            }
+
+            if transaction_type == 1: 
+                if transaction.get('income_type') == True:  # Adjust condition based on your schema
+                    categorized_data["active_income"].append(transaction)
+                else:
+                    categorized_data["passive_income"].append(transaction)
+            elif transaction_type == 0:  # Assuming '0' denotes expense
+                if category in needs_categories:
+                    categorized_data["needs_expense"].append(transaction)
+                else:
+                    categorized_data["wants_expense"].append(transaction)
             else:
-                categorized_data["passive_income"].append(transaction)
-        elif transaction_type == 0:  # Assuming '0' denotes expense
-            if category in needs_categories:
-                categorized_data["needs_expense"].append(transaction)
-            else:
-                categorized_data["wants_expense"].append(transaction)
-        else:
-            categorized_data["savings"].append(transaction)
+                categorized_data["savings"].append(transaction)
     
     return jsonify(categorized_data), 200

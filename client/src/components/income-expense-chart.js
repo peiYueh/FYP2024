@@ -1,19 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import axios from 'axios'; // Import axios if not already
+import { API_BASE_URL } from '../../config';
 
 const IncomeExpenseChart = () => {
-    const incomeData = [
-        { value: 1500, incomeType: 'Active', frontColor: '#177AD5' },
-        { value: 645, incomeType: 'Passive', frontColor: '#FF5733' },
-    ];
+    const [data, setData] = useState(null);
 
-    const expenseData = [
-        { value: 200, expenseType: 'Need', frontColor: '#177AD5' },
-        { value: 645, expenseType: 'Want', frontColor: '#FF5733' },
-        { value: 64, expenseType: 'Saving', frontColor: '#FF5733' },
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
 
-    // Calculate the total value
+            try {
+                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
+                setData(response.data);
+                console.log(response.data.savings)
+            } catch (error) {
+                console.error('Error fetching categorized transactions:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const calculateTotals = (data) => {
+        const incomeData = [
+            { value: data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Active', frontColor: '#177AD5' },
+            { value: data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Passive', frontColor: '#FF5733' }
+        ];
+
+        const expenseData = [
+            { value: Math.abs(data.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Need', frontColor: '#177AD5' },
+            { value: Math.abs(data.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Want', frontColor: '#FF5733' },
+            { value: Math.abs(data.savings.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Saving', frontColor: '#FF5733' }
+        ];
+
+        return { incomeData, expenseData };
+    };
+
+    if (!data) {
+        return <Text>Loading...</Text>;
+    }
+
+    const { incomeData, expenseData } = calculateTotals(data);
+
     const totalIncome = incomeData.reduce((acc, item) => acc + item.value, 0);
     const totalExpense = expenseData.reduce((acc, item) => acc + item.value, 0);
 
@@ -23,7 +52,6 @@ const IncomeExpenseChart = () => {
                 <View style={styles.row}>
                     <View style={styles.incomeCardHeader}>
                         <Text style={styles.textHeader}>Monthly Income</Text>
-                        {/* <Text>RM {totalIncome}</Text> */}
                         <Image
                             source={require('../../assets/Image/income.png')}
                             style={styles.headerImage}
@@ -31,11 +59,11 @@ const IncomeExpenseChart = () => {
                     </View>
                     <View style={styles.incomeBarContainer}>
                         {incomeData.map((item, index) => (
-                            <View style={styles.barRow}>
+                            <View key={index} style={styles.barRow}>
                                 <Text style={styles.incomeType}>
                                     {item.incomeType}: RM {item.value}
                                 </Text>
-                                <View key={index} style={styles.barWrapper}>
+                                <View style={styles.barWrapper}>
                                     <View
                                         style={[
                                             styles.bar,
@@ -60,7 +88,6 @@ const IncomeExpenseChart = () => {
                 <View style={styles.row}>
                     <View style={styles.expenseCardHeader}>
                         <Text style={styles.textHeader}>Monthly Spending</Text>
-                        {/* <Text>RM {totalValue}</Text> */}
                         <Image
                             source={require('../../assets/Image/expenses.png')}
                             style={styles.headerImage}
@@ -68,12 +95,11 @@ const IncomeExpenseChart = () => {
                     </View>
                     <View style={styles.expenseBarContainer}>
                         {expenseData.map((item, index) => (
-                            <View style={styles.barRow}>
+                            <View key={index} style={styles.barRow}>
                                 <Text style={[styles.incomeType, { color: '#D5E5EB' }]}>
                                     {item.expenseType}: RM {item.value}
                                 </Text>
-
-                                <View key={index} style={styles.barWrapper}>
+                                <View style={styles.barWrapper}>
                                     <View
                                         style={[
                                             styles.bar,
@@ -98,6 +124,9 @@ const IncomeExpenseChart = () => {
 };
 
 const styles = StyleSheet.create({
+    content: {
+        padding: 10,
+    },
     card: {
         backgroundColor: 'white',
         borderRadius: 10,
@@ -108,7 +137,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         margin: 5,
-        height: 'auto', // Allow height to wrap content
+        height: 'auto', 
         justifyContent: 'center',
     },
     row: {
@@ -120,63 +149,55 @@ const styles = StyleSheet.create({
     },
     incomeBarContainer: {
         flex: 1,
-        backgroundColor: '#FF8B00', // Set your desired background color here
-        // borderRadius: 10,
-        paddingBottom: 15, // Ensure vertical padding to fit the chart height
-        justifyContent: 'start', // Center the bars vertically
-        // paddingTop: 50,
+        backgroundColor: '#FF8B00',
+        paddingBottom: 15,
+        justifyContent: 'center',
         padding: 10,
         height: 180,
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
-        paddingTop: 20
+        paddingTop: 20,
     },
     expenseBarContainer: {
         flex: 1,
-        backgroundColor: '#006A89', // Set your desired background color here
-        // borderRadius: 10,
-        paddingBottom: 15, // Ensure vertical padding to fit the chart height
-        justifyContent: 'start', // Center the bars vertically
-        // paddingTop: 50,
+        backgroundColor: '#006A89',
+        paddingBottom: 15,
+        justifyContent: 'center',
         padding: 10,
         height: 180,
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
-        paddingTop: 20
+        paddingTop: 20,
     },
     barWrapper: {
-        height: 8, // Set the height of each bar
-        position: 'relative', // Set position to relative to enable absolute positioning of child elements
-        // marginVertical: 5
+        height: 8,
+        position: 'relative',
     },
     bar: {
-        height: '100%', // Set the height of each bar
-        position: 'absolute', // Position the bars absolutely within the barWrapper
+        height: '100%',
+        position: 'absolute',
         top: 0,
         left: 0,
         borderRadius: 10,
-
     },
     barRow: {
-        marginBottom: 10
+        marginBottom: 10,
     },
     incomeCardHeader: {
         width: '45%',
-        backgroundColor: '#FFB154', // Set your desired background color here
-        // justifyContent: 'center', // Center the bars vertically
+        backgroundColor: '#FFB154',
         height: 180,
         padding: 10,
         borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10
+        borderBottomLeftRadius: 10,
     },
     expenseCardHeader: {
         width: '45%',
-        backgroundColor: '#005A75', // Set your desired background color here
-        // justifyContent: 'center', // Center the bars vertically
+        backgroundColor: '#005A75',
         height: 180,
         padding: 10,
         borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10
+        borderBottomLeftRadius: 10,
     },
     totalValue: {
         fontSize: 20,
@@ -190,7 +211,7 @@ const styles = StyleSheet.create({
     textHeader: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#EDE8E8'
+        color: '#EDE8E8',
     },
     headerImage: {
         width: 80,
@@ -198,7 +219,7 @@ const styles = StyleSheet.create({
         bottom: 10,
         right: 10,
         position: 'absolute',
-    }
+    },
 });
 
 export default IncomeExpenseChart;
