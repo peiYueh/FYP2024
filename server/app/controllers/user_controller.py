@@ -1,12 +1,9 @@
 from flask import request, jsonify, session
-from server.app.dao.userDAO import User
-from werkzeug.security import generate_password_hash, check_password_hash
+from app.dao.userDAO import User
 import bcrypt
 
 def signup(db):
-    print("HIII Im in sign up")
     data = request.get_json()
-    print(data)
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')

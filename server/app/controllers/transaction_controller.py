@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from server.app.dao.transactionDAO import Transaction
+from app.dao.transactionDAO import Transaction
 from bson import ObjectId
 from datetime import datetime, timedelta
 

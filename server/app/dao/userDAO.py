@@ -1,12 +1,10 @@
-from pymongo import MongoClient
+# from pymongo import MongoClient
 import bcrypt
 
 class User:
     def __init__(self, db):
         self.collection = db['user']
         self.basic_info_collection = db['basic_information']
-        # print("users collection")
-        # print(self.collection)
 
     def create_user(self, username, email, password, birthDate, gender):
         print("in create user liao")
