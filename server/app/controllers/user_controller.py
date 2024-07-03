@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from app.models.user_model import User
+from app.dao.user_model import User
 from werkzeug.security import generate_password_hash, check_password_hash
 import bcrypt
 

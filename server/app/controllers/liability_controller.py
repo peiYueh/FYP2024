@@ -1,6 +1,6 @@
 from flask import request, jsonify, session
-from app.models.liability_model import Liability
-from app.models.transaction_model import Transaction
+from app.dao.liability_model import Liability
+from app.dao.transaction_model import Transaction
 from bson import ObjectId
 from datetime import datetime, timezone
 

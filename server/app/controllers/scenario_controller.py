@@ -1,5 +1,5 @@
 from flask import request, jsonify, session
-from app.models.scenario_model import Scenario
+from app.dao.scenario_model import Scenario
 from bson import ObjectId
 
 def newGoal(db):
