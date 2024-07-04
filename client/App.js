@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider as PaperProvider } from "react-native-paper";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import LandingPage from "./src/view/LandingPage"; // Import your LandingPage component
 import LoginPage from "./src/view/LoginPage";
@@ -10,14 +10,52 @@ import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 import EditTransactionPage from "./src/view/EditTransactionPage";
-import incomeExpenseChart from "./src/components/income-expense-chart"
-import expenseDistributionChart from "./src/components/expense-distribution-piechart"
+import incomeExpenseChart from "./src/components/income-expense-chart";
+import expenseDistributionChart from "./src/components/expense-distribution-piechart";
 
-import { registerTranslation } from 'react-native-paper-dates'
+import { registerTranslation } from "react-native-paper-dates";
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
 import { Lato } from "@expo-google-fonts/lato";
-import { Poppins_400Regular } from "@expo-google-fonts/poppins";
-import { Montserrat } from "@expo-google-fonts/montserrat";
+import {
+  Poppins_100Thin,
+  Poppins_100Thin_Italic,
+  Poppins_200ExtraLight,
+  Poppins_200ExtraLight_Italic,
+  Poppins_300Light,
+  Poppins_300Light_Italic,
+  Poppins_400Regular,
+  Poppins_400Regular_Italic,
+  Poppins_500Medium,
+  Poppins_500Medium_Italic,
+  Poppins_600SemiBold,
+  Poppins_600SemiBold_Italic,
+  Poppins_700Bold,
+  Poppins_700Bold_Italic,
+  Poppins_800ExtraBold,
+  Poppins_800ExtraBold_Italic,
+  Poppins_900Black,
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
+import {
+  Montserrat_100Thin,
+  Montserrat_200ExtraLight,
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+  Montserrat_700Bold,
+  Montserrat_800ExtraBold,
+  Montserrat_900Black,
+  Montserrat_100Thin_Italic,
+  Montserrat_200ExtraLight_Italic,
+  Montserrat_300Light_Italic,
+  Montserrat_400Regular_Italic,
+  Montserrat_500Medium_Italic,
+  Montserrat_600SemiBold_Italic,
+  Montserrat_700Bold_Italic,
+  Montserrat_800ExtraBold_Italic,
+  Montserrat_900Black_Italic,
+} from "@expo-google-fonts/montserrat";
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
@@ -25,28 +63,24 @@ import MyLiabilityPage from "./src/view/MyLiabilityPage";
 import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
 import NewGoalPage from "./src/view/NewGoalPage";
 import GoalDetailPage from "./src/view/GoalDetailPage";
-import AccountPage from "./src/view/accountPage"
+import AccountPage from "./src/view/accountPage";
 
-
-
-registerTranslation('en', {
-  save: 'Save',
-  selectSingle: 'Select date',
-  selectMultiple: 'Select dates',
-  selectRange: 'Select period',
-  notAccordingToDateFormat: (inputFormat) =>
-    `Date format must be ${inputFormat}`,
+registerTranslation("en", {
+  save: "Save",
+  selectSingle: "Select date",
+  selectMultiple: "Select dates",
+  selectRange: "Select period",
+  notAccordingToDateFormat: (inputFormat) => `Date format must be ${inputFormat}`,
   mustBeHigherThan: (date) => `Must be later then ${date}`,
   mustBeLowerThan: (date) => `Must be earlier then ${date}`,
-  mustBeBetween: (startDate, endDate) =>
-    `Must be between ${startDate} - ${endDate}`,
-  dateIsDisabled: 'Day is not allowed',
-  previous: 'Previous',
-  next: 'Next',
-  typeInDate: 'Type in date',
-  pickDateFromCalendar: 'Pick date from calendar',
-  close: 'Close',
-})
+  mustBeBetween: (startDate, endDate) => `Must be between ${startDate} - ${endDate}`,
+  dateIsDisabled: "Day is not allowed",
+  previous: "Previous",
+  next: "Next",
+  typeInDate: "Type in date",
+  pickDateFromCalendar: "Pick date from calendar",
+  close: "Close",
+});
 
 const theme = {
   colors: {
@@ -100,8 +134,42 @@ const App = () => {
   const [fontLoaded] = useFonts({
     Oswald_400Regular,
     Lato,
+    Poppins_100Thin,
+    Poppins_100Thin_Italic,
+    Poppins_200ExtraLight,
+    Poppins_200ExtraLight_Italic,
+    Poppins_300Light,
+    Poppins_300Light_Italic,
     Poppins_400Regular,
-    Montserrat,
+    Poppins_400Regular_Italic,
+    Poppins_500Medium,
+    Poppins_500Medium_Italic,
+    Poppins_600SemiBold,
+    Poppins_600SemiBold_Italic,
+    Poppins_700Bold,
+    Poppins_700Bold_Italic,
+    Poppins_800ExtraBold,
+    Poppins_800ExtraBold_Italic,
+    Poppins_900Black,
+    Poppins_900Black_Italic,
+    Montserrat_100Thin,
+    Montserrat_200ExtraLight,
+    Montserrat_300Light,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+    Montserrat_700Bold,
+    Montserrat_800ExtraBold,
+    Montserrat_900Black,
+    Montserrat_100Thin_Italic,
+    Montserrat_200ExtraLight_Italic,
+    Montserrat_300Light_Italic,
+    Montserrat_400Regular_Italic,
+    Montserrat_500Medium_Italic,
+    Montserrat_600SemiBold_Italic,
+    Montserrat_700Bold_Italic,
+    Montserrat_800ExtraBold_Italic,
+    Montserrat_900Black_Italic,
     Roboto,
     OpenSans,
   });
@@ -109,67 +177,19 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="My Account">
-          <Stack.Screen
-            name="LandingPage"
-            component={LandingPage}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SignUpPage"
-            component={SignUpPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="LoginPage"
-            component={LoginPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="NewTransactionPage"
-            component={NewTransactionPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="Get Started"
-            component={GetStartedPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="My Transaction"
-            component={MyTransactionPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="EditTransactionPage"
-            component={EditTransactionPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="New Goal"
-            component={NewGoalPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="View Goal"
-            component={GoalDetailPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="My Liabilities"
-            component={MyLiabilityPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="Liability Detail"
-            component={LiabilityDetailPage}
-            options={{ headerShown: true }}
-          />
-          <Stack.Screen
-            name="My Account"
-            component={AccountPage}
-            options={{ headerShown: true }}
-          />
+        <Stack.Navigator initialRouteName="LandingPage">
+          <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
+          <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
+          <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />
+          <Stack.Screen name="NewTransactionPage" component={NewTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: true }} />
+          <Stack.Screen name="My Transaction" component={MyTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="EditTransactionPage" component={EditTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="New Goal" component={NewGoalPage} options={{ headerShown: true }} />
+          <Stack.Screen name="View Goal" component={GoalDetailPage} options={{ headerShown: true }} />
+          <Stack.Screen name="My Liabilities" component={MyLiabilityPage} options={{ headerShown: true }} />
+          <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true }} />
+          <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true }} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />
