@@ -6,7 +6,7 @@ from app.controllers.user_controller import signup, login, getStarted, getAccoun
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal
-from app.controllers.machine_learning_controller import classifyCategory
+from app.controllers.machine_learning_controller import classifyCategory, predictSalary, predictExpense
 from app.db import get_db
 from app import create_app
 
@@ -165,7 +165,47 @@ def classify_category():
 def categorize_transactions():
     db = get_db()  # Replace with your method of obtaining the database connection
     return categorizeTransactions(db)    
+
+@app.route('/predictSalary', methods=['GET'])
+def predict_salary_endpoint():
+    # data = request.get_json()
+    # if not data:
+    #     return jsonify({'error': 'Invalid input data'}), 400
     
+    # current_salary = data.get('current_salary')
+    # future_years = data.get('future_years')
+
+    current_salary = 36000
+    future_years = 30
+
+    # if current_salary is None or future_years is None:
+    #     return jsonify({'error': 'Missing required parameters'}), 400
+    
+    # try:
+    #     current_salary = float(current_salary)
+    #     future_years = int(future_years)
+    # except ValueError:
+    #     return jsonify({'error': 'Invalid parameter types'}), 400
+
+    result = predictSalary(current_salary, future_years)
+    # if 'error' in result:
+    #     return jsonify(result), 500
+    
+    # return jsonify({'future_salaries': result})
+    return result
+
+@app.route('/predictExpense', methods=['GET'])
+def predict_expense_endpoint():
+    # Example usage:
+    expense_history = [1000, 1100, 1050, 1200, 1250, 1300, 1400, 1450, 1500, 1550, 1600, 1650]  # Replace with actual data
+    future_expenses = predictExpense(expense_history, months_to_predict=12)
+    # Prepare response
+    response = {
+        'predictions': future_expenses.flatten().tolist()  # Convert NumPy array to list
+    }
+
+    return response
+
 
 if __name__ == "__main__":
     app.run(debug=True)
