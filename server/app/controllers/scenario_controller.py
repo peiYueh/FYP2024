@@ -82,6 +82,20 @@ def newGoal(db):
     inserted_id = scenario_DAO.insert_goal(goal)
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
+def myGoal(db):
+    user_id = "665094c0c1a89d9d19d13606" ##############################
+    
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+    scenario_DAO = Scenario(db)
+    goals = scenario_DAO.get_all_goals(user_id)
+    # Convert ObjectId to string
+    for goal in goals:
+        if '_id' in goal:
+            goal['_id'] = str(goal['_id'])
+
+    return jsonify(goals)
+    
 def getGoal(db, goal_id):
     scenario_DAO = Scenario(db)
     try:

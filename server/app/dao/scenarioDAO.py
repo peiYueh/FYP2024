@@ -21,3 +21,6 @@ class Scenario:
             return {"message": "Transaction updated successfully"}, 200
         else:
             return {"error": "Transaction not found"}, 404
+        
+    def get_all_goals(self, user_id):
+        return list(self.goal_collection.find({'user_id': user_id}))

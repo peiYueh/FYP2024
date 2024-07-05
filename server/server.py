@@ -5,7 +5,7 @@ from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
-from app.controllers.scenario_controller import newGoal, getGoal, editGoal
+from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal
 from app.controllers.machine_learning_controller import classifyCategory, predictSalary, predictExpense
 from app.db import get_db
 from app import create_app
@@ -113,6 +113,11 @@ def delete_payment(payment_id):
 def delete_liability(liability_id):
     db = get_db()
     return deleteLiability(db, liability_id)
+
+@app.route('/myGoals', methods=['GET'])
+def get_all_goals():
+    db = get_db()
+    return myGoal(db)
 
 @app.route('/newGoal', methods=['POST'])
 def add_goal():
