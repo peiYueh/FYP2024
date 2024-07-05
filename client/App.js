@@ -10,8 +10,12 @@ import NewTransactionPage from "./src/view/NewTransactionPage";
 import MyTransactionPage from "./src/view/MyTransactionPage";
 import GetStartedPage from "./src/view/GetStarted";
 import EditTransactionPage from "./src/view/EditTransactionPage";
-import incomeExpenseChart from "./src/components/income-expense-chart";
-import expenseDistributionChart from "./src/components/expense-distribution-piechart";
+import FinancialScenarioPage from "./src/view/FinancialScenarioPage";
+import MyLiabilityPage from "./src/view/MyLiabilityPage";
+import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
+import NewGoalPage from "./src/view/NewGoalPage";
+import GoalDetailPage from "./src/view/GoalDetailPage";
+import AccountPage from "./src/view/accountPage";
 
 import { registerTranslation } from "react-native-paper-dates";
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -59,11 +63,7 @@ import {
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
-import MyLiabilityPage from "./src/view/MyLiabilityPage";
-import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
-import NewGoalPage from "./src/view/NewGoalPage";
-import GoalDetailPage from "./src/view/GoalDetailPage";
-import AccountPage from "./src/view/accountPage";
+
 
 registerTranslation("en", {
   save: "Save",
@@ -177,7 +177,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LandingPage">
+        <Stack.Navigator initialRouteName="Financial Scenario">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />
@@ -190,6 +190,7 @@ const App = () => {
           <Stack.Screen name="My Liabilities" component={MyLiabilityPage} options={{ headerShown: true }} />
           <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true }} />
           <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true }} />
+          <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />
