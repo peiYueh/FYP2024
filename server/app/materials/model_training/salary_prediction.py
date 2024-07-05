@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 from joblib import dump, load
 
 # Load the dataset
-df = pd.read_csv("./Salary Data.csv")
+df = pd.read_csv("../dataset/Salary Data.csv")
 
 # Prepare the Dataset
 df['NextYearSalary'] = df['Salary'].shift(-1)

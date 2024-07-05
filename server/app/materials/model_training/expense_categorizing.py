@@ -12,7 +12,7 @@ import joblib
 
 sns.set(style="white", color_codes=True)
 
-df = pd.read_csv("./Daily Household Transactions.csv")
+df = pd.read_csv("../dataset/Daily Household Transactions.csv")
 # Keep only expense rows
 expense_data_1 = df[df['Income/Expense'] == 'Expense']
 

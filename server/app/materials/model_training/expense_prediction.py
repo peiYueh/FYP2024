@@ -13,7 +13,7 @@ import numpy as np
 sns.set(style="white", color_codes=True)
 
 # Assuming df is already read from the CSV file
-df = pd.read_csv("./Daily Household Transactions.csv")
+df = pd.read_csv("../dataset/Daily Household Transactions.csv")
 
 # Keep only expense rows
 expense_data = df[df['Income/Expense'] == 'Expense']
