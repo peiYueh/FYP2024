@@ -15,7 +15,7 @@ import MyLiabilityPage from "./src/view/MyLiabilityPage";
 import LiabilityDetailPage from "./src/view/LiabilityDetailPage";
 import NewGoalPage from "./src/view/NewGoalPage";
 import GoalDetailPage from "./src/view/GoalDetailPage";
-import AccountPage from "./src/view/accountPage";
+import AccountPage from "./src/view/MyAccountPage";
 
 import { registerTranslation } from "react-native-paper-dates";
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -177,7 +177,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Financial Scenario">
+        <Stack.Navigator initialRouteName="My Account">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />

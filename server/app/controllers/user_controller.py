@@ -1,6 +1,7 @@
 from flask import request, jsonify, session
 from app.dao.userDAO import User
 import bcrypt
+from bson import ObjectId
 
 def signup(db):
     data = request.get_json()
@@ -64,3 +65,22 @@ def getAccountDetails(db):
             return jsonify({"error": "User not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+def editAccount(db):
+    print("Editing")
+    data = request.get_json()
+    print(data)
+    userID = data.get('_id')
+
+    if not userID:
+        print("User ID not found")
+        return jsonify({"error": "User ID is required"}), 400
+
+    try:
+        userID = ObjectId(userID)
+    except Exception as e:
+        return jsonify({"error": "Invalid User ID format"}), 400
+    
+    user_DAO = User(db)
+    user_DAO.update_account(data)
+    return jsonify({"message": "Data updated successfully"}), 201

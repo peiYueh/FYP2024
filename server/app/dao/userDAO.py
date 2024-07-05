@@ -34,3 +34,13 @@ class User:
     
     def get_account_by_id(self, user_id):
         return self.collection.find_one({'_id': ObjectId(user_id)})
+    
+    def update_account(self, user):
+        user_id = user['_id']
+        user.pop('_id')
+        result = self.collection.update_one({'_id': ObjectId(user_id)}, {'$set': user})
+
+        if result.matched_count > 0:
+            return {"message": "Account updated successfully"}, 200
+        else:
+            return {"error": "Account not found"}, 404
