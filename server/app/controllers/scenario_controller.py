@@ -208,3 +208,17 @@ def editGoal(db):
     print(goal)
     scenario_DAO.update_goal(goal)
     return jsonify({"message": "Data updated successfully"}), 200
+
+def deleteGoal(db, goal_id):
+    print(goal_id)
+    try:
+        scenario_DAO = Scenario(db)
+        result = scenario_DAO.delete_goal(goal_id)
+        if result:
+            return jsonify({"message": "Goal deleted successfully"}), 200
+        else:
+            return jsonify({"error": "Goal not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    

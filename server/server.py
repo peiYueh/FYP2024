@@ -5,7 +5,7 @@ from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
-from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal
+from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal, deleteGoal
 from app.controllers.machine_learning_controller import classifyCategory, predictSalary, predictExpense
 from app.db import get_db
 from app import create_app
@@ -152,16 +152,10 @@ def edit_goal():
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
 
-# @app.route('/goal/<goal_id>', methods=['DELETE'])
-# def delete_goal(goal_id):
-#     try:
-#         result = goals_collection.delete_one({"_id": ObjectId(goal_id)})
-#         if result.deleted_count:
-#             return jsonify({"message": "Goal deleted successfully"}), 200
-#         else:
-#             return jsonify({"error": "Goal not found"}), 404
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
+@app.route('/goal/<goal_id>', methods=['DELETE'])
+def delete_goal(goal_id):
+    db = get_db()
+    return deleteGoal(db, goal_id)
 
 @app.route('/classify', methods=['POST'])
 def classify_category():

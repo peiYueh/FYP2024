@@ -24,3 +24,17 @@ class Scenario:
         
     def get_all_goals(self, user_id):
         return list(self.goal_collection.find({'user_id': user_id}))
+        
+    def delete_goal(self, goal_id):
+        try:
+            obj_id = ObjectId(goal_id)
+            result = self.goal_collection.delete_one({'_id': obj_id})
+            if result.deleted_count > 0:
+                print(f"Goal with ID {goal_id} deleted successfully.")
+                return True
+            else:
+                print(f"Goal with ID {goal_id} not found or could not be deleted.")
+                return False
+        except Exception as e:
+            print(f"Error deleting goal with ID {goal_id}: {e}")
+            return False
