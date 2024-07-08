@@ -17,6 +17,8 @@ import NewGoalPage from "./src/view/NewGoalPage";
 import GoalDetailPage from "./src/view/GoalDetailPage";
 import AccountPage from "./src/view/MyAccountPage";
 import MyGoalPage from "./src/view/MyGoalPage";
+import FinancialScenarioSetting from "./src/view/FinancialScenarioSetting";
+
 
 import { registerTranslation } from "react-native-paper-dates";
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -178,7 +180,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="My Goals">
+        <Stack.Navigator initialRouteName="Financial Scenario Settings">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />
@@ -193,6 +195,7 @@ const App = () => {
           <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true }} />
           <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true }} />
           <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
+          <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />

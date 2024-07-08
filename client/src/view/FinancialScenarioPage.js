@@ -2,7 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { BarChart } from "react-native-gifted-charts";
 import Icon from 'react-native-vector-icons/FontAwesome';
-const FinancialScenarioPage = () => {
+const FinancialScenarioPage = ({ route }) => {
+    const {
+        activeIncome,
+        passiveIncome,
+        needsSpending,
+        wantsSpending,
+        savings,
+        goalsData,
+    } = route.params;
+
+    console.log(route.params)
+    
     const stackData = [
         { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' }, //label is user's age
         {

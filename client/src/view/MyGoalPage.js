@@ -12,7 +12,7 @@ import vehicleImage from '../../assets/background/goals_background/vehicle-2.jpg
 import travelImage from '../../assets/background/goals_background/travel.jpg';
 import customImage from '../../assets/background/goals_background/custom-goal-2.jpg';
 
-const HomeScreen = ({ navigation }) => {
+const MyGoals = ({ navigation }) => {
     const theme = useTheme();
     const [userGoals, setUserGoals] = useState([]);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -232,4 +232,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomeScreen;
+export default MyGoals;
