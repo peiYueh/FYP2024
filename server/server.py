@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount
-from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions
+from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions, getMonthlyExpense
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal, deleteGoal
 from app.controllers.machine_learning_controller import classifyCategory, predictSalary, predictExpense
@@ -178,7 +178,9 @@ def predict_salary_endpoint():
     # if not data:
     #     return jsonify({'error': 'Invalid input data'}), 400
     
-    # current_salary = data.get('current_salary')
+    current_salary = request.args.get('activeIncome')
+    # get retirement age here
+    
     # future_years = data.get('future_years')
 
     current_salary = 36000
@@ -202,16 +204,24 @@ def predict_salary_endpoint():
 
 @app.route('/predictExpense', methods=['GET'])
 def predict_expense_endpoint():
-    # Example usage:
-    expense_history = [1000, 1100, 1050, 1200, 1250, 1300, 1400, 1450, 1500, 1550, 1600, 1650]  # Replace with actual data
+    use_history_data = request.args.get('useHistoricalDataForIncome', False)  # Default to False if not provided
+    expense_initial = request.args.get('totalSpending', 0)  # Default to 0 if not provided
+    
+    if use_history_data:
+        # Assuming getMonthlyExpense returns a list of monthly expenses
+        db = get_db()
+        expense_history = getMonthlyExpense(db)
+    else:
+        expense_history = [expense_initial] * 12  # Initialize with expense_initial repeated 12 times
+    
     future_expenses = predictExpense(expense_history, months_to_predict=12)
+    
     # Prepare response
     response = {
         'predictions': future_expenses.flatten().tolist()  # Convert NumPy array to list
     }
 
-    return response
-
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run(debug=True)

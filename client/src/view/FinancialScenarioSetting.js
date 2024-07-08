@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Card, Title, TextInput, Button, Appbar, IconButton, List } from 'react-native-paper';
+import { Card, Title, TextInput, Button, Appbar, IconButton, Checkbox } from 'react-native-paper';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 
 const FinancialScenarioSetting = ({ navigation }) => {
     const [activeIncome, setActiveIncome] = useState('');
     const [passiveIncome, setPassiveIncome] = useState('');
-    // const [needsSpending, setNeedsSpending] = useState('');
     const [totalSpending, setTotalSpending] = useState('');
-    const [financialGoals, setFinancialGoals] = useState('');
+    const [initialActiveIncome, setInitialActiveIncome] = useState('');
+    const [initialPassiveIncome, setInitialPassiveIncome] = useState('');
+    const [initialTotalSpending, setInitialTotalSpending] = useState('');
     const [savings, setSavings] = useState([]);
-    const [data, setData] = useState(null);
     const [goalsData, setGoalsData] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
-    // useEffect for fetching data would typically be here
+    
+    const [useHistoricalDataForIncome, setUseHistoricalDataForIncome] = useState(false);
+    const [useHistoricalDataForExpenses, setUseHistoricalDataForExpenses] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
@@ -27,7 +30,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 const totalExpenses = totalNeeds + totalWants;
                 const activeIncome = Math.abs(fetchedData.active_income.reduce((acc, item) => acc + item.transaction_amount, 0));
                 const passiveIncome = Math.abs(fetchedData.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
-                console.log("Fetched savings: "+fetchedData.savings);
+                console.log("Fetched savings: " + fetchedData.savings);
                 const filteredSavings = fetchedData.savings
                     .filter(item => item.transaction_type === 2)
                     .map(item => ({
@@ -37,11 +40,19 @@ const FinancialScenarioSetting = ({ navigation }) => {
                         interestRate: item.interest_rate.toString(),
                     }));
 
-                setActiveIncome(activeIncome.toString());
-                setPassiveIncome(passiveIncome.toString());
-                setTotalSpending(totalExpenses.toString());
+                setInitialActiveIncome(activeIncome.toString());
+                setInitialPassiveIncome(passiveIncome.toString());
+                setInitialTotalSpending(totalExpenses.toString());
                 setSavings(filteredSavings);
                 setDataLoaded(true);
+
+                if (useHistoricalDataForIncome) {
+                    setActiveIncome(activeIncome.toString());
+                    setPassiveIncome(passiveIncome.toString());
+                }
+                if (useHistoricalDataForExpenses) {
+                    setTotalSpending(totalExpenses.toString());
+                }
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);
             }
@@ -54,14 +65,15 @@ const FinancialScenarioSetting = ({ navigation }) => {
             } catch (error) {
                 console.error('Error fetching goals:', error);
             }
+            setDataLoaded(true);
         };
-
-        fetchData();
-        fetchGoals();
-    }, []);
-
-
-
+        console.log("DATALOADED: " + dataLoaded)
+        if(!dataLoaded){
+            fetchData();
+            setDataLoaded(false);
+            fetchGoals();
+        }
+    }, [useHistoricalDataForIncome, useHistoricalDataForExpenses]);
 
     const addSaving = () => {
         setSavings([...savings, { name: '', initial: '', monthly: '', interestRate: '' }]);
@@ -79,19 +91,16 @@ const FinancialScenarioSetting = ({ navigation }) => {
         setSavings(newSavings);
     };
 
-    // Function to add a new goal
     const addGoal = () => {
         setGoalsData([...goalsData, { goal_description: '', total_amount: '', target_age: '' }]);
     };
 
-    // Function to handle changes in goal fields
     const handleGoalChange = (index, field, value) => {
         const newGoals = [...goalsData];
         newGoals[index][field] = value;
         setGoalsData(newGoals);
     };
 
-    // Function to delete a goal
     const deleteGoal = (index) => {
         const newGoals = [...goalsData];
         newGoals.splice(index, 1);
@@ -99,7 +108,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
     };
 
     const handleSubmit = () => {
-        // Perform data validation
         if (!activeIncome || !passiveIncome || !totalSpending) {
             alert('Please fill in all income and expense fields.');
             return;
@@ -117,23 +125,14 @@ const FinancialScenarioSetting = ({ navigation }) => {
             return;
         }
 
-        // Handle scenario submission logic here
-        // console.log({
-        //     activeIncome,
-        //     passiveIncome,
-        //     totalSpending,
-        //     financialGoals: financialGoals, // Assuming you'll set this state somewhere
-        //     savings,
-        //     goalsData,
-        // });
-
-        // Navigate back or to another screen after submission
         navigation.navigate('Financial Scenario', {
             activeIncome,
             passiveIncome,
             totalSpending,
             savings,
             goalsData,
+            useHistoricalDataForIncome,
+            useHistoricalDataForExpenses
         });
     };
 
@@ -147,6 +146,20 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 <Card style={styles.card}>
                     <Card.Content>
                         <Title>Income & Expenses</Title>
+                        <Checkbox.Item
+                            label="Simulate with Historical Data"
+                            status={useHistoricalDataForIncome ? 'checked' : 'unchecked'}
+                            onPress={() => {
+                                setUseHistoricalDataForIncome(!useHistoricalDataForIncome);
+                                if (!useHistoricalDataForIncome) {
+                                    setActiveIncome(initialActiveIncome);
+                                    setPassiveIncome(initialPassiveIncome);
+                                } else {
+                                    setActiveIncome('');
+                                    setPassiveIncome('');
+                                }
+                            }}
+                        />
                         <View style={styles.row}>
                             <TextInput
                                 label="Active (RM)"
@@ -154,6 +167,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
                                 onChangeText={setActiveIncome}
                                 keyboardType="numeric"
                                 style={styles.input}
+                                disabled={useHistoricalDataForIncome}
                             />
                             <TextInput
                                 label="Passive (RM)"
@@ -161,15 +175,29 @@ const FinancialScenarioSetting = ({ navigation }) => {
                                 onChangeText={setPassiveIncome}
                                 keyboardType="numeric"
                                 style={styles.input}
+                                disabled={useHistoricalDataForIncome}
                             />
                         </View>
+                        <Checkbox.Item
+                            label="Simulate with Historical Data"
+                            status={useHistoricalDataForExpenses ? 'checked' : 'unchecked'}
+                            onPress={() => {
+                                setUseHistoricalDataForExpenses(!useHistoricalDataForExpenses);
+                                if (!useHistoricalDataForExpenses) {
+                                    setTotalSpending(initialTotalSpending);
+                                } else {
+                                    setTotalSpending('');
+                                }
+                            }}
+                        />
                         <View style={styles.row}>
                             <TextInput
-                                label="Expenses(RM)"
+                                label="Expenses (RM)"
                                 value={totalSpending}
                                 onChangeText={setTotalSpending}
                                 keyboardType="numeric"
                                 style={styles.input}
+                                disabled={useHistoricalDataForExpenses}
                             />
                         </View>
                     </Card.Content>
@@ -279,7 +307,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
                     </Card.Content>
                 </Card>
 
-
                 <Button mode="contained" onPress={handleSubmit} style={styles.button}>
                     Save Scenario
                 </Button>
@@ -318,9 +345,6 @@ const styles = StyleSheet.create({
     },
     savingCard: {
         marginBottom: 12,
-    },
-    button: {
-        marginTop: 16,
     },
     deleteButton: {
         marginLeft: 8,

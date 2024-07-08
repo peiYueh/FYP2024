@@ -1,19 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { BarChart } from "react-native-gifted-charts";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
+
+
 const FinancialScenarioPage = ({ route }) => {
     const {
         activeIncome,
         passiveIncome,
-        needsSpending,
-        wantsSpending,
+        totalSpending,
         savings,
+        useHistoricalDataForIncome,
+        useHistoricalDataForExpenses,
         goalsData,
     } = route.params;
 
     console.log(route.params)
-    
+    //ML 1: Expense Prediction
+    useEffect(() => {
+        const expensePrediction = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/predictExpense`, {
+                    params: {
+                        useHistoricalDataForIncome,  // Assuming these are variables in your scope
+                        totalSpending
+                    }
+                });
+                console.log(response.data);  // Log response data to console
+                // setGoalsData(response.data);  // Uncomment to set response data to state or variable
+            } catch (error) {
+                console.error('Error fetching expense prediction:', error);
+            }
+            // setDataLoaded(true);  // Assuming setDataLoaded is a function to set state indicating data is loaded
+        };
+
+        const salaryPrediction = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/predictSalary`, {
+                    params: {
+                        activeIncome
+                    }
+                });
+                console.log("Salary" + response.data);  // Log response data to console
+                // setGoalsData(response.data);  // Uncomment to set response data to state or variable
+            } catch (error) {
+                console.error('Error fetching expense prediction:', error);
+            }
+        }
+        expensePrediction();
+        salaryPrediction();
+    }, [route.params]);
+    //ML 2: Salary Prediction
+
+    // Financial Projection
+
     const stackData = [
         { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' }, //label is user's age
         {
@@ -21,32 +63,17 @@ const FinancialScenarioPage = ({ route }) => {
                 <Icon name="home" size={20} color="black" style={styles.icon} />
             )
         },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 20, color: '#f4a259' }, { value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
         { stacks: [{ value: 10, color: '#bc4b51' }, { value: 20, color: '#f4a259' }, { value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 10, color: '#bc4b51' }, { value: 20, color: '#f4a259' }, { value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        { stacks: [{ value: 10, color: '#bc4b51' }, { value: 20, color: '#f4a259' }, { value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
-        
+
     ];
 
-    const initialGoals = [
-        { id: 1, title: 'Save $10,000 for vacation', completed: false },
-        { id: 2, title: 'Buy a new car', completed: true },
-        { id: 3, title: 'Invest in stocks', completed: false },
-        // Add more goals as needed
-    ];
-
-    const [goals, setGoals] = useState(initialGoals);
+    const [goals, setGoals] = useState(goalsData);
 
     // Function to toggle completion status of a goal
     const toggleGoalCompletion = (goalId) => {
+        console.log(goalId)
         const updatedGoals = goals.map(goal =>
-            goal.id === goalId ? { ...goal, completed: !goal.completed } : goal
+            goal.id === goalId ? { ...goal, apply: !goal.apply } : goal
         );
         setGoals(updatedGoals);
     };
@@ -68,18 +95,20 @@ const FinancialScenarioPage = ({ route }) => {
                 <View>
                     <View style={[styles.goalContainer, styles.sideContainer]}>
                         <Text style={styles.sideTitle}>My Goals</Text>
-                        {goals.map(goal => (
-                            <TouchableOpacity
-                                key={goal.id}
-                                onPress={() => toggleGoalCompletion(goal.id)}
-                                style={styles.goalItem}
-                            >
-                                <Icon name={goal.completed ? 'check-square' : 'square-o'} size={20} color="black" />
-                                <Text style={[styles.goalText, { textDecorationLine: goal.completed ? 'line-through' : 'none' }]}>
-                                    {goal.title}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
+                        <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
+                            {goals.map(goal => (
+                                <TouchableOpacity
+                                    key={goal._id}  // Ensure each goal has a unique key
+                                    onPress={() => toggleGoalCompletion(goal._id)}
+                                    style={styles.goalItem}
+                                >
+                                    <Icon name={goal.apply ? 'check-square' : 'square-o'} size={25} color="black" />
+                                    <Text style={[styles.goalText, { textDecorationLine: goal.apply ? 'line-through' : 'none' }]}>
+                                        {goal.goal_description}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
                     </View>
                     <View style={[styles.infoContainer, styles.sideContainer]}>
                         <Text style={styles.sideTitle}>Financial Information</Text>
@@ -115,16 +144,16 @@ const styles = StyleSheet.create({
     },
     goalContainer: {
         justifyContent: 'center', // Center content vertically
-        alignItems: 'flex-start', // Center content horizontally
+        // alignItems: 'flex-start', // Center content horizontally
         marginLeft: height / 100 * 5, // Add space between chart and goal container
         // backgroundColor: 'red',
-        width: height / 100 * 30,
+        // width: height / 100 * 30,
     },
     infoContainer: {
         justifyContent: 'center', // Center content vertically
         alignItems: 'flex-start', // Center content horizontally
         // backgroundColor: 'red',
-        width: height / 100 * 30,
+        // width: height / 100 * 30,
     },
     sideContainer: {
         margin: 5,
@@ -135,6 +164,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 3, height: 5 },
         height: '50%',
         marginLeft: height / 100 * 10,
+        width: height / 100 * 30,
     },
     title: {
         fontSize: 24,
@@ -149,8 +179,9 @@ const styles = StyleSheet.create({
     goalItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         marginBottom: 5,
+        // flex: 1
     },
     goalText: {
         fontSize: 16,

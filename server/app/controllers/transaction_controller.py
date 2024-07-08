@@ -2,6 +2,8 @@ from flask import request, jsonify, session
 from app.dao.transactionDAO import Transaction
 from bson import ObjectId
 from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def newTransaction(db):
     print("Yes you are here")
@@ -115,6 +117,51 @@ def getTransactions(db):
     print("Transaction hereeeeeeeeeeeeeeeeeeee")
     print(transactions)
     return jsonify(transactions)
+
+def getMonthlyExpense(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+    transaction_DAO = Transaction(db)
+    transactions = transaction_DAO.get_transaction(user_id)
+    # filter it and group it into months
+    monthly_expenses = {}
+
+    for transaction in transactions:
+        transaction_date = transaction['transaction_date']
+        transaction_amount = transaction['transaction_amount']
+
+        # Extract month-year from transaction_date
+        month_year = datetime.strptime(transaction_date, '%Y-%m-%d').strftime('%Y-%m')
+
+        # Add transaction_amount to corresponding month-year key
+        if month_year in monthly_expenses:
+            monthly_expenses[month_year] += transaction_amount
+        else:
+            monthly_expenses[month_year] = transaction_amount
+
+    sorted_months = sorted(monthly_expenses.keys())
+    if not sorted_months:
+        return []
+
+    # Initialize the list to hold the 12 months data
+    full_data = []
+
+    # Get the last known month data
+    last_data = abs(monthly_expenses[sorted_months[-1]])
+
+    # Iterate to create 12 months data
+    current_month = sorted_months[0]
+    for _ in range(12):
+        if current_month in monthly_expenses:
+            full_data.append(abs(monthly_expenses[current_month]))
+        else:
+            full_data.append(last_data)
+
+        # Move to the next month
+        current_month = (datetime.strptime(current_month, '%Y-%m') + relativedelta(months=1)).strftime('%Y-%m')
+
+    return full_data
 
 def deleteTransaction(db, transaction_id):
     transaction_DAO = Transaction(db)
