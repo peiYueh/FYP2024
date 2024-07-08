@@ -13,8 +13,10 @@ const ViewGoalPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const route = useRoute();
-    // const { goalId } = route.params; // Assumes goalId is passed via navigation params
-    const goalId = "667da042ce513693892d65ed"
+    console.log(route)
+    const { goalId } = route.params; // Assumes goalId is passed via navigation params
+    // const goalId = "667da042ce513693892d65ed"
+    console.log("Goal ID: " + goalId)
 
     // const [loading, setLoading] = useState(true);
     const [goal, setGoal] = useState({});
@@ -823,5 +825,3 @@ const CustomGoal = ({ goalData, setEditedData }) => {
 };
 
 export default ViewGoalPage;
-
-// Note: Ensure that BuyProperty, BuyVehicle, Traveling, and CustomGoal components are imported or defined similarly as in the NewGoalPage.

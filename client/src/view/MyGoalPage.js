@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
-import { Card, Text, Provider as PaperProvider, Title, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from 'react-native-paper';
+import { FlatList, View, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useTheme, Card, Text, Provider as PaperProvider, Title, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config'; // Ensure API_BASE_URL is correctly imported
-
+import LoadingIndicator from '../components/loading-component';
+import { showMessage } from "react-native-flash-message";
 // Importing local images
 import propertyImage from '../../assets/background/goals_background/property-1.jpg';
 import vehicleImage from '../../assets/background/goals_background/vehicle-2.jpg';
@@ -12,12 +13,13 @@ import travelImage from '../../assets/background/goals_background/travel.jpg';
 import customImage from '../../assets/background/goals_background/custom-goal-2.jpg';
 
 const HomeScreen = ({ navigation }) => {
+    const theme = useTheme();
     const [userGoals, setUserGoals] = useState([]);
-    const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
     const [goalToDelete, setGoalToDelete] = useState(null);
-
+    const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
     useEffect(() => {
         fetchGoals();
     }, []);
@@ -26,6 +28,7 @@ const HomeScreen = ({ navigation }) => {
         try {
             const response = await axios.get(`${API_BASE_URL}/myGoals`);
             setUserGoals(response.data);
+            setLoading(false)
         } catch (error) {
             console.error('Error fetching goals:', error);
         }
@@ -62,8 +65,14 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const handleCardPress = (goal) => {
-        console.log('Goal pressed:', goal);
+        navigation.navigate('View Goal', { goalId: goal._id });
     };
+
+    const renderLoadingIndicator = () => (
+        <View style={styles.loadingContainer}>
+            <ActivityIndicator size={100} color={theme.colors.primary} />
+        </View>
+    );
 
     const showDeleteConfirmation = (goal) => {
         setGoalToDelete(goal);
@@ -72,19 +81,26 @@ const HomeScreen = ({ navigation }) => {
 
     const deleteGoal = async () => {
         if (!goalToDelete) return;
-
+        setDeleteConfirmationVisible(false);
+        setDeleting(true)
         try {
             await axios.delete(`${API_BASE_URL}/goal/${goalToDelete._id}`);
             // Remove the deleted goal from state
             setUserGoals(userGoals.filter(goal => goal._id !== goalToDelete._id));
-            setSnackbarMessage('Goal deleted successfully');
-            setSnackbarVisible(true);
+            showMessage({
+                message: "Goal Deleted!",
+                description: "Your goal has been deleted",
+                type: "success",
+            })
         } catch (error) {
             console.error('Error deleting goal:', error);
-            setSnackbarMessage('Error deleting goal');
-            setSnackbarVisible(true);
+            showMessage({
+                message: "Error Deleting Goal!",
+                description: "Your goal has not been deleted",
+                type: "success",
+            })
         } finally {
-            setDeleteConfirmationVisible(false);
+            setDeleting(false)
             setGoalToDelete(null);
         }
     };
@@ -95,81 +111,80 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const GoalCard = ({ goal }) => (
-        <Card style={styles.card}>
-            <ImageBackground
-                source={getBackgroundImage(goal.goal_type)} // Assuming goal_type corresponds to the type index
-                style={styles.image}
-                imageStyle={{ borderRadius: 8 }}
-            >
-                <View style={styles.overlay}>
-                    <Card.Content style={styles.cardContent}>
-                        <Title style={styles.title}>
-                            <Icon name={getIcon(goal.goal_type)} size={24} color="#fff" /> 
-                            {goal.goal_description}
-                        </Title>
-                        <Text style={styles.text}>
-                            <Icon name="event" size={20} color="#fff" /> Target Age: {goal.target_age}
-                        </Text>
-                        <Text style={styles.text}>
-                            <Icon name="attach-money" size={20} color="#fff" /> Total Amount: {goal.total_amount}
-                        </Text>
-                        <IconButton
-                            icon="delete"
-                            color="#fff"
-                            size={20}
-                            style={styles.deleteButton}
-                            onPress={() => showDeleteConfirmation(goal)}
-                        />
-                    </Card.Content>
-                </View>
-            </ImageBackground>
-        </Card>
+        <TouchableOpacity onPress={() => handleCardPress(goal)}>
+            <Card style={styles.card}>
+                <ImageBackground
+                    source={getBackgroundImage(goal.goal_type)} // Assuming goal_type corresponds to the type index
+                    style={styles.image}
+                    imageStyle={{ borderRadius: 8 }}
+                >
+                    <View style={styles.overlay}>
+                        <Card.Content style={styles.cardContent}>
+                            <Title style={styles.title}>
+                                <Icon name={getIcon(goal.goal_type)} size={24} color="#fff" />
+                                {goal.goal_description}
+                            </Title>
+                            <Text style={styles.text}>
+                                <Icon name="event" size={20} color="#fff" /> Target Age: {goal.target_age}
+                            </Text>
+                            <Text style={styles.text}>
+                                <Icon name="attach-money" size={20} color="#fff" /> Total Amount: {goal.total_amount}
+                            </Text>
+                            <IconButton
+                                icon="delete"
+                                color="#fff"
+                                size={20}
+                                style={styles.deleteButton}
+                                onPress={() => showDeleteConfirmation(goal)}
+                            />
+                        </Card.Content>
+                    </View>
+                </ImageBackground>
+            </Card>
+        </TouchableOpacity>
     );
 
     return (
+
         <PaperProvider>
-            <View style={styles.container}>
-                <Button
-                    mode="contained"
-                    icon="plus"
-                    onPress={() => navigation.navigate('New Goal')}
-                    style={styles.addButton}
-                >
-                    Add Goal
-                </Button>
-                <FlatList
-                    data={userGoals}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({ item }) => (
-                        <GoalCard goal={item} />
+            {loading ? (
+                renderLoadingIndicator() // Render loading indicator if data is still fetching
+            ) : (<>
+                <View style={styles.container}>
+                    <Button
+                        mode="contained"
+                        icon="plus"
+                        onPress={() => navigation.navigate('New Goal')}
+                        style={styles.addButton}
+                    >
+                        Add Goal
+                    </Button>
+                    <FlatList
+                        data={userGoals}
+                        keyExtractor={(item) => item._id}
+                        renderItem={({ item }) => (
+                            <GoalCard goal={item} />
+                        )}
+                    />
+                    <Portal>
+                        <Dialog visible={deleteConfirmationVisible} onDismiss={cancelDelete}>
+                            <Dialog.Title>Confirm Delete</Dialog.Title>
+                            <Dialog.Content>
+                                <Paragraph>Are you sure you want to delete this goal?</Paragraph>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button onPress={cancelDelete}>Cancel</Button>
+                                <Button onPress={deleteGoal}>Delete</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
+                    {(deleting &&
+                        <LoadingIndicator theme={theme} />
                     )}
-                />
-                <Snackbar
-                    visible={snackbarVisible}
-                    onDismiss={() => setSnackbarVisible(false)}
-                    action={{
-                        label: 'Close',
-                        onPress: () => {
-                            // Do something when dismissed
-                        },
-                    }}
-                >
-                    {snackbarMessage}
-                </Snackbar>
-                <Portal>
-                    <Dialog visible={deleteConfirmationVisible} onDismiss={cancelDelete}>
-                        <Dialog.Title>Confirm Delete</Dialog.Title>
-                        <Dialog.Content>
-                            <Paragraph>Are you sure you want to delete this goal?</Paragraph>
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={cancelDelete}>Cancel</Button>
-                            <Button onPress={deleteGoal}>Delete</Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal>
-            </View>
+                </View>
+            </>)}
         </PaperProvider>
+
     );
 };
 

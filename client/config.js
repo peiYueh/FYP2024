@@ -1,1 +1,1 @@
-export const API_BASE_URL = 'https://552f-113-210-60-225.ngrok-free.app';
+export const API_BASE_URL = 'https://0740-113-210-56-146.ngrok-free.app';
