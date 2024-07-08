@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Title, TextInput, Button, Appbar, IconButton, List } from 'react-native-paper';
+import axios from 'axios';
+import { API_BASE_URL } from '../../config';
 
 const FinancialScenarioSetting = ({ navigation }) => {
     const [activeIncome, setActiveIncome] = useState('');
@@ -9,14 +11,57 @@ const FinancialScenarioSetting = ({ navigation }) => {
     const [totalSpending, setTotalSpending] = useState('');
     const [financialGoals, setFinancialGoals] = useState('');
     const [savings, setSavings] = useState([]);
-    const [goalsData, setGoalsData] = useState([
-        { "_id": "66884730ce22da648f486a0f", "goal_description": "Goal 1", "goal_type": 3, "target_age": "50", "total_amount": "888", "user_id": "665094c0c1a89d9d19d13606" },
-        { "_id": "66884733ce22da648f486a11", "goal_description": "Goal 2", "goal_type": 3, "target_age": "50", "total_amount": "888", "user_id": "665094c0c1a89d9d19d13606" },
-        { "_id": "66884742ce22da648f486a19", "goal_description": "Goal 3", "goal_type": 3, "target_age": "50", "total_amount": "888", "user_id": "665094c0c1a89d9d19d13606" },
-        { "_id": "66884734ce22da648f486a17", "goal_description": "Goal 4", "goal_type": 3, "target_age": "50", "total_amount": "888", "user_id": "665094c0c1a89d9d19d13606" },
-    ]);
-
+    const [data, setData] = useState(null);
+    const [goalsData, setGoalsData] = useState([]);
+    const [dataLoaded, setDataLoaded] = useState(false);
     // useEffect for fetching data would typically be here
+    useEffect(() => {
+        const fetchData = async () => {
+            const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
+            try {
+                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
+                const fetchedData = response.data;
+
+                const totalNeeds = Math.abs(fetchedData.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
+                const totalWants = Math.abs(fetchedData.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
+                const totalExpenses = totalNeeds + totalWants;
+                const activeIncome = Math.abs(fetchedData.active_income.reduce((acc, item) => acc + item.transaction_amount, 0));
+                const passiveIncome = Math.abs(fetchedData.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
+                console.log("Fetched savings: "+fetchedData.savings);
+                const filteredSavings = fetchedData.savings
+                    .filter(item => item.transaction_type === 2)
+                    .map(item => ({
+                        name: item.transaction_description,
+                        initial: (item.transaction_amount * 12).toString(),
+                        monthly: item.transaction_amount.toString(),
+                        interestRate: item.interest_rate.toString(),
+                    }));
+
+                setActiveIncome(activeIncome.toString());
+                setPassiveIncome(passiveIncome.toString());
+                setTotalSpending(totalExpenses.toString());
+                setSavings(filteredSavings);
+                setDataLoaded(true);
+            } catch (error) {
+                console.error('Error fetching categorized transactions:', error);
+            }
+        };
+
+        const fetchGoals = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/myGoals`);
+                setGoalsData(response.data);
+            } catch (error) {
+                console.error('Error fetching goals:', error);
+            }
+        };
+
+        fetchData();
+        fetchGoals();
+    }, []);
+
+
+
 
     const addSaving = () => {
         setSavings([...savings, { name: '', initial: '', monthly: '', interestRate: '' }]);
@@ -59,29 +104,29 @@ const FinancialScenarioSetting = ({ navigation }) => {
             alert('Please fill in all income and expense fields.');
             return;
         }
-    
+
         const savingsValid = savings.every(saving => saving.name && saving.initial && saving.monthly && saving.interestRate);
         if (!savingsValid) {
             alert('Please fill in all savings fields or remove unwanted savings.');
             return;
         }
-    
+
         const goalsValid = goalsData.every(goal => goal.goal_description && goal.total_amount && goal.target_age);
         if (!goalsValid) {
             alert('Please fill in all goals fields or remove unwanted goals.');
             return;
         }
-    
+
         // Handle scenario submission logic here
-        console.log({
-            activeIncome,
-            passiveIncome,
-            totalSpending,
-            financialGoals: financialGoals, // Assuming you'll set this state somewhere
-            savings,
-            goalsData,
-        });
-    
+        // console.log({
+        //     activeIncome,
+        //     passiveIncome,
+        //     totalSpending,
+        //     financialGoals: financialGoals, // Assuming you'll set this state somewhere
+        //     savings,
+        //     goalsData,
+        // });
+
         // Navigate back or to another screen after submission
         navigation.navigate('Financial Scenario', {
             activeIncome,
