@@ -84,3 +84,52 @@ def editAccount(db):
     user_DAO = User(db)
     user_DAO.update_account(data)
     return jsonify({"message": "Data updated successfully"}), 201
+
+
+def getInitialExpense(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    # Fetch the user document from the database
+    user_DAO = User(db)
+    user_document = user_DAO.get_basic_information(user_id)
+    # user_document = db.basic_info_collection.find_one({'_id': ObjectId(user_id)})
+    if user_document:
+        # Assuming the expenses are stored as a single integer under a key like 'expenses'
+        return user_document.get('expenses', 0)
+    return 0
+
+def getInitialIncome(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    # Fetch the user document from the database
+    user_DAO = User(db)
+    user_document = user_DAO.get_basic_information(user_id)
+    if user_document:
+        # Assuming the expenses are stored as a single integer under a key like 'expenses'
+        return user_document.get('income', 0)
+    return 0
+
+def getLifeExpectancy(self, db):
+    user_id = "665094c0c1a89d9d19d13606"
+    # Fetch the user document from the database
+    user_DAO = User(db)
+    user_document = user_DAO.get_basic_information(user_id)
+    if user_document:
+        # Assuming the expenses are stored as a single integer under a key like 'expenses'
+        return user_document.get('lifeExpectancy', 0)
+    return 0
+
+def getExpectedRetirement(self, db):
+    user_id = "665094c0c1a89d9d19d13606"
+    # Fetch the user document from the database
+    user_DAO = User(db)
+    user_document = user_DAO.get_basic_information(user_id)
+    if user_document:
+        # Assuming the expenses are stored as a single integer under a key like 'expenses'
+        return user_document.get('retirementAge', 0)
+    return 0
+
+def getBasicInformation(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    # Fetch the user document from the database
+    user_DAO = User(db)
+    user_document = user_DAO.get_basic_information(user_id)
+    return user_document

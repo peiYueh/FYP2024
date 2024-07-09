@@ -5,6 +5,8 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 
 const FinancialScenarioSetting = ({ navigation }) => {
+    const [lifeExpectancy, setLifeExpectancy] = useState('');
+    const [retirementAge, setRetirementAge] = useState('');
     const [activeIncome, setActiveIncome] = useState('');
     const [passiveIncome, setPassiveIncome] = useState('');
     const [totalSpending, setTotalSpending] = useState('');
@@ -14,11 +16,23 @@ const FinancialScenarioSetting = ({ navigation }) => {
     const [savings, setSavings] = useState([]);
     const [goalsData, setGoalsData] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
-    
+
     const [useHistoricalDataForIncome, setUseHistoricalDataForIncome] = useState(false);
     const [useHistoricalDataForExpenses, setUseHistoricalDataForExpenses] = useState(false);
 
     useEffect(() => {
+        const fetchBasicInformation = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/basicInformation`);
+                console.log(response.data);
+                setLifeExpectancy(response.data.lifeExpectancy.toString())
+                setRetirementAge(response.data.retirementAge.toString())
+            } catch (error) {
+                console.error('Error fetching goals:', error);
+            }
+            setDataLoaded(true);
+        }
+
         const fetchData = async () => {
             const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
             try {
@@ -67,8 +81,11 @@ const FinancialScenarioSetting = ({ navigation }) => {
             }
             setDataLoaded(true);
         };
+
         console.log("DATALOADED: " + dataLoaded)
-        if(!dataLoaded){
+        if (!dataLoaded) {
+            fetchBasicInformation();
+            setDataLoaded(false);
             fetchData();
             setDataLoaded(false);
             fetchGoals();
@@ -143,6 +160,29 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 <Appbar.Content title="Financial Scenario Settings" />
             </Appbar.Header>
             <ScrollView style={styles.content}>
+                <Card style={styles.card}>
+                    <Card.Content>
+                        <Title>Basic Information</Title>
+                        <View style={styles.row}>
+                            <TextInput
+                                label="Life Expectancy"
+                                value={lifeExpectancy}
+                                onChangeText={setLifeExpectancy}
+                                keyboardType="numeric"
+                                style={styles.input}
+                                disabled={useHistoricalDataForIncome}
+                            />
+                            <TextInput
+                                label="Retirement Age"
+                                value={retirementAge}
+                                onChangeText={setRetirementAge}
+                                keyboardType="numeric"
+                                style={styles.input}
+                                disabled={useHistoricalDataForIncome}
+                            />
+                        </View>
+                    </Card.Content>
+                </Card>
                 <Card style={styles.card}>
                     <Card.Content>
                         <Title>Income & Expenses</Title>

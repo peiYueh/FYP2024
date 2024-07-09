@@ -148,13 +148,13 @@ def getMonthlyExpense(db):
     full_data = []
 
     # Get the last known month data
-    last_data = abs(monthly_expenses[sorted_months[-1]])
+    last_data = abs(monthly_expenses[sorted_months[-1]]) * 12
 
     # Iterate to create 12 months data
     current_month = sorted_months[0]
     for _ in range(12):
         if current_month in monthly_expenses:
-            full_data.append(abs(monthly_expenses[current_month]))
+            full_data.append(abs(monthly_expenses[current_month]) * 12) 
         else:
             full_data.append(last_data)
 

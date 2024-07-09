@@ -2,7 +2,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
-from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount
+from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions, getMonthlyExpense
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal, deleteGoal
@@ -85,6 +85,13 @@ def get_payment_date():
     print("HELLOO")
     db = get_db()
     return getPaymentDates(db)
+
+@app.route('/basicInformation', methods=['GET'])
+def get_basic_information():
+    print("HELLOO")
+    db = get_db()
+    return getBasicInformation(db)
+
 
 @app.route('/updatePayment', methods=['POST'])
 def new_payment_update():
@@ -180,27 +187,30 @@ def predict_salary_endpoint():
     
     current_salary = request.args.get('activeIncome')
     # get retirement age here
-    
-    # future_years = data.get('future_years')
+    # future_years = 30
+    future_years = request.args.get('futureYears')
 
-    current_salary = 36000
-    future_years = 30
-
-    # if current_salary is None or future_years is None:
-    #     return jsonify({'error': 'Missing required parameters'}), 400
+    # current_salary = 36000
+    if not current_salary:
+        # HAVENT TEST
+        current_salary = [getInitialIncome()] * 12
     
-    # try:
-    #     current_salary = float(current_salary)
-    #     future_years = int(future_years)
-    # except ValueError:
-    #     return jsonify({'error': 'Invalid parameter types'}), 400
+
+    if current_salary is None or future_years is None:
+        return jsonify({'error': 'Missing required parameters'}), 400
+    
+    try:
+        current_salary = float(current_salary)
+        future_years = int(future_years)
+    except ValueError:
+        return jsonify({'error': 'Invalid parameter types'}), 400
 
     result = predictSalary(current_salary, future_years)
     # if 'error' in result:
     #     return jsonify(result), 500
     
-    # return jsonify({'future_salaries': result})
-    return result
+    return jsonify({'future_salaries': result})
+    # return result
 
 @app.route('/predictExpense', methods=['GET'])
 def predict_expense_endpoint():
@@ -211,8 +221,15 @@ def predict_expense_endpoint():
         # Assuming getMonthlyExpense returns a list of monthly expenses
         db = get_db()
         expense_history = getMonthlyExpense(db)
+        # if expense_history is empty, call getInitialExpense function
+        if not expense_history:
+            # HAVENT TEST
+            expense_history = [getInitialExpense(db)] * 12
     else:
         expense_history = [expense_initial] * 12  # Initialize with expense_initial repeated 12 times
+
+    # get life expectancy
+    months_to_predict = getLifeExpectancy(db)
     
     future_expenses = predictExpense(expense_history, months_to_predict=12)
     

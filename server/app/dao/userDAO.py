@@ -44,3 +44,10 @@ class User:
             return {"message": "Account updated successfully"}, 200
         else:
             return {"error": "Account not found"}, 404
+        
+    def get_basic_information(db, user_id):
+        result = db.basic_info_collection.find_one({'user_id': user_id})
+        if result and '_id' in result:
+            result['_id'] = str(result['_id'])  # Convert ObjectId to string
+        print(result)
+        return result

@@ -33,7 +33,8 @@ const GetStarted = () => {
         expenses: '',
         savings: '',
         retirementAge: '',
-        lifeExpectancy: ''
+        lifeExpectancy: '',
+        user_id: '665094c0c1a89d9d19d13606' //NEED TO CHANGE THIS
     });
 
     const translateX = useRef(new Animated.Value(0)).current;
@@ -67,6 +68,7 @@ const GetStarted = () => {
         // You can perform additional actions here, such as sending data to a server
         setLoading(true);
         try {
+            console.log("Submitting: " + formData);
             const response = await axios.post(API_BASE_URL + '/getStarted', {
                 formData
             });
@@ -84,7 +86,6 @@ const GetStarted = () => {
 
     return (
         <View style={[style.container, { backgroundColor: theme.colors.primary }]}>
-        
             <Title style={[styles.headingText, { color: theme.colors.background, fontWeight: 'bold', fontSize: 30, textAlign: 'left', marginBottom: '5%' }]}>Let's Get Started!</Title>
             <ProgressBar progress={progress} color="#F4F9FB" style={style.progressBar} />
             {(loading &&
