@@ -188,14 +188,14 @@ def predict_salary_endpoint():
     current_salary = request.args.get('activeIncome')
     # get retirement age here
     # future_years = 30
-    future_years = request.args.get('futureYears')
-
+    current_age = 22
+    retirement_age = request.args.get('retirementAge')
+    years_to_predict = (current_age - current_age)
     # current_salary = 36000
     if not current_salary:
         # HAVENT TEST
         current_salary = [getInitialIncome()] * 12
     
-
     if current_salary is None or future_years is None:
         return jsonify({'error': 'Missing required parameters'}), 400
     
@@ -214,24 +214,29 @@ def predict_salary_endpoint():
 
 @app.route('/predictExpense', methods=['GET'])
 def predict_expense_endpoint():
-    use_history_data = request.args.get('useHistoricalDataForIncome', False)  # Default to False if not provided
-    expense_initial = request.args.get('totalSpending', 0)  # Default to 0 if not provided
-    
+    use_history_data = request.args.get('useHistoricalDataForExpenses', 'false').lower() == 'true'
+    expense_initial = float(request.args.get('totalSpending', 0))  # Default to 0 if not provided
+    life_expectancy = int(request.args.get('lifeExpectancy', 0))
+    current_age = 22
+
+    # Calculate the number of years to predict
+    years_to_predict = (life_expectancy - current_age)
+
+    SEQUENCE_LENGTH = 12  # Sequence length expected by the model
+
     if use_history_data:
         # Assuming getMonthlyExpense returns a list of monthly expenses
         db = get_db()
         expense_history = getMonthlyExpense(db)
-        # if expense_history is empty, call getInitialExpense function
+        # If expense_history is empty, call getInitialExpense function
         if not expense_history:
-            # HAVENT TEST
-            expense_history = [getInitialExpense(db)] * 12
+            expense_history = [getInitialExpense(db)] * SEQUENCE_LENGTH
+        elif len(expense_history) < SEQUENCE_LENGTH:
+            expense_history = (expense_history * (SEQUENCE_LENGTH // len(expense_history) + 1))[:SEQUENCE_LENGTH]
     else:
-        expense_history = [expense_initial] * 12  # Initialize with expense_initial repeated 12 times
+        expense_history = [expense_initial] * SEQUENCE_LENGTH  # Repeat expense_initial to fill the sequence
 
-    # get life expectancy
-    months_to_predict = getLifeExpectancy(db)
-    
-    future_expenses = predictExpense(expense_history, months_to_predict=12)
+    future_expenses = predictExpense(expense_history, years_to_predict=years_to_predict)
     
     # Prepare response
     response = {
@@ -239,6 +244,7 @@ def predict_expense_endpoint():
     }
 
     return jsonify(response)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

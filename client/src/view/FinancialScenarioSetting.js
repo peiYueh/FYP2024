@@ -149,7 +149,9 @@ const FinancialScenarioSetting = ({ navigation }) => {
             savings,
             goalsData,
             useHistoricalDataForIncome,
-            useHistoricalDataForExpenses
+            useHistoricalDataForExpenses,
+            retirementAge,
+            lifeExpectancy
         });
     };
 

@@ -12,9 +12,11 @@ const FinancialScenarioPage = ({ route }) => {
         passiveIncome,
         totalSpending,
         savings,
+        goalsData,
         useHistoricalDataForIncome,
         useHistoricalDataForExpenses,
-        goalsData,
+        retirementAge,
+        lifeExpectancy
     } = route.params;
 
     console.log(route.params)
@@ -24,8 +26,9 @@ const FinancialScenarioPage = ({ route }) => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/predictExpense`, {
                     params: {
-                        useHistoricalDataForIncome,  // Assuming these are variables in your scope
-                        totalSpending
+                        useHistoricalDataForExpenses,  // Assuming these are variables in your scope
+                        totalSpending,
+                        lifeExpectancy
                     }
                 });
                 console.log(response.data);  // Log response data to console
@@ -40,7 +43,8 @@ const FinancialScenarioPage = ({ route }) => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/predictSalary`, {
                     params: {
-                        activeIncome
+                        activeIncome,
+                        retirementAge
                     }
                 });
                 console.log("Salary" + response.data);  // Log response data to console

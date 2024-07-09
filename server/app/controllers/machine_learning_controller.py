@@ -36,7 +36,7 @@ def predictSalary(current_salary, future_years):
         return jsonify({'error': str(e)}), 500
     
 
-def predictExpense(expense_history, months_to_predict=12):
+def predictExpense(expense_history, years_to_predict=12):
     # Load the saved model
     model = load_model('./app/materials/expense_prediction_model.h5')
     
@@ -55,7 +55,7 @@ def predictExpense(expense_history, months_to_predict=12):
     
     future_seq = expense_history_scaled[-SEQUENCE_LENGTH:].reshape((1, SEQUENCE_LENGTH, 1))  # Last sequence in the scaled data
     future_forecast = []
-    for _ in range(months_to_predict):
+    for _ in range(years_to_predict):
         next_pred = model.predict(future_seq)[0]
         future_forecast.append(next_pred)
         future_seq = np.append(future_seq[:, 1:, :], [[next_pred]], axis=1)
