@@ -11,6 +11,7 @@ const FinancialScenarioPage = ({ route }) => {
         activeIncome,
         passiveIncome,
         totalSpending,
+        savings,
         goalsData,
         useHistoricalDataForIncome,
         useHistoricalDataForExpenses,
@@ -18,8 +19,14 @@ const FinancialScenarioPage = ({ route }) => {
         lifeExpectancy
     } = route.params;
 
+    // console.log("savings" + savings)
+    // savings.forEach((data, index) => {
+    //     console.log(`Row ${index + 1}:`);
+    //     console.log(data);
+    // });
     const [predictedYearlySalary, setPredictedYearlySalary] = useState([]);
     const [predictedYearlyExpenses, setPredictedYearlyExpenses] = useState([]);
+    const [futureSavingData, setFutureSavingData] = useState([]);
     const [stackData, setStackData] = useState([]);
     const [goals, setGoals] = useState(goalsData);
     //ML 1: Expense Prediction
@@ -33,7 +40,7 @@ const FinancialScenarioPage = ({ route }) => {
                         lifeExpectancy
                     }
                 });
-                // console.log("Expense Prediction: " + response.data);  // Log response data to console
+                // console.log(response.data);  // Log response data to console
                 setPredictedYearlyExpenses(response.data.predictions);
             } catch (error) {
                 console.error('Error fetching expense prediction:', error);
@@ -48,7 +55,7 @@ const FinancialScenarioPage = ({ route }) => {
                         retirementAge
                     }
                 });
-                // console.log("Salary Prediction: " + response.data.future_salaries);  // Log response data to console
+                // console.log(response.data.future_salaries);  // Log response data to console
                 setPredictedYearlySalary(response.data.future_salaries);
             } catch (error) {
                 console.error('Error fetching salary prediction:', error);
@@ -60,60 +67,145 @@ const FinancialScenarioPage = ({ route }) => {
     }, [route.params]);
     // Financial Projection
 
-    const constructStackData = (predictedSalary, predictedExpense, passiveIncome, currentAge) => {
+    // const tempStackData = [
+    //     {"label": "69", "stacks": [{"color": "#f4e285", "value": 3500}, {"color": "#8cb369", "value": 0}, {"color": "#f4a259", "value": 15600}, {"color": "#bc4b51", "value": 0}]},
+    //     {label: "73", "stacks": [{"color": "#f4e285", "value": 3500}, {"color": "#8cb369", "value": 0}, {"color": "#f4a259", "value": 15600}, {"color": "#bc4b51", "value": 0}]},
+    //     {label: "74", stacks: [{"color": "#f4e285", "value": 3500}, {"color": "#8cb369", "value": 0}, {"color": "#f4a259", "value": 15600}, {"color": "#bc4b51", "value": 0}], topLabelComponent: () => (
+    //         <Icon name="home" size={20} color="black" style={styles.icon} />
+    //     )},
+    //     { stacks: [{ value: 10, color: '#bc4b51' }, { value: 20, color: '#f4a259' }, { value: 20, color: '#f4e285' }, { value: 20, color: '#8cb369' }], label: '24' },
+
+    // ];
+
+    // tempStackData.forEach((data, index) => {
+    //     console.log(`Row ${index + 1}:`);
+    //     console.log(data);
+    // });
+    // Calculate yearly savings with accumulation
+    const calculateYearlySavings = (savings) => {
+        const yearlySavings = {};
+
+        // Initialize accumulated amounts for each saving
+        const accumulatedAmounts = savings.map(saving => parseFloat(saving.initial));
+
+        for (let year = 1; year <= Math.max(...savings.map(s => parseInt(s.contributionYear, 10))); year++) {
+            savings.forEach((saving, index) => {
+                const monthlyContribution = parseFloat(saving.monthly);
+                const yearlyInterestRate = parseFloat(saving.interestRate) / 100;
+                const contributionYear = parseInt(saving.contributionYear, 10);
+
+                if (year <= contributionYear) {
+                    // Add contributions and interest for this year
+                    for (let month = 1; month <= 12; month++) {
+                        accumulatedAmounts[index] += monthlyContribution;
+                        accumulatedAmounts[index] *= (1 + yearlyInterestRate / 12);
+                    }
+                } else {
+                    // Only add interest for this year
+                    for (let month = 1; month <= 12; month++) {
+                        accumulatedAmounts[index] *= (1 + yearlyInterestRate / 12);
+                    }
+                }
+
+                if (!yearlySavings[year]) {
+                    yearlySavings[year] = 0;
+                }
+                yearlySavings[year] += accumulatedAmounts[index];
+            });
+        }
+
+        const sortedYears = Object.keys(yearlySavings).sort((a, b) => a - b);
+        const result = sortedYears.map(year => ({ year: parseInt(year, 10), savings: yearlySavings[year] }));
+
+        console.log("Yearly savings: ", result);
+        return result;
+    };
+    const constructStackData = (predictedSalary, predictedExpense, yearlySavings, passiveIncome, currentAge) => {
         // Combine the data into a single array of objects
-        const maxLength = Math.max(predictedSalary.length, predictedExpense.length);
+        const maxLength = Math.max(predictedSalary.length, predictedExpense.length, yearlySavings.length);
+
+        // Get the last available savings value for cases where yearlySavings is out of range
+        const lastSavings = yearlySavings[yearlySavings.length - 1].savings;
+
+        // Create an array to store the remaining savings for each year
+        let remainingSavings = yearlySavings.map(item => item.savings);
+        console.log(maxLength)
         // Combine the data into a single array of objects
         const combinedData = Array.from({ length: maxLength }, (_, index) => {
             return {
                 index: index,
                 active_income: predictedSalary[index] || 0,
                 passive_income: passiveIncome,
-                expenses: predictedExpense[index] || 0,
+                savings: remainingSavings[index] !== undefined ? remainingSavings[index] : lastSavings,
+                expenses: predictedExpense[index] || 0
             };
         });
-        let remainingSavings = 0;
+
+        console.log(combinedData)
+
         const tempStackData = combinedData.map((yearData, index) => {
             let remainingExpense = yearData.expenses;
-            
+
             // Subtract passive income
             let passiveIncomeUsed = Math.min(remainingExpense, yearData.passive_income);
             remainingExpense -= passiveIncomeUsed;
-            
+
             // Subtract active income
             let activeIncomeUsed = Math.min(remainingExpense, yearData.active_income);
             remainingExpense -= activeIncomeUsed;
 
-            let savingUsed = Math.min(remainingExpense, remainingSavings);
-            remainingExpense -= savingUsed;
-    
-            // Calculate unused income and add it to savings for the next year
-            let unusedIncome = (yearData.passive_income + yearData.active_income) - yearData.expenses;
-            if (unusedIncome > 0) {
-                remainingSavings += unusedIncome;
+            // Subtract savings and update remaining savings for future years
+            let savingsUsed = Math.min(remainingExpense, yearData.savings);
+            remainingExpense -= savingsUsed;
+            if (index < remainingSavings.length) {
+                remainingSavings[index] -= savingsUsed;
+                if (remainingSavings[index] < 0) remainingSavings[index] = 0;
             }
 
-            
-    
+            // Deduct savings used from subsequent years
+            for (let i = index + 1; i < remainingSavings.length && savingsUsed > 0; i++) {
+                let savingsToDeduct = Math.min(savingsUsed, remainingSavings[i]);
+                remainingSavings[i] -= savingsToDeduct;
+                savingsUsed -= savingsToDeduct;
+            }
+
             let downfall = remainingExpense > 0 ? remainingExpense : 0;
-    
+
             return {
                 label: `${currentAge + index}`,
                 stacks: [
                     { color: "#f4e285", value: passiveIncomeUsed },
                     { color: "#8cb369", value: activeIncomeUsed },
-                    { color: "#f4a259", value: savingUsed },
-                    { color: "#bc4b51", value: downfall }
+                    { color: "#f4a259", value: savingsUsed },
+                    // { color: "#bc4b51", value: downfall }
                 ]
             };
         });
-    
-        return tempStackData;
+
+        // console.log(tempStackData);
+        // tempStackData.forEach((data, index) => {
+        //     console.log(`Row ${index + 1}:`);
+        //     console.log(data);
+        // });
+        // setStackData(tempStackData)
+        return tempStackData
     };
-    
+
+
+
+    const savingData = [
+        { initial: '3600', interestRate: '5', monthly: '300', name: 'Interest income', contributionYear: 10 },
+        // { initial: '1800', interestRate: '0', monthly: '150', name: 'Interest income', contributionYear: 10 },
+        { initial: '2400', interestRate: '4', monthly: '200', name: 'Interest income', contributionYear: 15 }
+    ];
+
+
     useEffect(() => {
         if (predictedYearlySalary.length > 0 && predictedYearlyExpenses.length > 0) {
-            const stackData = constructStackData(predictedYearlySalary, predictedYearlyExpenses, parseInt(passiveIncome) * 12, 23);
+            const maxLength = Math.max(predictedYearlySalary.length, predictedYearlyExpenses.length);
+            const years = 10; // Number of years to project
+            const yearlySavings = calculateYearlySavings(savingData, years);
+            const stackData = constructStackData(predictedYearlySalary, predictedYearlyExpenses, yearlySavings, parseInt(passiveIncome), 23);
             setStackData(stackData);
         }
     }, [predictedYearlySalary, predictedYearlyExpenses]);

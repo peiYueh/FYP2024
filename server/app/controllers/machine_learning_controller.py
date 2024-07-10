@@ -20,12 +20,12 @@ def classifyCategory(description):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-def predictSalary(current_salary, future_years):
+def predictSalary(current_salary, years_to_predict):
     try:
         model = joblib.load('./app/materials/salary_prediction_model.joblib')
 
         future_salaries = []
-        for year in range(future_years):
+        for year in range(years_to_predict):
             next_year_salary = model.predict([[current_salary]])[0]
             future_salaries.append(next_year_salary)
             current_salary = next_year_salary
@@ -62,7 +62,8 @@ def predictExpense(expense_history, years_to_predict=12):
 
     # Inverse transform forecasts to original scale
     future_forecast = scaler.inverse_transform(np.array(future_forecast).reshape(-1, 1))
-
+    future_forecast = future_forecast * 12
+    
     return future_forecast
 
 

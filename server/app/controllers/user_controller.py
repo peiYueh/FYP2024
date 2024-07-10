@@ -133,3 +133,31 @@ def getBasicInformation(db):
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
     return user_document
+
+from flask import jsonify
+from datetime import datetime
+
+def getUserAge(db):
+    user_id = "665094c0c1a89d9d19d13606"
+    user_DAO = User(db)
+    try:
+        user = user_DAO.get_account_by_id(user_id)
+        if user:
+            user["_id"] = str(user["_id"])
+            for key, value in user.items():
+                if isinstance(value, bytes):
+                    user[key] = value.decode('utf-8')  # Decode bytes to string
+
+            birth_date_str = user.get("user_birthDate")
+            if birth_date_str:
+                # Assuming birth_date_str is in the format "YYYY-MM-DD"
+                birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
+                today = datetime.today().date()
+                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+                return age
+            else:
+                raise ValueError("User birth date not found")
+        else:
+            raise ValueError("User not found")
+    except Exception as e:
+        raise e

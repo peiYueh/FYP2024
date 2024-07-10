@@ -2,7 +2,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
-from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation
+from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation, getUserAge
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions, getMonthlyExpense
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal, deleteGoal
@@ -181,34 +181,22 @@ def categorize_transactions():
 
 @app.route('/predictSalary', methods=['GET'])
 def predict_salary_endpoint():
-    # data = request.get_json()
-    # if not data:
-    #     return jsonify({'error': 'Invalid input data'}), 400
-    
-    current_salary = request.args.get('activeIncome')
-    # get retirement age here
-    # future_years = 30
-    current_age = 22
-    retirement_age = request.args.get('retirementAge')
-    years_to_predict = (current_age - current_age)
-    # current_salary = 36000
+    retirement_age = int(request.args.get('retirementAge'))
+    current_salary = float(request.args.get('activeIncome'))
     if not current_salary:
         # HAVENT TEST
-        current_salary = [getInitialIncome()] * 12
+        current_salary = getInitialIncome()
     
-    if current_salary is None or future_years is None:
-        return jsonify({'error': 'Missing required parameters'}), 400
-    
-    try:
-        current_salary = float(current_salary)
-        future_years = int(future_years)
-    except ValueError:
-        return jsonify({'error': 'Invalid parameter types'}), 400
+    # get current age from user data
+    db = get_db()
+    current_age = getUserAge(db)
+    # print("currentagee"+current_age)
+    years_to_predict = (retirement_age - current_age)
 
-    result = predictSalary(current_salary, future_years)
-    # if 'error' in result:
-    #     return jsonify(result), 500
-    
+    result = predictSalary(current_salary * 12, years_to_predict)
+    # print(result)
+    if 'error' in result:
+        return jsonify(result), 500
     return jsonify({'future_salaries': result})
     # return result
 
@@ -217,16 +205,16 @@ def predict_expense_endpoint():
     use_history_data = request.args.get('useHistoricalDataForExpenses', 'false').lower() == 'true'
     expense_initial = float(request.args.get('totalSpending', 0))  # Default to 0 if not provided
     life_expectancy = int(request.args.get('lifeExpectancy', 0))
-    current_age = 22
+    db = get_db()
+    current_age = getUserAge(db)
 
     # Calculate the number of years to predict
     years_to_predict = (life_expectancy - current_age)
 
     SEQUENCE_LENGTH = 12  # Sequence length expected by the model
-
+    
     if use_history_data:
         # Assuming getMonthlyExpense returns a list of monthly expenses
-        db = get_db()
         expense_history = getMonthlyExpense(db)
         # If expense_history is empty, call getInitialExpense function
         if not expense_history:
@@ -237,7 +225,7 @@ def predict_expense_endpoint():
         expense_history = [expense_initial] * SEQUENCE_LENGTH  # Repeat expense_initial to fill the sequence
 
     future_expenses = predictExpense(expense_history, years_to_predict=years_to_predict)
-    
+    print(future_expenses)
     # Prepare response
     response = {
         'predictions': future_expenses.flatten().tolist()  # Convert NumPy array to list

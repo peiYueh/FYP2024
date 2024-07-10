@@ -172,7 +172,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
                                 onChangeText={setLifeExpectancy}
                                 keyboardType="numeric"
                                 style={styles.input}
-                                disabled={useHistoricalDataForIncome}
                             />
                             <TextInput
                                 label="Retirement Age"
@@ -180,7 +179,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
                                 onChangeText={setRetirementAge}
                                 keyboardType="numeric"
                                 style={styles.input}
-                                disabled={useHistoricalDataForIncome}
                             />
                         </View>
                     </Card.Content>
