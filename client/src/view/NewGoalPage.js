@@ -104,7 +104,7 @@ const NewGoalPage = () => {
                 });
                 return;
             }
-            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 0 || downPaymentPercentage >100) {
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 0 || downPaymentPercentage > 100) {
                 showMessage({
                     message: "Down payment percentage should be more than 10% and less than 100%.",
                     type: "danger",
@@ -158,7 +158,8 @@ const NewGoalPage = () => {
             console.log("Goal 3 total amount: " + goalPayload.component_data.goalCost);
         }
 
-        
+        console.log(goalPayload)
+
         axios.post(API_BASE_URL + '/newGoal', { goalPayload })
             .then(response => {
                 console.log('Goal Data:', response.data);
@@ -353,16 +354,16 @@ const BuyProperty = ({ setGoalData }) => {
     const calculateDownPayment = () => {
         const price = parseFloat(propertyPrice);
         const percentage = parseFloat(downPaymentPercentage);
-        if(percentage >= 100){
-            setDownPaymentAmount(price)    
-        }else{
+        if (percentage >= 100) {
+            setDownPaymentAmount(price)
+        } else {
             if (!isNaN(price) && !isNaN(percentage)) {
                 const amount = (price * percentage) / 100;
                 setDownPaymentAmount(amount);
             } else {
                 setDownPaymentAmount(0);
             }
-        } 
+        }
     };
 
     const calculateMonthlyPayment = () => {
@@ -385,7 +386,7 @@ const BuyProperty = ({ setGoalData }) => {
 
         if (!isNaN(P) && !isNaN(r) && !isNaN(n) && r !== 0) {
             const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
-            setMonthlyPayment(monthly.toFixed(2));
+            setMonthlyPayment(monthly);
 
             const totalPayment = monthly * n;
             const totalInterest = totalPayment - P;
@@ -524,16 +525,16 @@ const BuyVehicle = ({ setGoalData }) => {
     const calculateDownPayment = () => {
         const price = parseFloat(vehiclePrice);
         const percentage = parseFloat(downPaymentPercentage);
-        if(percentage >= 100){
-            setDownPaymentAmount(price)    
-        }else{
+        if (percentage >= 100) {
+            setDownPaymentAmount(price)
+        } else {
             if (!isNaN(price) && !isNaN(percentage)) {
                 const amount = (price * percentage) / 100;
                 setDownPaymentAmount(amount);
             } else {
                 setDownPaymentAmount(0);
             }
-        } 
+        }
     };
 
     const calculateMonthlyPayment = () => {

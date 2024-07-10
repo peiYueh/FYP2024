@@ -22,6 +22,7 @@ const FinancialScenarioPage = ({ route }) => {
     const [predictedYearlyExpenses, setPredictedYearlyExpenses] = useState([]);
     const [stackData, setStackData] = useState([]);
     const [goals, setGoals] = useState(goalsData);
+    console.log(goals)
     //ML 1: Expense Prediction
     useEffect(() => {
         const expensePrediction = async () => {
@@ -83,7 +84,7 @@ const FinancialScenarioPage = ({ route }) => {
             // Subtract active income
             let activeIncomeUsed = Math.min(remainingExpense, yearData.active_income);
             remainingExpense -= activeIncomeUsed;
-
+    
             let savingUsed = Math.min(remainingExpense, remainingSavings);
             remainingExpense -= savingUsed;
     
@@ -92,8 +93,6 @@ const FinancialScenarioPage = ({ route }) => {
             if (unusedIncome > 0) {
                 remainingSavings += unusedIncome;
             }
-
-            
     
             let downfall = remainingExpense > 0 ? remainingExpense : 0;
     
@@ -116,15 +115,44 @@ const FinancialScenarioPage = ({ route }) => {
             const stackData = constructStackData(predictedYearlySalary, predictedYearlyExpenses, parseInt(passiveIncome) * 12, 23);
             setStackData(stackData);
         }
-    }, [predictedYearlySalary, predictedYearlyExpenses]);
+    }, [predictedYearlySalary, predictedYearlyExpenses, goals]);
 
     // Function to toggle completion status of a goal
     const toggleGoalCompletion = (goalId) => {
-        // console.log(goalId)
         const updatedGoals = goals.map(goal =>
-            goal.id === goalId ? { ...goal, apply: !goal.apply } : goal
+            goal._id === goalId ? { ...goal, apply: !goal.apply } : goal
         );
         setGoals(updatedGoals);
+    
+        // Recalculate the predicted expenses with the updated goals
+        const appliedGoals = updatedGoals.filter(goal => goal.apply);
+        const updatedExpenses = calculateUpdatedExpenses(predictedYearlyExpenses, appliedGoals);
+        setPredictedYearlyExpenses(updatedExpenses);
+    };
+
+    const calculateUpdatedExpenses = (originalExpenses, appliedGoals) => {
+        // Make a deep copy of the original expenses to avoid direct mutation
+        let updatedExpenses = [...originalExpenses];
+    
+        // Loop through each applied goal and update the expenses for the target age
+        appliedGoals.forEach(goal => {
+            const targetAge = parseInt(goal.target_age);
+            const expenseAmount = parseFloat(goal.total_amount);
+            console.log(expenseAmount)
+    
+            // Find the index corresponding to the target age
+            const targetIndex = targetAge - 23; // Assuming the current age is 23
+    
+            // Add the expense to the target year
+            if (updatedExpenses[targetIndex] !== undefined) {
+                updatedExpenses[targetIndex] += (expenseAmount + 100000);
+                console.log("updated expenses"+updatedExpenses[targetIndex])
+            } else {
+                updatedExpenses[targetIndex] = expenseAmount;
+            }
+        });
+    
+        return updatedExpenses;
     };
 
     return (
