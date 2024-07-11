@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, Pressable, TouchableOpacity } from 'react-native';
+import { View, Image, Text, Pressable, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useTheme, TextInput, Portal, Provider } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpPage = () => {
   const navigation = useNavigation();
@@ -43,7 +43,8 @@ const SignUpPage = () => {
 
   // Handle date confirmation
   const handleConfirm = (params) => {
-    setBirthDate(params.date.toLocaleDateString());
+    const formattedDate = params.date.toISOString().split('T')[0];
+    setBirthDate(formattedDate);
     setBirthDateTouched(true);
     hideDatePicker();
   };
@@ -75,11 +76,6 @@ const SignUpPage = () => {
       return;
     }
 
-    // If all validations pass, proceed with sign-up logic
-    console.log('HI!');
-    // Add your sign-up logic here, such as sending data to the server
-    // TODO: Add to database
-    // Send data to the Flask server
     setLoading(true);
     try {
       const response = await axios.post(API_BASE_URL + '/signup', {
@@ -89,13 +85,21 @@ const SignUpPage = () => {
         birthDate,
         gender,
       });
-      console.log('Sign up successful!', response.data);
       alert('Sign Up Successful! Please proceed to Login');
-      navigation.navigate('LoginPage')
+      const userId = response.data.inserted_id; // Assuming response.data contains the user ID
+      navigation.navigate('Get Started', { userId });
     } catch (error) {
-      console.error('Error signing up', error);
-      alert('There was an error signing up. Please try again.');
-    }finally {
+      if (error.response) {
+        console.error('Error signing up:', error.response.data.error);
+        alert(`Error Signing Up: ${error.response.data.error}`);
+    } else if (error.request) {
+        console.error('Error signing up: No response from server');
+        alert('Error Signing Up: No response from server');
+    } else {
+        console.error('Error signing up:', error.message);
+        alert(`Error Signing Up: ${error.message}`);
+    }
+    } finally {
       setLoading(false); // Set loading to false regardless of login success or failure
     }
   };
@@ -123,136 +127,141 @@ const SignUpPage = () => {
 
   return (
     <Provider>
-      <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
-        <Text style={[styles.pageHeading, { color: theme.colors.onPrimary }]}>
-          Sign Up
-        </Text>
-        <View style={styles.content}>
-          <TextInput
-            label="Username"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-            onBlur={() => setUsernameTouched(true)}
-            style={[
-              styles.inputField,
-              usernameTouched && !validUsername(username) && { borderColor: 'red' }
-            ]}
-            accessibilityLabel="Username Input"
-          />
-          <View style={styles.row}>
-            <Pressable
-              style={[
-                styles.dateBtn,
-                birthDateTouched && !validBirthDate(birthDate) && { borderColor: 'red' }
-              ]}
-              onPress={showDatePicker}
-              accessibilityLabel="Date of Birth Picker"
-              locale={'en'}
-            >
-              <Text style={styles.dateBtnText}>{birthDate}</Text>
-            </Pressable>
-            <View style={{ zIndex: 100, flex: 1, marginTop: -20 }}>
-              <DropDownPicker
-                style={[
-                  styles.genderDropdown,
-                  genderTouched && !validGender(gender) && { borderColor: 'red' }
-                ]}
-                open={open}
-                value={gender}
-                items={items}
-                setOpen={setOpen}
-                setValue={setGender}
-                setItems={setItems}
-                placeholder="Select Gender"
-                showArrowIcon={false}
-                accessibilityLabel="Gender Dropdown"
-                dropDownContainerStyle={{ width: 145, marginLeft: 15, marginTop: 10, zIndex: 1000 }}
-                onOpen={() => setGenderTouched(true)}
-              />
-            </View>
-          </View>
-          <TextInput
-            label="Email Address"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            onBlur={() => setEmailTouched(true)}
-            style={[
-              styles.inputField,
-              emailTouched && !validEmail(email) && { borderColor: 'red' }
-            ]}
-            keyboardType="email-address"
-            accessibilityLabel="Email Input"
-          />
-          <TextInput
-            label="Password"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            onBlur={() => setPasswordTouched(true)}
-            style={[
-              styles.inputField,
-              passwordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
-            ]}
-            secureTextEntry={true} // Toggle password visibility
-            placeholder="Password" // Optional: add a placeholder for clarity
-          />
-          <TextInput
-            label="Confirm Password"
-            value={confirmPassword}
-            onChangeText={(text) => setConfirmPassword(text)}
-            onBlur={() => setConfirmPasswordTouched(true)}
-            style={[
-              styles.inputField,
-              confirmPasswordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
-            ]}
-            secureTextEntry={true} // Toggle password visibility
-            placeholder="Password" // Optional: add a placeholder for clarity
-          />
-          <Pressable
-            style={({ pressed }) => ({
-              backgroundColor: pressed ? 'rgba(0, 0, 0, 0.5)' : '#F69E35',
-              padding: 10,
-              borderRadius: 25,
-              width: 300,
-              top: 30,
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              pointerEvents: 'auto',
-            })}
-            onPress={handleSignUp}
-          >
-            <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Sign Up</Text>
-          </Pressable>
-          <Text style={[styles.remarkText, { color: '#0A252D' }]}>
-            Already have an account?{' '}
-            <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('LoginPage')}>
-              Login
-            </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+          <Text style={[styles.pageHeading, { color: theme.colors.onPrimary }]}>
+            Sign Up
           </Text>
-          {( loading &&
-            <LoadingIndicator theme={theme} />
-          )}
-        </View>
-        <Image
-          source={require('../../assets/graph_bg.png')}
-          style={styles.bottomImage}
-          accessibilityLabel="Background Image"
-        />
-        <Portal>
-          <DatePickerModal
-            mode="single"
-            visible={isDatePickerVisible}
-            onDismiss={hideDatePicker}
-            date={new Date()}
-            onConfirm={handleConfirm}
-            dropDownContainerStyle={styles.dropDownContainer}
-            accessibilityLabel="Date Picker Modal"
-            validRange={{
-              endDate: today, // Set the maximum date to today
-            }}
+          <View style={styles.content}>
+            <TextInput
+              label="Username"
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+              onBlur={() => setUsernameTouched(true)}
+              style={[
+                styles.inputField,
+                usernameTouched && !validUsername(username) && { borderColor: 'red' }
+              ]}
+              accessibilityLabel="Username Input"
+            />
+            <View style={styles.row}>
+              <Pressable
+                style={[
+                  styles.dateBtn,
+                  birthDateTouched && !validBirthDate(birthDate) && { borderColor: 'red' }
+                ]}
+                onPress={showDatePicker}
+                accessibilityLabel="Date of Birth Picker"
+                locale={'en'}
+              >
+                <Text style={styles.dateBtnText}>{birthDate}</Text>
+              </Pressable>
+              <View style={{ zIndex: 100, flex: 1, marginTop: -20 }}>
+                <DropDownPicker
+                  style={[
+                    styles.genderDropdown,
+                    genderTouched && !validGender(gender) && { borderColor: 'red' }
+                  ]}
+                  open={open}
+                  value={gender}
+                  items={items}
+                  setOpen={setOpen}
+                  setValue={setGender}
+                  setItems={setItems}
+                  placeholder="Select Gender"
+                  showArrowIcon={false}
+                  accessibilityLabel="Gender Dropdown"
+                  dropDownContainerStyle={{ width: 145, marginLeft: 15, marginTop: 10, zIndex: 1000 }}
+                  onOpen={() => setGenderTouched(true)}
+                />
+              </View>
+            </View>
+            <TextInput
+              label="Email Address"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              onBlur={() => setEmailTouched(true)}
+              style={[
+                styles.inputField,
+                emailTouched && !validEmail(email) && { borderColor: 'red' }
+              ]}
+              keyboardType="email-address"
+              accessibilityLabel="Email Input"
+            />
+            <TextInput
+              label="Password"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              onBlur={() => setPasswordTouched(true)}
+              style={[
+                styles.inputField,
+                passwordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
+              ]}
+              secureTextEntry={true} // Toggle password visibility
+              placeholder="Password" // Optional: add a placeholder for clarity
+            />
+            <TextInput
+              label="Confirm Password"
+              value={confirmPassword}
+              onChangeText={(text) => setConfirmPassword(text)}
+              onBlur={() => setConfirmPasswordTouched(true)}
+              style={[
+                styles.inputField,
+                confirmPasswordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
+              ]}
+              secureTextEntry={true} // Toggle password visibility
+              placeholder="Password" // Optional: add a placeholder for clarity
+            />
+            <Pressable
+              style={({ pressed }) => ({
+                backgroundColor: pressed ? 'rgba(0, 0, 0, 0.5)' : '#F69E35',
+                padding: 10,
+                borderRadius: 25,
+                width: 300,
+                top: 30,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pointerEvents: 'auto',
+              })}
+              onPress={handleSignUp}
+            >
+              <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Sign Up</Text>
+            </Pressable>
+            <Text style={[styles.remarkText, { color: '#0A252D' }]}>
+              Already have an account?{' '}
+              <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('LoginPage')}>
+                Login
+              </Text>
+            </Text>
+            {(loading &&
+              <LoadingIndicator theme={theme} />
+            )}
+          </View>
+          <Image
+            source={require('../../assets/graph_bg.png')}
+            style={styles.bottomImage}
+            accessibilityLabel="Background Image"
           />
-        </Portal>
-      </View>
+          <Portal>
+            <DatePickerModal
+              mode="single"
+              visible={isDatePickerVisible}
+              onDismiss={hideDatePicker}
+              date={new Date()}
+              onConfirm={handleConfirm}
+              dropDownContainerStyle={styles.dropDownContainer}
+              accessibilityLabel="Date Picker Modal"
+              validRange={{
+                endDate: today, // Set the maximum date to today
+              }}
+            />
+          </Portal>
+        </View>
+      </KeyboardAvoidingView>
     </Provider>
   );
 };

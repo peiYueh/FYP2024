@@ -1,6 +1,7 @@
 # from pymongo import MongoClient
 import bcrypt
 from bson.objectid import ObjectId
+import logging
 
 class User:
     def __init__(self, db):
@@ -8,22 +9,26 @@ class User:
         self.basic_info_collection = db['basic_information']
 
     def create_user(self, username, email, password, birthDate, gender):
-        print("in create user liao")
-        if self.collection.find_one({'email': email}):
-            return {'error': 'User already exists'}
-        print("accessed collection")
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        try:
+            if self.collection.find_one({'user_email': email}):
+                return {'error': 'User already exists'}
+            
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-        user = {
-            'user_name': username,
-            'user_email': email,
-            'user_password': hashed_password,
-            'user_birthDate': birthDate,
-            'user_gender': gender
-        }
+            user = {
+                'user_name': username,
+                'user_email': email,
+                'user_password': hashed_password,
+                'user_birthDate': birthDate,
+                'user_gender': gender
+            }
 
-        self.collection.insert_one(user)
-        return {'message': 'User created successfully'}
+            result = self.collection.insert_one(user)
+            logging.info(f"User created with ID: {result.inserted_id}")
+            return result.inserted_id
+        except Exception as e:
+            logging.error(f"Error creating user: {e}")
+            return {'error': 'Internal server error'}
     
     def get_user_by_email(self, email):
         return self.collection.find_one({'user_email': email})

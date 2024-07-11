@@ -6,6 +6,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
 const { width } = Dimensions.get('window');
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const CustomInput = ({ label, value, onChangeText }) => {
     return (
@@ -25,7 +26,10 @@ const CustomInput = ({ label, value, onChangeText }) => {
 };
 
 const GetStarted = () => {
+    const navigation = useNavigation();
     const theme = useTheme();
+    const route = useRoute();
+    const { userId } = route.params;
     const [step, setStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -34,7 +38,7 @@ const GetStarted = () => {
         savings: '',
         retirementAge: '',
         lifeExpectancy: '',
-        user_id: '665094c0c1a89d9d19d13606' //NEED TO CHANGE THIS
+        user_id: userId //NEED TO CHANGE THIS
     });
 
     const translateX = useRef(new Animated.Value(0)).current;
@@ -72,8 +76,8 @@ const GetStarted = () => {
             const response = await axios.post(API_BASE_URL + '/getStarted', {
                 formData
             });
-            console.log('Done!', response.data);
-            alert('DONE');
+            alert('Welcome to Doit4Duit! Please Proceed to Login');
+            navigation.navigate('LoginPage');
         } catch (error) {
             console.error('Error Occurs', error);
             alert('There was an error. Please try again.');

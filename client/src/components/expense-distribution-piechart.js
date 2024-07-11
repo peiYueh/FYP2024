@@ -4,19 +4,18 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import axios from 'axios';
 import Swiper from 'react-native-swiper';
 import { API_BASE_URL } from '../../config';
+import LottieView from 'lottie-react-native';
 
-const ExpenseDistributionChart = () => {
+const ExpenseDistributionChart = ({ onDataLoaded }) => {
     const [focusedIndex, setFocusedIndex] = useState(0);
     const [data, setData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
-
             try {
                 const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
                 setData(response.data);
-                console.log(response.data.savings)
+                onDataLoaded(); // Notify parent component that data is loaded
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);
             }
@@ -42,18 +41,27 @@ const ExpenseDistributionChart = () => {
             { value: 50, amount: totalIncome / 100 * 50, label: 'Needs', color: '#005A5A', gradientCenterColor: '#005A5A', index: 0, focused: focusedIndex === 0 },
             { value: 30, amount: totalIncome / 100 * 30, label: 'Wants', color: '#2E8B57', gradientCenterColor: '#2E8B57', index: 1, focused: focusedIndex === 1 },
             { value: 20, amount: totalIncome / 100 * 20, label: 'Savings', color: '#3CB371', gradientCenterColor: '#3CB371', index: 2, focused: focusedIndex === 2 },
-        ]
+        ];
 
         return { spendingData, idealSpendingData, totalIncome };
     };
 
     if (!data) {
-        return <Text>Loading...</Text>;
+        return (
+            <View style={styles.loadingContainer}>
+                <LottieView
+                    source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                    autoPlay
+                    loop
+                    style={styles.lottieAnimation}
+                />
+            </View>
+        )
     }
 
     const { spendingData, idealSpendingData, totalIncome } = calculateTotals(data);
 
-    const renderDot = color => {
+    const renderDot = (color) => {
         return (
             <View
                 style={{
@@ -233,7 +241,16 @@ const styles = StyleSheet.create({
         color: '#005A75',
         fontWeight: 'bold',
         fontSize: 18
-    }
-})
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
+    },
+});
 
 export default ExpenseDistributionChart;

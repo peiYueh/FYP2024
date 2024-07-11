@@ -8,7 +8,7 @@ import { TextInput } from "react-native-paper";
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component'; // Import the LoadingIndicator component
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
 
 const LoginPage = () => {
   const navigation = useNavigation();
@@ -31,7 +31,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/login`, 
+        `${API_BASE_URL}/login`,
         { email, password },
         {
           headers: {
@@ -40,12 +40,20 @@ const LoginPage = () => {
           }
         }
       );
-      console.log('Login successful!', response.data);
-      alert(`Welcome ${response.data.user.username}`);
+      alert(`Welcome ${response.data.user.username} !`);
+      username = response.data.user.username
+      navigation.navigate('Home Page', { username });
       // Navigate to the next screen or perform any action you need upon successful login
     } catch (error) {
-      alert('Login Error', 'Login Unsuccessful. Please try again.');
-    }finally {
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        const errorMessage = error.response.data.message;
+        Alert.alert('Login Error', errorMessage);
+      } else {
+        // Network error or some other issue
+        Alert.alert('Login Error', 'Login Unsuccessful. Please try again.');
+      }
+    } finally {
       setLoading(false); // Set loading to false regardless of login success or failure
     }
   };
@@ -84,11 +92,11 @@ const LoginPage = () => {
           placeholder="Password" // Optional: add a placeholder for clarity
         />
         <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.showPasswordIconButton}
-          >
+          onPress={() => setShowPassword(!showPassword)}
+          style={styles.showPasswordIconButton}
+        >
           <Icon name={showPassword ? 'visibility-off' : 'visibility'} size={24} color="gray" />
-          </TouchableOpacity>
+        </TouchableOpacity>
         <Pressable
           style={({ pressed }) => ({
             backgroundColor: pressed ? 'rgba(0, 0, 0, 0.5)' : '#F69E35',
@@ -111,7 +119,7 @@ const LoginPage = () => {
             Sign Up
           </Text>
         </Text>
-        {( loading &&
+        {(loading &&
           <LoadingIndicator theme={theme} />
         )}
 

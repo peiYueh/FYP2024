@@ -66,6 +66,7 @@ import {
 import { Roboto } from "@expo-google-fonts/roboto";
 import { OpenSans } from "@expo-google-fonts/open-sans";
 import FlashMessage from "react-native-flash-message";
+import HomePage from "./src/view/HomePage";
 
 
 registerTranslation("en", {
@@ -180,13 +181,13 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Financial Scenario Settings">
+        <Stack.Navigator initialRouteName="LandingPage">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
-          <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
-          <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />
+          <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: false }} />
+          <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />
           <Stack.Screen name="NewTransactionPage" component={NewTransactionPage} options={{ headerShown: true }} />
-          <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: true }} />
-          <Stack.Screen name="My Transaction" component={MyTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: false }} />
+          <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="EditTransactionPage" component={EditTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="New Goal" component={NewGoalPage} options={{ headerShown: true }} />
           <Stack.Screen name="View Goal" component={GoalDetailPage} options={{ headerShown: true }} />
@@ -196,6 +197,7 @@ const App = () => {
           <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true }} />
           <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
           <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }} />
+          <Stack.Screen name="Home Page" component={HomePage} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />

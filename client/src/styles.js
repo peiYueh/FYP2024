@@ -58,15 +58,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   pageHeading: {
-    top: "1%", // Adjust the top value to position it where you want
-    zIndex: 2,
-    position: "absolute",
     textShadowColor: "#F69E35",
     fontFamily: "Montserrat_500Medium",
     fontSize: 40,
     fontWeight: "bold",
     textAlign: "left",
     paddingLeft: "10%",
+    marginBottom: '10%'
   },
   topLeftButton: {
     position: "absolute",
@@ -137,9 +135,8 @@ const styles = StyleSheet.create({
   },
   showPasswordIconButton: {
     position: "absolute",
-    right: 40, // Adjust this value as needed
-    top: "54%", // Align it vertically to the center
-    transform: [{ translateY: -12 }],
+    right: 60, // Adjust this value as needed
+    transform: [{ translateY:-10 }],
   },
   dateBtn: {
     width: 140,
@@ -555,6 +552,10 @@ const styles = StyleSheet.create({
     height: "100%", // Ensure the image takes up the full height of its container
     resizeMode: "contain",
   },
+  lottieAnimation: {
+        width: 200,
+        height: 200,
+    },
 });
 
 export default styles;
