@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Keyboard, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useTheme, TextInput, Portal, SegmentedButtons } from 'react-native-paper';
+import { useTheme, TextInput, Portal, SegmentedButtons, Menu } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { useNavigation } from '@react-navigation/native';
 import { showMessage } from "react-native-flash-message";
@@ -9,6 +9,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
 import styles from '../styles';
+import { Dimensions } from 'react-native';
 
 const NewTransactionPage = () => {
     const theme = useTheme();
@@ -249,10 +250,33 @@ const NewTransactionPage = () => {
 };
 
 const ExpenseComponent = ({ transactionDescription, setTransactionDescription, transactionDate, settransactionDate, transactionCategory, setTransactionCategory, isDatePickerVisible, setDatePickerVisibility }) => {
+    const categories = [
+        'apparel',
+        'health',
+        'tourism',
+        'subscription',
+        'social life',
+        'money transfer',
+        'investment',
+        'household',
+        'grooming',
+        'beauty',
+        'food',
+        'festivals',
+        'family',
+        'education',
+        'documents',
+        'culture',
+        'transportation',
+        'others'
+    ];
     const theme = useTheme();
+    const [isMenuVisible, setMenuVisible] = useState(false);
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
     const today = new Date();
+    const screenWidth = Dimensions.get('window').width;
+    const menuWidth = screenWidth * 0.85;
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toLocaleDateString('en-GB'));
@@ -301,12 +325,33 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
                 />
             </Pressable>
 
-            <TextInput style={styles.transactionDetailInput}
-                label="Category"
-                left={<TextInput.Icon icon="shape" />}
-                value={transactionCategory}
-                onChangeText={(text) => setTransactionCategory(text)}
-            />
+            <Menu
+                visible={isMenuVisible}
+                onDismiss={() => setMenuVisible(false)}
+                anchor={
+                    <Pressable onPress={() => setMenuVisible(true)}>
+                        <TextInput
+                            style={[styles.transactionDetailInput,{width: menuWidth }]}
+                            label="Category"
+                            left={<TextInput.Icon icon="shape" />}
+                            value={transactionCategory}
+                            editable={false}
+                        />
+                    </Pressable>
+                }
+            >
+                {categories.map((category) => (
+                    <Menu.Item 
+                        key={category} 
+                        onPress={() => {
+                            setTransactionCategory(category);
+                            setMenuVisible(false);
+                        }} 
+                        title={category} 
+                        style={{width: 320}}
+                    />
+                ))}
+            </Menu>
 
             <Portal>
                 <DatePickerModal

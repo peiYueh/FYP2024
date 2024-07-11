@@ -23,7 +23,7 @@ expense_data_1['Category'] = expense_data_1['Category'].str.strip()
 expense_data_1['Category'] = expense_data_1['Category'].str.strip().str.lower()
 # print(expense_data_1)
 
-expense_data_2 = pd.read_csv("./allExpenses.csv")
+expense_data_2 = pd.read_csv("../dataset/allExpenses.csv")
 
 # Dropping unwanted varibales
 expense_data_2 = expense_data_2.drop(['Date', 'Amount'], axis = 1)
@@ -110,9 +110,9 @@ print(classification_report(y_test, y_pred))
 
 # Save the Model
 # # Export the model
-# model_filename = 'random_forest_model.joblib'
-# joblib.dump(model, model_filename)
+model_filename = 'random_forest_model.joblib'
+joblib.dump(model, model_filename)
 
-# # Export the TF-IDF vectorizer
-# vectorizer_filename = 'tfidf_vectorizer.joblib'
-# joblib.dump(tfidf, vectorizer_filename)
+# Export the TF-IDF vectorizer
+vectorizer_filename = 'tfidf_vectorizer.joblib'
+joblib.dump(tfidf, vectorizer_filename)

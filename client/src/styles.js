@@ -578,6 +578,15 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16
     },
+    menuContent: {
+        width: "100%", // Adjust the width here
+    },
+    menuItem: {
+        width: '100%',
+    },
+    dropDownContainer: {
+        padding: 16,
+    },
 });
 
 export default styles;
