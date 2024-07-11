@@ -180,7 +180,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="New Goal">
+        <Stack.Navigator initialRouteName="Financial Scenario Settings">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: true }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: true }} />

@@ -126,6 +126,11 @@ def get_all_goals():
     db = get_db()
     return myGoal(db)
 
+@app.route('/userAge', methods=['GET'])
+def get_user_age():
+    db = get_db()
+    return str(getUserAge(db))
+
 @app.route('/newGoal', methods=['POST'])
 def add_goal():
     print("Adding Goal")
@@ -181,7 +186,7 @@ def categorize_transactions():
 
 @app.route('/predictSalary', methods=['GET'])
 def predict_salary_endpoint():
-    retirement_age = int(request.args.get('retirementAge'))
+    retirement_age = int(request.args.get('retirementAge')) + 1
     current_salary = float(request.args.get('activeIncome'))
     if not current_salary:
         # HAVENT TEST
@@ -204,7 +209,7 @@ def predict_salary_endpoint():
 def predict_expense_endpoint():
     use_history_data = request.args.get('useHistoricalDataForExpenses', 'false').lower() == 'true'
     expense_initial = float(request.args.get('totalSpending', 0))  # Default to 0 if not provided
-    life_expectancy = int(request.args.get('lifeExpectancy', 0))
+    life_expectancy = int(request.args.get('lifeExpectancy', 0)) + 1
     db = get_db()
     current_age = getUserAge(db)
 

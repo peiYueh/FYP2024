@@ -13,9 +13,9 @@ const FinancialScenarioSetting = ({ navigation }) => {
     const [initialActiveIncome, setInitialActiveIncome] = useState('');
     const [initialPassiveIncome, setInitialPassiveIncome] = useState('');
     const [initialTotalSpending, setInitialTotalSpending] = useState('');
-    const [savings, setSavings] = useState([]);
     const [goalsData, setGoalsData] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
+    const [initialSavings, setInitialSavings] = useState('');
 
     const [useHistoricalDataForIncome, setUseHistoricalDataForIncome] = useState(false);
     const [useHistoricalDataForExpenses, setUseHistoricalDataForExpenses] = useState(false);
@@ -23,10 +23,12 @@ const FinancialScenarioSetting = ({ navigation }) => {
     useEffect(() => {
         const fetchBasicInformation = async () => {
             try {
+                console.log("getting information")
                 const response = await axios.get(`${API_BASE_URL}/basicInformation`);
                 console.log(response.data);
                 setLifeExpectancy(response.data.lifeExpectancy.toString())
                 setRetirementAge(response.data.retirementAge.toString())
+                setInitialSavings(response.data.savings.toString())
             } catch (error) {
                 console.error('Error fetching goals:', error);
             }
@@ -44,20 +46,10 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 const totalExpenses = totalNeeds + totalWants;
                 const activeIncome = Math.abs(fetchedData.active_income.reduce((acc, item) => acc + item.transaction_amount, 0));
                 const passiveIncome = Math.abs(fetchedData.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
-                console.log("Fetched savings: " + fetchedData.savings);
-                const filteredSavings = fetchedData.savings
-                    .filter(item => item.transaction_type === 2)
-                    .map(item => ({
-                        name: item.transaction_description,
-                        initial: (item.transaction_amount * 12).toString(),
-                        monthly: item.transaction_amount.toString(),
-                        interestRate: item.interest_rate.toString(),
-                    }));
 
                 setInitialActiveIncome(activeIncome.toString());
                 setInitialPassiveIncome(passiveIncome.toString());
                 setInitialTotalSpending(totalExpenses.toString());
-                setSavings(filteredSavings);
                 setDataLoaded(true);
 
                 if (useHistoricalDataForIncome) {
@@ -85,31 +77,18 @@ const FinancialScenarioSetting = ({ navigation }) => {
         console.log("DATALOADED: " + dataLoaded)
         if (!dataLoaded) {
             fetchBasicInformation();
+            console.log("Information Fetched")
             setDataLoaded(false);
             fetchData();
+            console.log("Data Fetched")
             setDataLoaded(false);
             fetchGoals();
+            console.log("Goals Fetched")
         }
     }, [useHistoricalDataForIncome, useHistoricalDataForExpenses]);
 
-    const addSaving = () => {
-        setSavings([...savings, { name: '', initial: '', monthly: '', interestRate: '' }]);
-    };
-
-    const handleSavingChange = (index, field, value) => {
-        const newSavings = [...savings];
-        newSavings[index][field] = value;
-        setSavings(newSavings);
-    };
-
-    const deleteSaving = (index) => {
-        const newSavings = [...savings];
-        newSavings.splice(index, 1);
-        setSavings(newSavings);
-    };
-
     const addGoal = () => {
-        setGoalsData([...goalsData, { goal_description: '', total_amount: '', target_age: '' }]);
+        setGoalsData([...goalsData, { _id:  Date.now().toString(), goal_description: '', total_amount: '', target_age: '', apply: false, goal_type: 3 }]);
     };
 
     const handleGoalChange = (index, field, value) => {
@@ -130,11 +109,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
             return;
         }
 
-        const savingsValid = savings.every(saving => saving.name && saving.initial && saving.monthly && saving.interestRate);
-        if (!savingsValid) {
-            alert('Please fill in all savings fields or remove unwanted savings.');
-            return;
-        }
 
         const goalsValid = goalsData.every(goal => goal.goal_description && goal.total_amount && goal.target_age);
         if (!goalsValid) {
@@ -146,12 +120,12 @@ const FinancialScenarioSetting = ({ navigation }) => {
             activeIncome,
             passiveIncome,
             totalSpending,
-            savings,
             goalsData,
             useHistoricalDataForIncome,
             useHistoricalDataForExpenses,
             retirementAge,
-            lifeExpectancy
+            lifeExpectancy,
+            initialSavings
         });
     };
 
@@ -246,55 +220,14 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 <Card style={styles.card}>
                     <Card.Content>
                         <Title>Savings</Title>
-                        {savings.map((saving, index) => (
-                            <Card key={index} style={styles.savingCard}>
-                                <Card.Content>
-                                    <View style={styles.titleRow}>
-                                        <Title>{`Saving ${index + 1}`}</Title>
-                                        <IconButton
-                                            icon="delete"
-                                            size={20}
-                                            onPress={() => deleteSaving(index)}
-                                            style={styles.deleteButton}
-                                        />
-                                    </View>
-                                    <View style={styles.row}>
-                                        <TextInput
-                                            label="Saving Name"
-                                            value={saving.name}
-                                            onChangeText={(text) => handleSavingChange(index, 'name', text)}
-                                            style={styles.input}
-                                        />
-                                        <TextInput
-                                            label="Initial (RM)"
-                                            value={saving.initial}
-                                            onChangeText={(text) => handleSavingChange(index, 'initial', text)}
-                                            keyboardType="numeric"
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    <View style={styles.row}>
-                                        <TextInput
-                                            label="Monthly (RM)"
-                                            value={saving.monthly}
-                                            onChangeText={(text) => handleSavingChange(index, 'monthly', text)}
-                                            keyboardType="numeric"
-                                            style={styles.input}
-                                        />
-                                        <TextInput
-                                            label="Interest (%)"
-                                            value={saving.interestRate}
-                                            onChangeText={(text) => handleSavingChange(index, 'interestRate', text)}
-                                            keyboardType="numeric"
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                </Card.Content>
-                            </Card>
-                        ))}
-                        <Button mode="outlined" onPress={addSaving} style={styles.addButton}>
-                            Add Saving
-                        </Button>
+                        <TextInput
+                                label="Initial Savings"
+                                value={initialSavings}
+                                onChangeText={setInitialSavings}
+                                keyboardType="numeric"
+                                style={styles.input}
+                            />
+
                     </Card.Content>
                 </Card>
 
@@ -323,7 +256,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
                                         <View style={styles.row}>
                                             <TextInput
                                                 label="Amount (RM)"
-                                                value={goal.total_amount}
+                                                value={goal.total_amount.toString()}
                                                 onChangeText={(text) => handleGoalChange(index, 'total_amount', text)}
                                                 keyboardType="numeric"
                                                 style={[styles.input, { flex: 1, marginLeft: 4 }]}
