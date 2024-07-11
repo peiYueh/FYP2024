@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   showPasswordIconButton: {
     position: "absolute",
     right: 60, // Adjust this value as needed
-    transform: [{ translateY:-10 }],
+    transform: [{ translateY: -10 }],
   },
   dateBtn: {
     width: 140,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#FBFCFE",
     borderRadius: 10,
-    height: "15%",
+    height: 350,
   },
   legend: {
     flexDirection: "row",
@@ -553,8 +553,30 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   lottieAnimation: {
-        width: 200,
-        height: 200,
+    width: 200,
+    height: 200,
+  },
+  noDataImage: {
+    width: 400,
+    height: 400,
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addButton: {
+        backgroundColor: '#87B6C4',
+        paddingHorizontal: 30,
+        paddingVertical: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginVertical: 10,
+        marginHorizontal: 20
+    },
+    addButtonText: {
+        color: '#fff',
+        fontSize: 16
     },
 });
 

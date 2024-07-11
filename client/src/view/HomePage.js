@@ -15,7 +15,7 @@ const HomePage = () => {
     const navigation = useNavigation();
     const theme = useTheme();
     const route = useRoute();
-    const { username } = route.params;
+    const { username } = route.params || "User";
 
     return (
         <ImageBackground source={backgroundImage} style={styles.backgroundImage}>

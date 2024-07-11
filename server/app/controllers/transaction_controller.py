@@ -103,6 +103,7 @@ def editTransaction(db):
 
 def getTransactions(db):
     # user_id = request.args.get('userId')  # Get the userId from query parameters
+    # user_id = session.get('user_id')
     user_id = "665094c0c1a89d9d19d13606"
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
@@ -114,8 +115,6 @@ def getTransactions(db):
         if '_id' in transaction:
             transaction['_id'] = str(transaction['_id'])
 
-    print("Transaction hereeeeeeeeeeeeeeeeeeee")
-    print(transactions)
     return jsonify(transactions)
 
 def getMonthlyExpense(db):
@@ -177,6 +176,7 @@ def deleteTransaction(db, transaction_id):
     
 def categorizeTransactions(db):
     user_id = session.get('user_id')  # Replace with dynamic user ID retrieval
+    print("userid here"+user_id)
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     

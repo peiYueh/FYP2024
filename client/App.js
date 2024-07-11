@@ -181,11 +181,11 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LandingPage">
+        <Stack.Navigator initialRouteName="My Transactions">
           <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />
-          <Stack.Screen name="NewTransactionPage" component={NewTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="New Transaction Page" component={NewTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: false }} />
           <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="EditTransactionPage" component={EditTransactionPage} options={{ headerShown: true }} />

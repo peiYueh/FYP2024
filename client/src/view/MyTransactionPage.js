@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Modal, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Modal, TouchableOpacity, Alert, ActivityIndicator, Image, FlatList  } from 'react-native';
 import { useTheme, Text, IconButton } from 'react-native-paper';
 import styles from '../styles';
 import { Picker } from '@react-native-picker/picker';
@@ -29,22 +29,22 @@ const MyTransactionPage = () => {
     const [deleting, setDeleting] = useState(false);
 
     const parseDate = (dateStr) => {
-        const [day, month, year] = dateStr.split('/');
+        const [year, month, day] = dateStr.split('-');
         return new Date(`${year}-${month}-${day}`);
     };
 
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get(API_BASE_URL + '/transactions', {
-                params: { userId: '665094c0c1a89d9d19d13606' },
-            });
+            const response = await axios.get(API_BASE_URL + '/transactions');
+            console.log("Response : " + response.data)
             // Parse and sort transactions by date
             const sortedTransactions = response.data.map(item => ({
                 ...item,
-                transaction_date: item.transaction_date, // Assuming parseDate function parses 'dd/mm/yyyy' to Date
+                transaction_date: item.transaction_date, // Now directly usable as Date in YYYY-MM-DD format
             })).sort((a, b) => parseDate(b.transaction_date) - parseDate(a.transaction_date)); // Sort in descending order
 
             setTransactionData(sortedTransactions);
+            console.log(transactionData)
             setDataFetched(true);
         } catch (error) {
             console.error('Error fetching transactions:', error);
@@ -74,11 +74,11 @@ const MyTransactionPage = () => {
     }, [navigation]);
     const mapDataToLineFormat = (type) => {
         const monthlyData = {};
-
+    
         transactionData.forEach(item => {
-            const [day, month, year] = item.transaction_date.split('/');
+            const [year, month] = item.transaction_date.split('-');
             const key = `${year}-${parseInt(month, 10)}`;
-
+    
             if (!monthlyData[key]) {
                 monthlyData[key] = { 0: 0, 1: 0, 2: 0 };
             }
@@ -86,13 +86,12 @@ const MyTransactionPage = () => {
                 monthlyData[key][type] += item.transaction_amount;
             }
         });
-
-        // Create an array of months in the correct order (from January to December)
+    
         const shortMonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         return shortMonthNames.map((month, index) => {
-            const year = selectedYear; // Use the selected year or adjust as needed
-            const key = `${year}-${index + 1}`; // Start from January (1) and increment
-
+            const year = selectedYear;
+            const key = `${year}-${index + 1}`;
+    
             return {
                 value: monthlyData[key] ? monthlyData[key][type] : 0,
                 label: shortMonthNames[index],
@@ -226,9 +225,9 @@ const MyTransactionPage = () => {
     };
 
     const filteredTransactionData = transactionData.filter(item => {
-        const [day, month, year] = item.transaction_date.split('/');
+        const [year, month] = item.transaction_date.split('-');
         const monthStr = getMonthName(month);
-
+    
         if (filterType && filterMonth && filterYear) {
             return item.transaction_type === (filterType === 'income' ? 1 : (filterType === 'savings' ? 2 : 0)) && monthStr === filterMonth && year === filterYear;
         } else if (filterType && filterMonth) {
@@ -252,18 +251,18 @@ const MyTransactionPage = () => {
         const yearlyData = {};
 
         transactionData.forEach(item => {
-            const [day, month, year] = item.transaction_date.split('/');
+            const [year, month, day] = item.transaction_date.split('-');
             const monthStr = (parseInt(month, 10)).toString();
             const transaction_amount = Math.abs(item.transaction_amount);
-
+        
             if (!yearlyData[year]) {
                 yearlyData[year] = {};
             }
-
+        
             if (!yearlyData[year][month]) {
                 yearlyData[year][month] = { income: 0, expense: 0 };
             }
-
+        
             if (item.transaction_type == 1) {
                 yearlyData[year][month].income += transaction_amount;
             } else {
@@ -328,16 +327,18 @@ const MyTransactionPage = () => {
 
     const renderTransactionItems = () => {
         let transactionGroups = {};
-
+    
         // Group transactions by month-year
         filteredTransactionData.forEach(item => {
-            const transactionMonthYear = getMonthName(item.transaction_date.split('/')[1]) + ' ' + item.transaction_date.split('/')[2];
+            const [year, month] = item.transaction_date.split('-');
+            const transactionMonthYear = `${getMonthName(month)} ${year}`;
+            
             if (!transactionGroups[transactionMonthYear]) {
                 transactionGroups[transactionMonthYear] = [];
             }
             transactionGroups[transactionMonthYear].push(item);
         });
-
+    
         // Render transaction groups
         return Object.entries(transactionGroups).map(([monthYear, transactions], index) => (
             <TransactionGroup
@@ -363,13 +364,10 @@ const MyTransactionPage = () => {
                             style={styles.transactionItem}
                             onPress={() => toggleTransactionPopup(item)}
                         >
-                            {/* Left Column: Description and Date */}
                             <View style={styles.leftColumn}>
                                 <Text style={styles.description} numberOfLines={1} ellipsizeMode="tail">{item.transaction_description}</Text>
                                 <Text style={styles.date}>{item.transaction_date}</Text>
                             </View>
-
-                            {/* Right Column: Amount */}
                             <View style={styles.rightColumn}>
                                 <Text style={[styles.amount, { color: getColorForTransactionType(item.transaction_type) }]}>
                                     RM {Math.abs(item.transaction_amount).toFixed(2)}
@@ -378,7 +376,6 @@ const MyTransactionPage = () => {
                         </TouchableOpacity>
                     ))}
                 </View>
-
             </View>
         );
     };
@@ -390,108 +387,123 @@ const MyTransactionPage = () => {
     );
 
     return (
-        <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background }}>
+        <>
             {loading ? (
                 renderLoadingIndicator() // Render loading indicator if data is still fetching
             ) : (<>
-                <View style={[styles.chart, { backgroundColor: '#FBFCFE' }]}>
-                    <Text style={[styles.chartTitle, { color: theme.colors.primary }]}>Monthly Income and Expenses</Text>
-                    <View style={[styles.picker, { width: '100%', height: 50, marginVertical: '5%' }]}>
-                        <Picker
-                            selectedValue={selectedYear}
-                            onValueChange={(itemValue) => setSelectedYear(itemValue)}
-                        >
-                            <Picker.Item label="Select Year" value="" enabled={false} />
-                            {[...new Set(transactionData.map(item => item.transaction_date.split('/')[2]))].map((year, index) => (
-                                <Picker.Item key={index} label={year} value={year} />
-                            ))}
-                        </Picker>
+                {transactionData.length === 0 ? (
+                    <View style={[styles.noDataContainer]}>
+                        <Image source={require('../../assets/background/no-transaction.png')} style={styles.noDataImage} />
+                        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('New Transaction Page')}>
+                            <Text style={styles.addButtonText}>Add Transaction</Text>
+                        </TouchableOpacity>
                     </View>
-                    {dataFetched && (
-                        <TransactionLinechart
-                            style={[styles.chart, { backgroundColor: '#FBFCFE' }]}
-                            incomeData={incomeData}
-                            expensesData={expensesData}
-                            maxIncome={maxIncome}
-                            maxExpense={maxExpense}
-                            stepValue={stepValue}
-                            theme={theme}
-                        />
-                    )}
-                </View>
-                <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilterModal(true)}>
-                    <Text style={styles.filterButtonText}>Filter</Text>
-                    <Icon name="filter-list" size={24} color={theme.colors.primary} />
-                </TouchableOpacity>
-                {renderTransactionItems()}
-                <Modal visible={showFilterModal} animationType="fade" transparent={true}>
-                    <View style={styles.filterModalContainer}>
-                        <View style={styles.filterModal}>
-                            <View style={styles.filterModalHeader}>
-                                <Text style={styles.filterModalHeaderText}>Filters</Text>
-                                <IconButton icon="close" onPress={() => setShowFilterModal(false)} />
+                ) : (
+                    <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background }}>
+                        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('New Transaction Page')}>
+                            <Text style={styles.addButtonText}>Add Transaction</Text>
+                        </TouchableOpacity>
+                        <View style={[styles.chart, { backgroundColor: '#FBFCFE' }]}>
+                            <Text style={[styles.chartTitle, { color: theme.colors.primary }]}>Monthly Income and Expenses</Text>
+                            <View style={[styles.picker, { width: '100%', height: 50, marginVertical: '5%' }]}>
+                                <Picker
+                                    selectedValue={selectedYear}
+                                    onValueChange={(itemValue) => setSelectedYear(itemValue)}
+                                >
+                                    <Picker.Item label="Select Year" value="" enabled={false} />
+                                    {[...new Set(transactionData.map(item => item.transaction_date.split('-')[0]))].map((year, index) => (
+                                        <Picker.Item key={index} label={year} value={year} />
+                                    ))}
+                                </Picker>
                             </View>
-                            <View style={styles.filterModalContent}>
-                                <View style={styles.filterItem}>
-                                    <Picker
-                                        selectedValue={filterType}
-                                        onValueChange={(itemValue) => setFilterType(itemValue)}
-                                        style={[styles.picker, { width: '100%' }]}
-                                    >
-                                        <Picker.Item label="Type" value="" enabled={false} />
-                                        <Picker.Item label="Income" value="income" />
-                                        <Picker.Item label="Expenses" value="expense" />
-                                        <Picker.Item label="Savings" value="savings" />
-                                    </Picker>
-                                </View>
-                                <View style={styles.filterItem}>
-                                    <Picker
-                                        selectedValue={filterMonth}
-                                        onValueChange={(itemValue) => setFilterMonth(itemValue)}
-                                        style={[styles.picker, { width: '100%' }]}
-                                    >
-                                        <Picker.Item label="Month" value="" enabled={false} />
-                                        {[
-                                            'January',
-                                            'February',
-                                            'March',
-                                            'April',
-                                            'May',
-                                            'June',
-                                            'July',
-                                            'August',
-                                            'September',
-                                            'October',
-                                            'November',
-                                            'December'
-                                        ].map((month, index) => (
-                                            <Picker.Item key={index} label={month} value={month} />
-                                        ))}
-                                    </Picker>
-                                </View>
-                                <View style={styles.filterItem}>
-                                    <Picker
-                                        selectedValue={filterYear}
-                                        onValueChange={(itemValue) => setFilterYear(itemValue)}
-                                        style={[styles.picker, { width: '100%' }]}
-                                    >
-                                        <Picker.Item label="Year" value="" enabled={false} />
-                                        {[...new Set(transactionData.map(item => item.transaction_date.split('/')[2]))].map((year, index) => (
-                                            <Picker.Item key={index} label={year} value={year} />
-                                        ))}
-                                    </Picker>
-                                </View>
-                                <TouchableOpacity style={styles.applyFilterButton} onPress={resetFilter}>
-                                    <Text style={styles.applyFilterButtonText}>Reset Filters</Text>
-                                </TouchableOpacity>
-                            </View>
+                            {dataFetched && (
+                                <TransactionLinechart
+                                    style={[styles.chart, { backgroundColor: '#FBFCFE' }]}
+                                    incomeData={incomeData}
+                                    expensesData={expensesData}
+                                    maxIncome={maxIncome}
+                                    maxExpense={maxExpense}
+                                    stepValue={stepValue}
+                                    theme={theme}
+                                />
+                            )}
                         </View>
-                    </View>
-                </Modal>
-                {renderTransactionPopup()}
+                        <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilterModal(true)}>
+                            <Text style={styles.filterButtonText}>Filter</Text>
+                            <Icon name="filter-list" size={24} color={theme.colors.primary} />
+                        </TouchableOpacity>
+                        {renderTransactionItems()}
+                        <Modal visible={showFilterModal} animationType="fade" transparent={true}>
+                            <View style={styles.filterModalContainer}>
+                                <View style={styles.filterModal}>
+                                    <View style={styles.filterModalHeader}>
+                                        <Text style={styles.filterModalHeaderText}>Filters</Text>
+                                        <IconButton icon="close" onPress={() => setShowFilterModal(false)} />
+                                    </View>
+                                    <View style={styles.filterModalContent}>
+                                        <View style={styles.filterItem}>
+                                            <Picker
+                                                selectedValue={filterType}
+                                                onValueChange={(itemValue) => setFilterType(itemValue)}
+                                                style={[styles.picker, { width: '100%' }]}
+                                            >
+                                                <Picker.Item label="Type" value="" enabled={false} />
+                                                <Picker.Item label="Income" value="income" />
+                                                <Picker.Item label="Expenses" value="expense" />
+                                                <Picker.Item label="Savings" value="savings" />
+                                            </Picker>
+                                        </View>
+                                        <View style={styles.filterItem}>
+                                            <Picker
+                                                selectedValue={filterMonth}
+                                                onValueChange={(itemValue) => setFilterMonth(itemValue)}
+                                                style={[styles.picker, { width: '100%' }]}
+                                            >
+                                                <Picker.Item label="Month" value="" enabled={false} />
+                                                {[
+                                                    'January',
+                                                    'February',
+                                                    'March',
+                                                    'April',
+                                                    'May',
+                                                    'June',
+                                                    'July',
+                                                    'August',
+                                                    'September',
+                                                    'October',
+                                                    'November',
+                                                    'December'
+                                                ].map((month, index) => (
+                                                    <Picker.Item key={index} label={month} value={month} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                        <View style={styles.filterItem}>
+                                            <Picker
+                                                selectedValue={filterYear}
+                                                onValueChange={(itemValue) => setFilterYear(itemValue)}
+                                                style={[styles.picker, { width: '100%' }]}
+                                            >
+                                                <Picker.Item label="Year" value="" enabled={false} />
+                                                {[...new Set(transactionData.map(item => item.transaction_date.split('/')[2]))].map((year, index) => (
+                                                    <Picker.Item key={index} label={year} value={year} />
+                                                ))}
+                                            </Picker>
+                                        </View>
+                                        <TouchableOpacity style={styles.applyFilterButton} onPress={resetFilter}>
+                                            <Text style={styles.applyFilterButtonText}>Reset Filters</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </Modal>
+                        {renderTransactionPopup()}
+                        </ScrollView>
+                )}
+
             </>
             )}
-        </ScrollView>
+        </>
     );
 };
 
