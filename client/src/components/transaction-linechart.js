@@ -17,6 +17,7 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 color1={theme.colors.primary}
                 color2={theme.colors.error}
                 textColor1={'#191C1D'}
+                yAxisThickness={0}
                 dataPointsHeight={3}
                 dataPointsWidth={3}
                 dataPointsColor1={theme.colors.primary}
@@ -38,7 +39,6 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 endFillColor2={'#BA1A1A'}
                 startOpacity={0.4}
                 endOpacity={0.1}
-                backgroundColor
                 focusEnabled
                 showTextOnFocus
                 endSpacing={15}
@@ -46,7 +46,7 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 overflowBottom
                 textShiftX={-10}
                 textShiftY={15}
-                xAxisLabelsVerticalShift={80}
+                // xAxisLabelsVerticalShift={80}
             />
         </View>
     );

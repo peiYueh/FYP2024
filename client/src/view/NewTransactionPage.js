@@ -18,7 +18,7 @@ const NewTransactionPage = () => {
     const [transactionType, setType] = useState("");
     const [keyboardVisible, setKeyboardVisible] = useState(false);
     const [transactionDescription, setTransactionDescription] = useState("");
-    const [transactionDate, settransactionDate] = useState(new Date().toLocaleDateString('en-GB'));
+    const [transactionDate, settransactionDate] = useState(new Date().toISOString().split('T')[0]);
     const [transactionCategory, setTransactionCategory] = useState("");
     const [incomeType, setIncomeType] = useState(true);
     const [incomeTaxability, setIncomeTaxability] = useState(false);
@@ -101,8 +101,8 @@ const NewTransactionPage = () => {
                 transactionData
             });
             console.log('Sign up successful!', response.data);
-            // alert('New Transaction Added!');
-            // navigation.navigate('LoginPage')
+            alert('New Transaction Added!');
+            navigation.navigate('My Transactions')
         } catch (error) {
             console.error('Error Adding New Transaction', error);
             alert('Please try again.');
@@ -279,7 +279,7 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
     const menuWidth = screenWidth * 0.85;
 
     const handleConfirm = (params) => {
-        settransactionDate(params.date.toLocaleDateString('en-GB'));
+        settransactionDate(params.date.toISOString().split('T')[0]);
         // settransactionDateTouched(true);
         hideDatePicker();
     };
@@ -378,7 +378,7 @@ const IncomeComponent = ({ transactionDescription, setTransactionDescription, tr
     const today = new Date();
 
     const handleConfirm = (params) => {
-        settransactionDate(params.date.toLocaleDateString('en-GB'));
+        settransactionDate(params.date.toISOString().split('T')[0]);
         // settransactionDateTouched(true);
         hideDatePicker();
     };

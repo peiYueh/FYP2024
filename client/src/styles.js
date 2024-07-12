@@ -249,9 +249,11 @@ const styles = StyleSheet.create({
   chart: {
     margin: 10,
     padding: 10,
-    backgroundColor: "#FBFCFE",
+    backgroundColor: "#F8FDFF",
     borderRadius: 10,
-    height: 350,
+    height: 340,
+    elevation: 3,
+    padding: 5
   },
   legend: {
     flexDirection: "row",

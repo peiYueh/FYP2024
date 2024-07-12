@@ -6,8 +6,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 def newTransaction(db):
-    print("Yes you are here")
-    userID = "665094c0c1a89d9d19d13606"
+    # userID = "665094c0c1a89d9d19d13606"
+    userID = session.get('user_id')
 
     data = request.get_json().get('transactionData')
     transactionType = data.get('transaction_type')
@@ -48,16 +48,13 @@ def newTransaction(db):
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
 def editTransaction(db):
-    print("Editing")
     data = request.get_json()
-    print(data)
-    userID = "665094c0c1a89d9d19d13606"
+    # print(data)
+    userID = session.get('user_id')
     transaction_id = data.get('transaction_id')
 
     if not transaction_id:
-        print("Trans ID not found")
         return jsonify({"error": "Transaction ID is required"}), 400
-
     # Convert the transaction_id to an ObjectId
     try:
         transaction_id = ObjectId(transaction_id)
@@ -102,9 +99,9 @@ def editTransaction(db):
     return jsonify({"message": "Data updated successfully"}), 201
 
 def getTransactions(db):
-    # user_id = request.args.get('userId')  # Get the userId from query parameters
-    # user_id = session.get('user_id')
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
+    print(user_id)
+    # user_id = "665094c0c1a89d9d19d13606"
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     transaction_DAO = Transaction(db)

@@ -25,7 +25,6 @@ const EditTransactionPage = ({ route, navigation }) => {
   };
 
   const { transactionData } = route.params;
-  console.log("THE ID: " + transactionData._id)
   const [amount, setAmount] = useState(formatAmount(transactionData.transaction_amount.toFixed(2).toString()));
   const [transactionType, setType] = useState(transactionData.transaction_type);
   // console.log("Trans data" + transactionData.)
@@ -33,11 +32,9 @@ const EditTransactionPage = ({ route, navigation }) => {
   const [transactionDescription, setTransactionDescription] = useState(transactionData.transaction_description);
   const [transactionDate, settransactionDate] = useState(transactionData.transaction_date);
   const [transactionCategory, setTransactionCategory] = useState(transactionData.transaction_category);
-  console.log(transactionData.income_type)
   const [incomeType, setIncomeType] = useState(transactionData.income_type);
   const [incomeTaxability, setIncomeTaxability] = useState(transactionData.income_taxability);
   const [savingInterestRate, setSavingInterestRate] = useState(transactionData.interest_rate);
-  console.log("Interest Rate : " + typeof savingInterestRate)
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +56,7 @@ const EditTransactionPage = ({ route, navigation }) => {
   const showDatePicker = () => setDatePickerVisibility(true);
   const hideDatePicker = () => setDatePickerVisibility(false);
   const handleConfirm = (params) => {
-    settransactionDate(params.date.toLocaleDateString('en-GB'));
+    settransactionDate(params.date.toISOString().split('T')[0]);
     hideDatePicker();
   };
 

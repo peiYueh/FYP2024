@@ -36,7 +36,6 @@ const MyTransactionPage = () => {
     const fetchTransactions = async () => {
         try {
             const response = await axios.get(API_BASE_URL + '/transactions');
-            console.log("Response : " + response.data)
             // Parse and sort transactions by date
             const sortedTransactions = response.data.map(item => ({
                 ...item,
@@ -117,7 +116,6 @@ const MyTransactionPage = () => {
 
     const handleEdit = () => {
         navigation.navigate('EditTransactionPage', { transactionData: selectedTransaction });
-        console.log("Going to edit");
     };
 
     const handleDelete = () => {
@@ -403,7 +401,7 @@ const MyTransactionPage = () => {
                         <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('New Transaction Page')}>
                             <Text style={styles.addButtonText}>Add Transaction</Text>
                         </TouchableOpacity>
-                        <View style={[styles.chart, { backgroundColor: '#FBFCFE' }]}>
+                        <View style={[styles.chart]}>
                             <Text style={[styles.chartTitle, { color: theme.colors.primary }]}>Monthly Income and Expenses</Text>
                             <View style={[styles.picker, { width: '100%', height: 50, marginVertical: '5%' }]}>
                                 <Picker
@@ -418,7 +416,7 @@ const MyTransactionPage = () => {
                             </View>
                             {dataFetched && (
                                 <TransactionLinechart
-                                    style={[styles.chart, { backgroundColor: '#FBFCFE' }]}
+                                    style={[styles.chart]}
                                     incomeData={incomeData}
                                     expensesData={expensesData}
                                     maxIncome={maxIncome}
