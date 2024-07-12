@@ -80,6 +80,7 @@ const FinancialScenarioPage = ({ route }) => {
             passive_income: passiveIncome,
             expenses: predictedExpense[index] || 0,
         }));
+        
 
         let remainingSavings = parseInt(initialSavings);
         const tempStackData = combinedData.map((yearData, index) => {
@@ -103,6 +104,8 @@ const FinancialScenarioPage = ({ route }) => {
                 remainingSavings += unusedIncome;
             }
 
+            yearData.savings = remainingSavings
+
             let downfall = remainingExpense > 0 ? remainingExpense : 0;
 
             return {
@@ -117,6 +120,7 @@ const FinancialScenarioPage = ({ route }) => {
                 topLabelComponent: () => getIconsForAge(currentAge + index) // Add top label component
             };
         });
+        console.log(tempStackData)
 
         return tempStackData;
     };
@@ -292,9 +296,9 @@ const FinancialScenarioPage = ({ route }) => {
         <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
                 <Text style={styles.modalTitle}>Year {selectedYearData.label}</Text>
-                <Text style={styles.modalText}>Active Income: RM {selectedYearData.stacks[1].value.toFixed()}</Text>
-                <Text style={styles.modalText}>Passive Income: RM {selectedYearData.stacks[0].value.toFixed()}</Text>
-                <Text style={styles.modalText}>Savings Used: RM {selectedYearData.stacks[2].value.toFixed()}</Text>
+                <Text style={styles.modalText}>Active Income: RM {selectedYearData.yearData.active_income.toFixed()}</Text>
+                <Text style={styles.modalText}>Passive Income: RM {selectedYearData.yearData.passive_income.toFixed()}</Text>
+                <Text style={styles.modalText}>Savings: RM {selectedYearData.yearData.savings.toFixed()}</Text>
                 <Text style={styles.modalText}>Downfall: RM {selectedYearData.stacks[3].value.toFixed()}</Text>
                 <Text style={styles.modalText}>Expenses: RM {selectedYearData.yearData.expenses.toFixed()}</Text>
                 

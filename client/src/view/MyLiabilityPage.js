@@ -20,9 +20,7 @@ const MyLiabilityPage = () => {
 
     const fetchLiabilities = async () => {
         try {
-            const response = await axios.get(API_BASE_URL + '/liabilities', {
-                params: { userId: '665094c0c1a89d9d19d13606' },
-            });
+            const response = await axios.get(API_BASE_URL + '/liabilities');
             // Parse and sort transactions by date
             const fetchedItems = response.data.map((item, index) => ({
                 key: index + 1,
@@ -84,12 +82,12 @@ const MyLiabilityPage = () => {
     // Calculate the number of empty rows needed to fill the table
     const emptyRows = Array.from({ length: itemsPerPage - displayedItems.length });
     const calculateTotalLiability = () => {
-        return items.reduce((total, item) => total + item.amount, 0);
+        console.log(items.reduce((total, item) => total + item.totalAmount, 0))
+        return items.reduce((total, item) => total + item.totalAmount, 0);
     };
 
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.background }]}>
-            {/* Liability table */}
             <View style={styles.totalLiabilityContainer}>
                 <Text style={styles.subHeading}>Total Liabilities</Text>
                 <Text style={styles.heading}>RM {calculateTotalLiability().toLocaleString()}</Text>
@@ -98,7 +96,6 @@ const MyLiabilityPage = () => {
             <View style={{ position: 'relative', width: '90%', paddingTop: 10 }}>
                 <View style={{ height: 300, backgroundColor: theme.colors.surface, borderRadius: 10 }}>
                     <DataTable>
-
                         <DataTable.Header style={{ backgroundColor: '#D5E5EB', borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
                             <DataTable.Title style={{ flex: 3 }} textStyle={{ fontWeight: 'bold' }}>Liability</DataTable.Title>
                             <DataTable.Title style={{ flex: 2 }} textStyle={{ fontWeight: 'bold' }} numeric>Remaining Amount</DataTable.Title>
@@ -120,17 +117,29 @@ const MyLiabilityPage = () => {
                                     <ActivityIndicator size="large" color={theme.colors.primary} />
                                 </View>
                             )}
-                            {displayedItems.map((item) => (
-                                <TouchableOpacity key={item.key} onPress={() => handleRowPress(item)}>
-                                    <DataTable.Row style={{ backgroundColor: theme.colors.inverseOnSurface }}>
-                                        <DataTable.Cell style={{ flex: 3 }}>{item.name}</DataTable.Cell>
-                                        <DataTable.Cell style={{ flex: 2 }} numeric>
-                                            {item.amount === 0 ? 'Cleared' : `RM ${item.amount}`}
-                                        </DataTable.Cell>
-                                    </DataTable.Row>
-                                </TouchableOpacity>
-                            ))}
-                            {emptyRows.map((_, index) => (
+                            {displayedItems.length > 0 ? (
+                                displayedItems.map((item) => (
+                                    <TouchableOpacity key={item.key} onPress={() => handleRowPress(item)}>
+                                        <DataTable.Row style={{ backgroundColor: theme.colors.inverseOnSurface }}>
+                                            <DataTable.Cell style={{ flex: 3 }}>{item.name}</DataTable.Cell>
+                                            <DataTable.Cell style={{ flex: 2 }} numeric>
+                                                {item.amount === 0 ? 'Cleared' : `RM ${item.amount}`}
+                                            </DataTable.Cell>
+                                        </DataTable.Row>
+                                    </TouchableOpacity>
+                                ))
+                            ) : (
+                                <View style={{ padding: 10, alignItems: 'center' }}>
+                                    <Image
+                                        source={require('../../assets/background/no-liability.png')}
+                                        style={{ width: 320, height: 150 }}
+                                    />
+                                    <Text style={{ textAlign: 'center', color: theme.colors.text, marginTop: 10 }}>
+                                        You have no liabilities currently.
+                                    </Text>
+                                </View>
+                            )}
+                            {displayedItems.length > 0 && emptyRows.map((_, index) => (
                                 <DataTable.Row key={`empty-${index}`} style={{ backgroundColor: theme.colors.inverseOnSurface }}>
                                     <DataTable.Cell style={{ flex: 3 }} />
                                     <DataTable.Cell style={{ flex: 2 }} numeric />
@@ -138,6 +147,7 @@ const MyLiabilityPage = () => {
                             ))}
                         </ScrollView>
                     </DataTable>
+
                     <DataTable.Pagination
                         page={page}
                         numberOfPages={Math.ceil(items.length / itemsPerPage)}

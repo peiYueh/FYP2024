@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontFamily: "Montserrat_500Medium",
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: "bold",
   },
   subHeading: {

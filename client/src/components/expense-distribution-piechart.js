@@ -6,16 +6,15 @@ import Swiper from 'react-native-swiper';
 import { API_BASE_URL } from '../../config';
 import LottieView from 'lottie-react-native';
 
-const ExpenseDistributionChart = ({ onDataLoaded }) => {
+const ExpenseDistributionChart = () => {
     const [focusedIndex, setFocusedIndex] = useState(0);
     const [data, setData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
+                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`);
                 setData(response.data);
-                onDataLoaded(); // Notify parent component that data is loaded
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);
             }

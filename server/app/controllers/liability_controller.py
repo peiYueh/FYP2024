@@ -36,7 +36,7 @@ def newLiability(db):
     return jsonify(str(liability_id))
 
 def getLiabilities(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     

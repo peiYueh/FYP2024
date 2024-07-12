@@ -281,7 +281,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 </Card>
 
                 <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-                    Save Scenario
+                    Generate Scenario
                 </Button>
             </ScrollView>
         </View>

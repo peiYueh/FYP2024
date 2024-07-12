@@ -173,7 +173,6 @@ def deleteTransaction(db, transaction_id):
     
 def categorizeTransactions(db):
     user_id = session.get('user_id')  # Replace with dynamic user ID retrieval
-    print("userid here"+user_id)
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     
