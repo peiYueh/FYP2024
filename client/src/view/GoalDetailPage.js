@@ -319,8 +319,8 @@ const BuyProperty = ({ goalData, setEditedData }) => {
     const [interestRate, setInterestRate] = useState('');
     const [downPaymentAmount, setDownPaymentAmount] = useState('');
     const [monthlyPayment, setMonthlyPayment] = useState('');
-    const [principal, setPrincipal] = useState('');
-    const [interest, setInterest] = useState('');
+    const [principal, setPrincipal] = useState(0);
+    const [interest, setInterest] = useState(0);
     const [showPieChart, setShowPieChart] = useState(false);
     const [dataLoaded, setDataLoaded] = useState(false)
 
@@ -406,8 +406,8 @@ const BuyProperty = ({ goalData, setEditedData }) => {
     };
 
     const pieData = [
-        { key: 'Principal', value: parseFloat(principal.toFixed(2)), color: theme.colors.primary, text: 'RM ' + principal.toFixed(2) },
-        { key: 'Interest', value: parseFloat(interest.toFixed(2)), color: theme.colors.tertiary, text: 'RM ' + interest.toFixed(2) },
+        { key: 'Principal', value: parseFloat(principal.toFixed(2)), color: theme.colors.primary, text: 'RM ' + parseFloat(principal.toFixed(2)) },
+        { key: 'Interest', value: parseFloat(interest.toFixed(2)), color: theme.colors.tertiary, text: 'RM ' + parseFloat(interest.toFixed(2)) },
     ];
 
     return (
@@ -490,8 +490,8 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
     const [loanPeriodYears, setLoanPeriodYears] = useState('');
     const [interestRate, setInterestRate] = useState('');
     const [monthlyPayment, setMonthlyPayment] = useState('');
-    const [principal, setPrincipal] = useState('');
-    const [interest, setInterest] = useState('');
+    const [principal, setPrincipal] = useState(0);
+    const [interest, setInterest] = useState(0);
     const [showPieChart, setShowPieChart] = useState(false);
 
     const [dataLoaded, setDataLoaded] = useState(false)
@@ -601,7 +601,7 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
                     />
                 </View>
                 <Text style={styles.calculationLabel}>
-                    Down Payment Amount: RM {downPaymentAmount.toFixed(2)}
+                    Down Payment Amount: RM {downPaymentAmount}
                 </Text>
                 <View style={styles.row}>
                     <TextInput
@@ -623,7 +623,7 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
                     Estimated Monthly Payment
                 </Text>
                 <Text style={styles.result}>
-                    RM {monthlyPayment.toFixed(2)}
+                    RM {monthlyPayment}
                 </Text>
                 {showPieChart && (
                     <View style={styles.pieChart}>
