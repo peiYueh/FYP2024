@@ -10,6 +10,9 @@ const transactionIcon = require('../../assets/Image/transaction-icon.png');
 const profileIcon = require('../../assets/Image/profile-icon.png');
 const goalIcon = require('../../assets/Image/goal-icon.png');
 const liabilityIcon = require('../../assets/Image/liability-icon.png');
+const addTransactionIcon = require('../../assets/Image/add-transaction.png');
+const addGoalIcon = require('../../assets/Image/add-goal.png');
+const AddLiabilityIcon = require('../../assets/Image/add-liability.png');
 
 const HomePage = () => {
     const navigation = useNavigation();
@@ -31,7 +34,7 @@ const HomePage = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.chartContainer}>
-                        <ExpenseDistributionChart/>
+                    <ExpenseDistributionChart />
                 </View>
                 <View style={styles.buttonRow}>
                     <TouchableOpacity style={styles.homepageBtn} onPress={() => navigation.navigate('Financial Scenario Settings')}>
@@ -58,6 +61,26 @@ const HomePage = () => {
                         <View style={styles.iconTextContainer}>
                             <Image source={liabilityIcon} style={styles.icon} />
                             <Text style={styles.buttonText}>My Liabilities</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.quickButtonRow}>
+                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('New Transaction Page')}>
+                        <View style={styles.iconTextContainer}>
+                            <Image source={addTransactionIcon} style={styles.quickIcon} />
+                            <Text style={styles.quickButtonText}>Add Transaction</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('New Goal')}>
+                        <View style={styles.iconTextContainer}>
+                            <Image source={addGoalIcon} style={styles.quickIcon} />
+                            <Text style={styles.quickButtonText}>Add Goal</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('My Liabilities')}>
+                        <View style={styles.iconTextContainer}>
+                            <Image source={AddLiabilityIcon} style={styles.quickIcon} />
+                            <Text style={styles.quickButtonText}>Add Liability</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -102,6 +125,11 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 20,
     },
+    quickButtonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '99%',
+    },
     homepageBtn: {
         width: '45%',
         paddingVertical: 15,
@@ -109,6 +137,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#1F8AAA',
         borderRadius: 15,
+    },
+    quickActionBtn:{
+        backgroundColor: '#F69E35',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 15,
+        width: '30%'
+    },
+    quickIcon: {
+        width: 30,
+        height: 30,
+        marginBottom: 5,
+    },
+    quickButtonText: {
+        fontSize: 12,
+        color: 'white',
     },
     iconTextContainer: {
         alignItems: 'center',
