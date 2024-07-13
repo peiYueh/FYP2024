@@ -5,7 +5,6 @@ from bson import ObjectId
 from datetime import datetime, timezone
 
 def newLiability(db):
-    print("controller")
     data = request.json
 
     liability_name = data.get('name')
@@ -13,10 +12,10 @@ def newLiability(db):
     interest_rate = data.get('interestRate')
     term = data.get('term')
     monthly_payment = data.get('monthlyPayment')
-    due_date = data.get('dueDate')
+    remaining_amount = data.get('remainingAmount')
     lender_info = data.get('lenderInfo')
     purpose = data.get('purpose')
-    userID = "665094c0c1a89d9d19d13606"
+    userID = session.get('user_id')
 
     liability = {
         'user_id' : userID,
@@ -25,7 +24,7 @@ def newLiability(db):
         'interest_rate': interest_rate,
         'term': term,
         'monthly_payment': monthly_payment,
-        'due_date': due_date,
+        'remaining_amount': remaining_amount,
         'lender_info': lender_info,
         'purpose': purpose
     }
@@ -48,7 +47,6 @@ def getLiabilities(db):
         if '_id' in liability:
             liability['_id'] = str(liability['_id'])
 
-    print(liabilities)
     return jsonify(liabilities)
 
 def getPaymentDates(db):
@@ -65,22 +63,23 @@ def getPaymentDates(db):
     return jsonify(payments)
 
 def newPaymentUpdate(db):
-    print("Editing")
     data = request.get_json()
-    print(data)
+    payment_amount = data.get('payment_amount')
+    liability_id = data.get('liability_id')
     paymentUpdate = {
-        'liability_id':data.get('liability_id'),
+        'liability_id': liability_id,
         'payment_date':data.get('payment_date'),
-        'payment_amount':data.get('payment_amount'),
+        'payment_amount':payment_amount,
     }
     liability_DAO = Liability(db)
     # add to liability payment date
     inserted_id = liability_DAO.insert_payment_update(paymentUpdate)
+    # update remaining payment to data
+    liability_DAO.update_remaining_amount(liability_id, payment_amount)
     return jsonify(str(inserted_id))
 
 def editLiability(db):
     data = request.get_json()
-    print(data)
     liability_id = data.get('_id')
 
     if not liability_id:

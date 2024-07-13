@@ -26,8 +26,9 @@ const MyLiabilityPage = () => {
                 key: index + 1,
                 name: item.liability_name,
                 amount: item.liability_amount,
-                details: item
-            })).sort((a, b) => b.amount - a.amount);
+                details: item,
+                remaining_amount: item.remaining_amount
+            })).sort((a, b) => b.remaining_amount - a.remaining_amount);
             setItems(fetchedItems);
         } catch (error) {
             console.error('Error fetching liabilities:', error);
@@ -82,8 +83,8 @@ const MyLiabilityPage = () => {
     // Calculate the number of empty rows needed to fill the table
     const emptyRows = Array.from({ length: itemsPerPage - displayedItems.length });
     const calculateTotalLiability = () => {
-        console.log(items.reduce((total, item) => total + item.totalAmount, 0))
-        return items.reduce((total, item) => total + item.totalAmount, 0);
+        console.log(items.reduce((total, item) => total + item.remaining_amount, 0))
+        return items.reduce((total, item) => total + item.remaining_amount, 0);
     };
 
     return (
@@ -123,7 +124,7 @@ const MyLiabilityPage = () => {
                                         <DataTable.Row style={{ backgroundColor: theme.colors.inverseOnSurface }}>
                                             <DataTable.Cell style={{ flex: 3 }}>{item.name}</DataTable.Cell>
                                             <DataTable.Cell style={{ flex: 2 }} numeric>
-                                                {item.amount === 0 ? 'Cleared' : `RM ${item.amount}`}
+                                                {item.remaining_amount === 0 ? 'Cleared' : `RM ${item.remaining_amount}`}
                                             </DataTable.Cell>
                                         </DataTable.Row>
                                     </TouchableOpacity>

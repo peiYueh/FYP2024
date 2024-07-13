@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Pressable, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme, Button, Portal, TextInput } from 'react-native-paper';
-import { DatePickerModal } from 'react-native-paper-dates';
+import { useTheme, TextInput } from 'react-native-paper';
 import LoadingIndicator from './loading-component';
 import { API_BASE_URL } from '../../config';
 import axios from 'axios';
@@ -14,15 +13,14 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
   const [interestRate, setInterestRate] = useState('');
   const [term, setTerm] = useState('');
   const [monthlyPayment, setMonthlyPayment] = useState('');
-  const [dueDate, setDueDate] = useState(null);
   const [lenderInfo, setLenderInfo] = useState('');
   const [purpose, setPurpose] = useState('');
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const showDatePicker = () => setDatePickerVisibility(true);
-  const hideDatePicker = () => setDatePickerVisibility(false);
+  useEffect(() => {
+    calculateMonthlyPayment();
+  }, [totalAmount, interestRate, term]);
 
   const validateInputs = () => {
     let valid = true;
@@ -48,10 +46,6 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       tempErrors.monthlyPayment = 'Valid monthly payment is required';
       valid = false;
     }
-    if (!dueDate) {
-      tempErrors.dueDate = 'Due date is required';
-      valid = false;
-    }
     if (!lenderInfo.trim()) {
       tempErrors.lenderInfo = 'Lender information is required';
       valid = false;
@@ -65,44 +59,19 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
     return valid;
   };
 
-  const handleConfirm = (params) => {
-    setDueDate(params.date);
-    hideDatePicker();
-  };
-
   const resetFields = () => {
     setLiabilityName('');
     setTotalAmount('');
     setInterestRate('');
     setTerm('');
     setMonthlyPayment('');
-    setDueDate(null);
     setLenderInfo('');
     setPurpose('');
     setErrors({});
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    let month = d.getMonth() + 1;
-    let day = d.getDate();
-  
-    // Add leading zeros if month or day is less than 10
-    if (month < 10) {
-      month = `0${month}`;
-    }
-    if (day < 10) {
-      day = `0${day}`;
-    }
-  
-    return `${day}/${month}/${year}`;
-  };
-
   const handleAddLiability = async () => {
     if (!validateInputs()) return;
-
-    const formattedDueDate = dueDate ? formatDate(dueDate) : null;
 
     const newLiability = {
       name: liabilityName,
@@ -110,9 +79,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       interestRate: parseFloat(interestRate),
       term: parseInt(term),
       monthlyPayment: parseFloat(monthlyPayment),
-      dueDate: formattedDueDate,
       lenderInfo: lenderInfo,
       purpose: purpose,
+      remainingAmount: parseFloat(totalAmount)
     };
 
     setLoading(true);
@@ -120,7 +89,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       const response = await axios.post(API_BASE_URL + '/newLiability', newLiability);
       console.log('Response:', response.data);
       Alert.alert('Success', 'Liability added successfully');
-      onSubmit(newLiability); // Assuming this is where you handle adding the liability to some list or state
+      onSubmit(newLiability);
       resetFields();
       onClose();
     } catch (error) {
@@ -128,6 +97,21 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       Alert.alert('Error', 'Failed to add liability');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const calculateMonthlyPayment = () => {
+    if (!totalAmount || !interestRate || !term) return;
+
+    const principal = parseFloat(totalAmount);
+    const monthlyInterestRate = parseFloat(interestRate) / 100 / 12;
+    const numberOfPayments = parseInt(term) * 12;
+
+    if (!isNaN(principal) && !isNaN(monthlyInterestRate) && !isNaN(numberOfPayments)) {
+      const monthlyPayment =
+        (principal * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
+        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+      setMonthlyPayment(monthlyPayment.toFixed(2));
     }
   };
 
@@ -176,7 +160,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
 
         <TextInput
           style={styles.input}
-          placeholder="Term (in months)"
+          placeholder="Term (in years)"
           keyboardType="numeric"
           value={term}
           onChangeText={setTerm}
@@ -193,31 +177,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
           onChangeText={setMonthlyPayment}
           left={<TextInput.Icon icon="cash-multiple" />}
           error={!!errors.monthlyPayment}
+          disabled
         />
         {errors.monthlyPayment && <Text style={styles.errorText}>{errors.monthlyPayment}</Text>}
-
-        <Pressable style={styles.datePickerButton} onPress={showDatePicker}>
-          <TextInput
-            editable={false}
-            placeholder="Select Payment Due Date"
-            value={dueDate ? formatDate(dueDate) : ''}
-            style={{ fontSize: 12 }}
-            left={<TextInput.Icon icon="update" />}
-            error={!!errors.dueDate}
-          />
-        </Pressable>
-        {errors.dueDate && <Text style={styles.errorText}>{errors.dueDate}</Text>}
-
-        <Portal>
-          <DatePickerModal
-            mode="single"
-            visible={isDatePickerVisible}
-            onDismiss={hideDatePicker}
-            date={dueDate || new Date()}
-            onConfirm={handleConfirm}
-            validRange={{ startDate: new Date() }}
-          />
-        </Portal>
 
         <TextInput
           style={styles.input}
@@ -283,10 +245,6 @@ const styles = StyleSheet.create({
   },
   halfWidth: {
     width: '48%',
-  },
-  datePickerButton: {
-    width: '100%',
-    marginTop: 10,
   },
   addButton: {
     backgroundColor: 'blue',

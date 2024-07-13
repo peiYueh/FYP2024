@@ -27,7 +27,7 @@ const DetailedView = ({ route, navigation }) => {
 
     // Validation function to check if edited data is valid
     const validateEditedData = () => {
-        const { liability_amount, interest_rate, term, monthly_payment, due_date, lender_info, purpose } = editedData;
+        const { liability_amount, interest_rate, term, monthly_payment, lender_info, purpose } = editedData;
 
         if (!liability_amount || isNaN(parseFloat(liability_amount))) {
             Alert.alert('Invalid Input', 'Please enter a valid liability amount.');
@@ -49,11 +49,6 @@ const DetailedView = ({ route, navigation }) => {
             return false;
         }
 
-        if (!isValidDate(due_date)) {
-            Alert.alert('Invalid Input', 'Please enter a valid due date (DD/MM/YYYY format).');
-            return false;
-        }
-
         if (!lender_info || lender_info.trim().length === 0) {
             Alert.alert('Invalid Input', 'Please enter lender information.');
             return false;
@@ -65,28 +60,6 @@ const DetailedView = ({ route, navigation }) => {
         }
 
         return true;
-    };
-
-    const isValidDate = (dateString) => {
-        // Check for format DD/MM/YYYY
-        const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
-        if (!datePattern.test(dateString)) {
-            return false;
-        }
-
-        // Validate actual date values
-        const parts = dateString.split('/');
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10) - 1; // Month is zero-based
-        const year = parseInt(parts[2], 10);
-
-        const dateObj = new Date(year, month, day);
-
-        return (
-            dateObj.getFullYear() === year &&
-            dateObj.getMonth() === month &&
-            dateObj.getDate() === day
-        );
     };
 
     // Function to handle input changes in edit mode
@@ -114,14 +87,6 @@ const DetailedView = ({ route, navigation }) => {
         } finally {
             setLoading(false); // Set loading to false when fetching ends (success or error)
         }
-    };
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
     };
 
     // Calculate remaining amount based on paymentDates
@@ -283,6 +248,28 @@ const DetailedView = ({ route, navigation }) => {
         );
     };
 
+    const calculateMonthlyPayment = (principal, annualInterestRate, years) => {
+        const monthlyInterestRate = annualInterestRate / 12 / 100;
+        const numberOfPayments = years * 12;
+        if (monthlyInterestRate === 0) {
+            return principal / numberOfPayments;
+        }
+        return (principal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+    };
+
+    useEffect(() => {
+        if (editedData.liability_amount && editedData.interest_rate && editedData.term) {
+            console.log("Calculating")
+            const monthlyPayment = calculateMonthlyPayment(
+                editedData.liability_amount,
+                editedData.interest_rate,
+                editedData.term
+            );
+            setEditedData((prevData) => ({ ...prevData, monthly_payment: monthlyPayment }));
+        }
+    }, [editedData.liability_amount, editedData.interest_rate, editedData.term]);
+
+
     // State for selected date in calendar
     const [selectedDate, setSelectedDate] = useState(null);
 
@@ -382,7 +369,7 @@ const DetailedView = ({ route, navigation }) => {
                                     onChangeText={(text) => handleChange('term', parseInt(text, 10))}
                                 />
                             ) : (
-                                <Text style={styles.value}>{liabilityData.term} months</Text>
+                                <Text style={styles.value}>{liabilityData.term} years</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -391,25 +378,13 @@ const DetailedView = ({ route, navigation }) => {
                             {editMode ? (
                                 <TextInput
                                     style={styles.value}
-                                    value={editedData.monthly_payment ? editedData.monthly_payment.toString() : ''}
+                                    value={editedData.monthly_payment ? editedData.monthly_payment.toFixed(2).toString() : ''}
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleChange('monthly_payment', parseFloat(text))}
+                                    disabled
                                 />
                             ) : (
                                 <Text style={styles.value}>${liabilityData.monthly_payment.toFixed(2)}</Text>
-                            )}
-                        </View>
-                        <View style={styles.row}>
-                            <Icon name="event" size={20} color="grey" />
-                            <Text style={styles.label}>Due Date:</Text>
-                            {editMode ? (
-                                <TextInput
-                                    style={styles.value}
-                                    value={editedData.due_date || liabilityData.due_date}
-                                    onChangeText={(text) => handleChange('due_date', text)}
-                                />
-                            ) : (
-                                <Text style={styles.value}>{liabilityData.due_date}</Text>
                             )}
                         </View>
                         <View style={styles.row}>

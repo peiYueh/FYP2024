@@ -36,11 +36,38 @@ class Liability:
     def delete_payment_update(self, payment_id):
         try:
             obj_id = ObjectId(payment_id)
+            payment_record = self.payment_dates_collection.find_one({'_id': obj_id})
+
+            if not payment_record:
+                return False
+
+            payment_amount = payment_record['payment_amount']
+            liability_id = payment_record['liability_id']
+
             result = self.payment_dates_collection.delete_one({'_id': obj_id})
-            return result.deleted_count > 0
+            if result.deleted_count > 0:
+                self.add_remaining_amount(liability_id, payment_amount)  # Add the amount back to the remaining amount
+                return True
+            return False
         except Exception as e:
             print(f"Error deleting transaction: {e}")
             return False
+        
+    def add_remaining_amount(self, liability_id, amount):
+        # Fetch current remaining amount
+        remaining_amount = self.get_remaining_amount(liability_id)
+
+        # Calculate new remaining amount
+        new_remaining_amount = remaining_amount + amount
+
+        # Update the database with the new remaining amount
+        result = self.collection.update_one(
+            {'_id': ObjectId(liability_id)},
+            {'$set': {'remaining_amount': new_remaining_amount}}
+        )
+
+        if result.matched_count == 0:
+            raise ValueError("Liability not found")
     
     def delete_liability(self, liability_id):
         try:
@@ -58,5 +85,28 @@ class Liability:
         except Exception as e:
             print(f"Error deleting transaction: {e}")
             return False
+        
+    def get_remaining_amount(self, liability_id):
+        # Fetch the current remaining amount
+        liability = self.collection.find_one({'_id': ObjectId(liability_id)})
+        if liability:
+            return liability.get('remaining_amount', 0)
+        else:
+            raise ValueError("Liability not found")
+    
+    def update_remaining_amount(self, liability_id, payment_amount):
+        # Fetch current remaining amount
+        remaining_amount = self.get_remaining_amount(liability_id)
 
+        # Calculate new remaining amount
+        new_remaining_amount = remaining_amount - payment_amount
+
+        # Update the database with the new remaining amount
+        result = self.collection.update_one(
+            {'_id': ObjectId(liability_id)},
+            {'$set': {'remaining_amount': new_remaining_amount}}
+        )
+
+        if result.matched_count == 0:
+            raise ValueError("Liability not found")
         
