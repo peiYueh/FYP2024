@@ -44,7 +44,7 @@ def login(db):
         session['username'] = str(user['user_name'])
         return jsonify({'message': 'Login successful!', 'user': {'email': user['user_email'], 'username': user['user_name']}}), 200
     else:
-        return jsonify({'message': 'Invalid email or password'}), 401
+        return jsonify({'message': 'Failed to login! Incorrect credentials.'}), 401
 
 def getStarted(db):
     data = request.get_json()

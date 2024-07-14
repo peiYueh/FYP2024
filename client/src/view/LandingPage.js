@@ -45,7 +45,7 @@ const LandingPage = () => {
               justifyContent: 'center',
               pointerEvents: 'auto'
             })}
-            onPress={() => navigation.navigate('SignUpPage')}
+            onPress={() => navigation.navigate('Sign Up')}
           >
             <Text style={[styles.buttonText, { color: '#F69E35' }]}>Sign Up</Text>
           </Pressable>
@@ -62,7 +62,7 @@ const LandingPage = () => {
               justifyContent: 'center',
               pointerEvents: 'auto'
             })}
-            onPress={() => navigation.navigate('LoginPage')}
+            onPress={() => navigation.navigate('Login')}
           >
             <Text style={[styles.buttonText, { color: '#F4F9FB' }]}>Login</Text>
           </Pressable>

@@ -181,10 +181,10 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home Page">
-          <Stack.Screen name="LandingPage" component={LandingPage} options={{ headerShown: false }} />
-          <Stack.Screen name="SignUpPage" component={SignUpPage} options={{ headerShown: false }} />
-          <Stack.Screen name="LoginPage" component={LoginPage} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName="Sign Up">
+          <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
+          <Stack.Screen name="Sign Up" component={SignUpPage} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
           <Stack.Screen name="New Transaction Page" component={NewTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: false }} />
           <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true }} />

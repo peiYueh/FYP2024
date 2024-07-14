@@ -3,20 +3,22 @@ import { AppLoading } from "expo";
 const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  // General
   container: {
-    flex: 1,
-    justifyContent: "center",
-    height: "100%",
-    position: "relative",
-    width: width,
-  },
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        overflow: 'hidden',
+        paddingTop: '10%'
+    },
   content: {
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    // height: "40%",
     width: "100%",
   },
+
+  //Landing
   landingContent: {
     top: "15%",
     alignItems: "center",
@@ -51,6 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat_500Medium",
     fontSize: 35,
     fontWeight: "bold",
+    paddingTop: '15%'
   },
   subHeading: {
     fontFamily: "Montserrat_500Medium",
@@ -63,8 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     textAlign: "left",
-    paddingLeft: "10%",
-    marginBottom: '10%'
+    marginVertical: '10%'
   },
   topLeftButton: {
     position: "absolute",
@@ -105,9 +107,9 @@ const styles = StyleSheet.create({
     height: 50,
     marginBottom: 20,
     backgroundColor: "#87B6C4",
-    borderWidth: 1, // Border width
-    borderColor: "#F4F9FB", // Border color
-    borderRadius: 5, // Border radius
+    borderWidth: 1, 
+    borderColor: "#F4F9FB", 
+    borderRadius: 5, 
   },
   oswaldText: {
     fontFamily: "Oswald_400Regular",
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
   },
   selectedOption: {
     borderRadius: 5,
-    backgroundColor: "#ddd", // Fill color when selecte
+    backgroundColor: "#ddd", // Fill color when selected
   },
   optionText: {
     color: "#000",
@@ -208,17 +210,8 @@ const styles = StyleSheet.create({
   selectedText: {
     fontWeight: "bold",
   },
-  transactionComponent: {
-    padding: 15,
-    alignItems: "center",
-  },
-  transactionDetailInput: {
-    backgroundColor: "transparent",
-    margin: 10,
-    width: "90%",
-    height: 55,
-    fontSize: 20,
-  },
+  
+  //Get Started
   getStartedContainer: {
     flex: 1,
     justifyContent: "center",
@@ -226,14 +219,16 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   progressBar: {
-    height: 10,
-    width: width / 3,
-    marginBottom: 16,
-  },
+        height: 10,
+        width: (width / 1.1),
+        backgroundColor: '#DBDBDB'
+    },
   innerContainer: {
-    flexDirection: "row",
-    width: width * 3, // Total width: 3 steps
-  },
+        marginTop: 20,
+        flexDirection: 'row',
+        width: width * 3,
+        alignItems: 'flex-start'
+    },
   step: {
     marginTop: "10%",
     marginBottom: "10%",
@@ -245,6 +240,35 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+    width: '90%',
+  },
+  backButton: {
+        flex: 1,
+        marginRight: 5,
+        backgroundColor: '#DBDBDB',
+    },
+    nextButton: {
+        flex: 1,
+        marginLeft: 5,
+        backgroundColor: '#F69E35',
+    },
+    submitButton: {
+        flex: 1,
+        marginLeft: 5,
+        backgroundColor: '#F69E35',
+    },
+
+  //Transaction
+  transactionComponent: {
+    padding: 15,
+    alignItems: "center",
+  },
+  transactionDetailInput: {
+    backgroundColor: "transparent",
+    margin: 10,
+    width: "90%",
+    height: 55,
+    fontSize: 20,
   },
   chart: {
     margin: 10,
@@ -505,10 +529,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // top: '50%',
     height: 700,
-    // backgroundColor: 'red',
-    // transform: [{ translateY: 100 }]
   },
   totalLiabilityContainer: {
     width: "90%",

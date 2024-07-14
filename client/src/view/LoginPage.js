@@ -20,12 +20,12 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     if (!validEmail(email)) {
-      alert('Invalid Email', 'Please enter a valid email address.');
+      alert('Invalid email address!');
       return;
     }
 
     if (!validPassword(password)) {
-      alert('Invalid Password', 'Password must be at least 6 characters long.');
+      alert('Invalid Password!');
       return;
     }
     setLoading(true);
@@ -40,7 +40,6 @@ const LoginPage = () => {
           }
         }
       );
-      alert(`Welcome ${response.data.user.username} !`);
       username = response.data.user.username
       navigation.navigate('Home Page', { username });
       // Navigate to the next screen or perform any action you need upon successful login
@@ -48,10 +47,10 @@ const LoginPage = () => {
       if (error.response) {
         // Server responded with a status other than 200 range
         const errorMessage = error.response.data.message;
-        Alert.alert('Login Error', errorMessage);
+        alert(errorMessage );
       } else {
         // Network error or some other issue
-        Alert.alert('Login Error', 'Login Unsuccessful. Please try again.');
+        alert('Login Unsuccessful. Please try again.');
       }
     } finally {
       setLoading(false); // Set loading to false regardless of login success or failure
@@ -115,7 +114,7 @@ const LoginPage = () => {
         </Pressable>
         <Text style={[styles.remarkText, { color: '#F4F9FB' }]}>
           Don't have an account?{' '}
-          <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('SignUpPage')}>
+          <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('Sign Up')}>
             Sign Up
           </Text>
         </Text>

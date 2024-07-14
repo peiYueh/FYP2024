@@ -14,6 +14,7 @@ const ExpenseDistributionChart = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`);
+                console.log("DATA: " + response.data)
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);

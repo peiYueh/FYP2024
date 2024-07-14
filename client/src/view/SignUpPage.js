@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Image, Text, Pressable, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Image, Text, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme, TextInput, Portal, Provider } from 'react-native-paper';
 import { DatePickerModal } from 'react-native-paper-dates';
 import DropDownPicker from 'react-native-dropdown-picker';
-import styles from '../styles'; // Import styles from your stylesheet file
-import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from '../styles';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
@@ -52,19 +51,25 @@ const SignUpPage = () => {
   const handleSignUp = async () => {
     // Perform form validation
     if (!validUsername(username)) {
-      alert('Username is invalid');
+      alert('Please enter a valid username');
       return;
     }
 
     if (!validEmail(email)) {
-      alert('Email is invalid');
+      alert('Please enter a valid email address');
       return;
     }
 
-    if (!validPassword(password, confirmPassword)) {
-      alert('Passwords do not match or are too short');
+    if (!validPassword(password)) {
+      alert('Please enter a valid password');
       return;
     }
+
+    if (!matchPassword(password, confirmPassword)) {
+      alert('The password and confirm password is unmatched');
+      return;
+    }
+    
 
     if (!validBirthDate(birthDate)) {
       alert('Please select a valid birth date');
@@ -85,8 +90,8 @@ const SignUpPage = () => {
         birthDate,
         gender,
       });
-      alert('Sign Up Successful! Please proceed to Login');
-      const userId = response.data.inserted_id; // Assuming response.data contains the user ID
+      alert('User Registered Successfully');
+      const userId = response.data.inserted_id;
       navigation.navigate('Get Started', { userId });
     } catch (error) {
       if (error.response) {
@@ -100,7 +105,7 @@ const SignUpPage = () => {
         alert(`Error Signing Up: ${error.message}`);
     }
     } finally {
-      setLoading(false); // Set loading to false regardless of login success or failure
+      setLoading(false);
     }
   };
 
@@ -113,8 +118,12 @@ const SignUpPage = () => {
     return emailRegex.test(email);
   };
 
-  const validPassword = (password, confirmPassword) => {
-    return password.length >= 6 && password === confirmPassword;
+  const validPassword = (password) => {
+    return password.length >= 6;
+  };
+
+  const matchPassword = (password, confirmPassword) => {
+    return password === confirmPassword;
   };
 
   const validBirthDate = (birthDate) => {
@@ -198,7 +207,7 @@ const SignUpPage = () => {
               onBlur={() => setPasswordTouched(true)}
               style={[
                 styles.inputField,
-                passwordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
+                passwordTouched && !validPassword(password) && { borderColor: 'red' }
               ]}
               secureTextEntry={true} // Toggle password visibility
               placeholder="Password" // Optional: add a placeholder for clarity
@@ -210,7 +219,7 @@ const SignUpPage = () => {
               onBlur={() => setConfirmPasswordTouched(true)}
               style={[
                 styles.inputField,
-                confirmPasswordTouched && !validPassword(password, confirmPassword) && { borderColor: 'red' }
+                confirmPasswordTouched && !matchPassword(password, confirmPassword) && { borderColor: 'red' }
               ]}
               secureTextEntry={true} // Toggle password visibility
               placeholder="Password" // Optional: add a placeholder for clarity
@@ -233,7 +242,7 @@ const SignUpPage = () => {
             </Pressable>
             <Text style={[styles.remarkText, { color: '#0A252D' }]}>
               Already have an account?{' '}
-              <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('LoginPage')}>
+              <Text style={styles.hyperLinkText} onPress={() => navigation.navigate('Login')}>
                 Login
               </Text>
             </Text>

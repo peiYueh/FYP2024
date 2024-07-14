@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Animated, Text, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Animated, Text, Image, Alert } from 'react-native';
 import { Button, TextInput, Title, ProgressBar, useTheme } from 'react-native-paper';
 import styles from '../styles';
 import axios from 'axios';
@@ -17,7 +17,7 @@ const CustomInput = ({ label, value, onChangeText }) => {
                 <TextInput
                     value={value}
                     onChangeText={onChangeText}
-                    style={style.input}
+                    style={[styles.inputField, style.inputContainer]}
                     keyboardType="numeric"
                 />
             </View>
@@ -29,7 +29,8 @@ const GetStarted = () => {
     const navigation = useNavigation();
     const theme = useTheme();
     const route = useRoute();
-    const { userId } = route.params;
+    // const { userId } = route.params;
+    const { userId } = "123";
     const [step, setStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const GetStarted = () => {
         savings: '',
         retirementAge: '',
         lifeExpectancy: '',
-        user_id: userId //NEED TO CHANGE THIS
+        user_id: userId
     });
 
     const translateX = useRef(new Animated.Value(0)).current;
@@ -51,15 +52,13 @@ const GetStarted = () => {
     }, [step, translateX]);
 
     const handleNext = () => {
-        if (step < 2) {
+        if (validateStep()) {
             setStep(step + 1);
         }
     };
 
     const handleBack = () => {
-        if (step > 0) {
-            setStep(step - 1);
-        }
+        setStep(step - 1);
     };
 
     const handleChange = (name, value) => {
@@ -67,35 +66,52 @@ const GetStarted = () => {
     };
 
     const handleSubmit = async () => {
-        // Process the form data
-        console.log(formData);
-        // You can perform additional actions here, such as sending data to a server
-        setLoading(true);
-        try {
-            console.log("Submitting: " + formData);
-            const response = await axios.post(API_BASE_URL + '/getStarted', {
-                formData
-            });
-            alert('Welcome to Doit4Duit! Please Proceed to Login');
-            navigation.navigate('LoginPage');
-        } catch (error) {
-            console.error('Error Occurs', error);
-            alert('There was an error. Please try again.');
-        } finally {
-            setLoading(false); // Set loading to false regardless of login success or failure
+        if (validateForm()) {
+            setLoading(true);
+            try {
+                const response = await axios.post(API_BASE_URL + '/getStarted', {formData});
+                alert('Welcome to Doit4Duit! Please proceed to Login');
+                navigation.navigate('Login');
+            } catch (error) {
+                console.error('Error Occurs', error);
+                alert('There was an error. Please try again.');
+            } finally {
+                setLoading(false);
+            }
         }
+    };
+
+    const validateStep = () => {
+        if (step === 0) {
+            if (!formData.income || !formData.expenses) {
+                Alert.alert('Validation Error', 'Please enter both income and expenses.');
+                return false;
+            }
+        } else if (step === 1) {
+            if (!formData.savings) {
+                Alert.alert('Validation Error', 'Please enter your current savings.');
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const validateForm = () => {
+        if (!formData.retirementAge || !formData.lifeExpectancy) {
+            Alert.alert('Validation Error', 'Please enter both retirement age and life expectancy.');
+            return false;
+        }
+        return true;
     };
 
     const progress = (step + 1) / 3;
 
     return (
-        <View style={[style.container, { backgroundColor: theme.colors.primary }]}>
-            <Title style={[styles.headingText, { color: theme.colors.background, fontWeight: 'bold', fontSize: 30, textAlign: 'left', marginBottom: '5%' }]}>Let's Get Started!</Title>
-            <ProgressBar progress={progress} color="#F4F9FB" style={style.progressBar} />
-            {(loading &&
-                <LoadingIndicator theme={theme} />
-            )}
-            <Animated.View style={[style.innerContainer, { transform: [{ translateX }] }]}>
+        <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+            <Title style={[styles.heading, { color: theme.colors.background }]}>Let's Get Started!</Title>
+            <ProgressBar progress={progress} color="#F4F9FB" style={styles.progressBar} />
+            {loading && <LoadingIndicator theme={theme} />}
+            <Animated.View style={[styles.innerContainer, { transform: [{ translateX }] }]}>
                 <View style={styles.step}>
                     <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontSize: 18 }]}>Step 1: Enter your estimated monthly income and expenses</Title>
                     <CustomInput
@@ -121,33 +137,33 @@ const GetStarted = () => {
 
                 <View style={styles.step}>
                     <Title style={[styles.bodyText, { color: theme.colors.tertiary, fontSize: 18 }]}>Step 3: Retirement and Life Expectancy</Title>
-                    <View style={style.inputContainer}>
+                    <View style={style.customInputContainer}>
                         <Text style={style.label}>Retirement Age:</Text>
                         <TextInput
                             value={formData.retirementAge}
                             onChangeText={(text) => handleChange('retirementAge', text)}
-                            style={style.input}
+                            style={[styles.inputField, style.inputContainer, {flex: 1}]}
                             keyboardType="numeric"
                         />
                     </View>
-                    <View style={style.inputContainer}>
+                    <View style={style.customInputContainer}>
                         <Text style={style.label}>Life Expectancy:</Text>
                         <TextInput
                             value={formData.lifeExpectancy}
                             onChangeText={(text) => handleChange('lifeExpectancy', text)}
-                            style={style.input}
+                            style={[styles.inputField, style.inputContainer, {flex: 1}]}
                             keyboardType="numeric"
                         />
                     </View>
                 </View>
             </Animated.View>
 
-            <View style={style.buttonContainer}>
-                {step > 0 && <Button style={style.backButton} mode="contained" onPress={handleBack} labelStyle={{ color: '#005A75' }}>Back</Button>}
+            <View style={styles.buttonContainer}>
+                {step > 0 && <Button style={styles.backButton} mode="contained" onPress={handleBack} labelStyle={{ color: '#005A75' }}>Back</Button>}
                 {step < 2 ? (
-                    <Button style={style.nextButton} mode="contained" onPress={handleNext}>Next</Button>
+                    <Button style={styles.nextButton} mode="contained" onPress={handleNext}>Next</Button>
                 ) : (
-                    <Button style={style.submitButton} mode="contained" onPress={handleSubmit}>Submit</Button>
+                    <Button style={styles.submitButton} mode="contained" onPress={handleSubmit}>Submit</Button>
                 )}
             </View>
             
@@ -160,24 +176,6 @@ const GetStarted = () => {
 };
 
 const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start', // Align content to the top
-        alignItems: 'center',
-        overflow: 'hidden', // To prevent overflow during animation
-        paddingTop: '10%'
-    },
-    progressBar: {
-        height: 10,
-        width: (width / 1.1),
-        backgroundColor: '#DBDBDB'
-    },
-    innerContainer: {
-        marginTop: 20, // Add some top margin
-        flexDirection: 'row',
-        width: width * 3, // Total width: 3 steps
-        alignItems: 'flex-start'
-    },
     customInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -185,10 +183,8 @@ const style = StyleSheet.create({
         width: '100%',
     },
     inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
         marginBottom: 16,
-        width: '100%',
+        width: '80%',
     },
     inputWithPrefix: {
         flexDirection: 'row',
@@ -202,37 +198,12 @@ const style = StyleSheet.create({
         fontWeight: 'bold'
     },
     label: {
-        flex: 1,
         fontSize: 18,
         color: '#000',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: '50%'
     },
-    input: {
-        flex: 1,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 20,
-        width: '90%', // Ensures buttons are centered within the screen
-    },
-    backButton: {
-        flex: 1, // Takes 1/3 of the container's width
-        marginRight: 5, // Adds some spacing between buttons
-        left: 0,
-        backgroundColor: '#DBDBDB',
-        color: 'red'
-    },
-    nextButton: {
-        flex: 1, // Takes 1/3 of the container's width
-        marginLeft: 5, // Adds some spacing between buttons
-        right: 0,
-        backgroundColor: '#F69E35',
-    },
-    submitButton: {
-        flex: 1, // Takes 1/3 of the container's width
-        marginLeft: 5, // Adds some spacing between buttons
-        backgroundColor: '#F69E35',
-    },
+    
 });
+
 export default GetStarted;
