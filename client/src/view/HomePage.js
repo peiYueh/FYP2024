@@ -3,6 +3,7 @@ import { View, ImageBackground, Text, StyleSheet, Image, TouchableOpacity } from
 import { useTheme } from 'react-native-paper';
 import ExpenseDistributionChart from '../components/expense-distribution-piechart';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import styles from "../styles"; 
 
 const backgroundImage = require('../../assets/background/homepage-background.png');
 const scenarioIcon = require('../../assets/Image/scenario-icon.png');
@@ -21,66 +22,66 @@ const HomePage = () => {
     const { username } = route.params || "User";
 
     return (
-        <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+        <ImageBackground source={backgroundImage} style={style.backgroundImage}>
 
             <View style={styles.container}>
-                <View style={styles.userContainer}>
-                    <Text style={styles.welcomeText}>Welcome {username}!</Text>
+                <View style={style.userContainer}>
+                    <Text style={styles.subHeading}>Welcome {username}!</Text>
                     <TouchableOpacity
-                        style={styles.profileIconContainer}
+                        style={style.profileIconContainer}
                         onPress={() => navigation.navigate('My Account')}
                     >
-                        <Image source={profileIcon} style={styles.profileIcon} />
+                        <Image source={profileIcon} style={style.profileIcon} />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.chartContainer}>
+                <View style={style.chartContainer}>
                     <ExpenseDistributionChart />
                 </View>
                 <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.homepageBtn} onPress={() => navigation.navigate('Financial Scenario Settings')}>
-                        <View style={styles.iconTextContainer}>
+                    <TouchableOpacity style={style.homepageBtn} onPress={() => navigation.navigate('Financial Scenario Settings')}>
+                        <View style={style.iconTextContainer}>
                             <Image source={scenarioIcon} style={styles.icon} />
-                            <Text style={styles.buttonText}>Financial Scenario</Text>
+                            <Text style={[style.buttonText, styles.poppinsText]}>Financial Scenario</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.homepageBtn} onPress={() => navigation.navigate('My Transactions')}>
-                        <View style={styles.iconTextContainer}>
+                    <TouchableOpacity style={style.homepageBtn} onPress={() => navigation.navigate('My Transactions')}>
+                        <View style={style.iconTextContainer}>
                             <Image source={transactionIcon} style={styles.icon} />
-                            <Text style={styles.buttonText}>My Transactions</Text>
+                            <Text style={[style.buttonText, styles.poppinsText]}>My Transactions</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.homepageBtn} onPress={() => navigation.navigate('My Goals')}>
-                        <View style={styles.iconTextContainer}>
+                    <TouchableOpacity style={style.homepageBtn} onPress={() => navigation.navigate('My Goals')}>
+                        <View style={style.iconTextContainer}>
                             <Image source={goalIcon} style={styles.icon} />
-                            <Text style={styles.buttonText}>My Goals</Text>
+                            <Text style={[style.buttonText, styles.poppinsText]}>My Goals</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.homepageBtn} onPress={() => navigation.navigate('My Liabilities')}>
-                        <View style={styles.iconTextContainer}>
+                    <TouchableOpacity style={style.homepageBtn} onPress={() => navigation.navigate('My Liabilities')}>
+                        <View style={style.iconTextContainer}>
                             <Image source={liabilityIcon} style={styles.icon} />
-                            <Text style={styles.buttonText}>My Liabilities</Text>
+                            <Text style={[style.buttonText, styles.poppinsText]}>My Liabilities</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.quickButtonRow}>
-                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('New Transaction Page')}>
-                        <View style={styles.iconTextContainer}>
-                            <Image source={addTransactionIcon} style={styles.quickIcon} />
-                            <Text style={styles.quickButtonText}>Add Transaction</Text>
+                <View style={style.quickButtonRow}>
+                    <TouchableOpacity style={style.quickActionBtn} onPress={() => navigation.navigate('New Transaction Page')}>
+                        <View style={style.iconTextContainer}>
+                            <Image source={addTransactionIcon} style={style.quickIcon} />
+                            <Text style={style.quickButtonText}>Add Transaction</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('New Goal')}>
-                        <View style={styles.iconTextContainer}>
-                            <Image source={addGoalIcon} style={styles.quickIcon} />
-                            <Text style={styles.quickButtonText}>Add Goal</Text>
+                    <TouchableOpacity style={style.quickActionBtn} onPress={() => navigation.navigate('New Goal')}>
+                        <View style={style.iconTextContainer}>
+                            <Image source={addGoalIcon} style={style.quickIcon} />
+                            <Text style={style.quickButtonText}>Add Goal</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate('My Liabilities')}>
-                        <View style={styles.iconTextContainer}>
-                            <Image source={AddLiabilityIcon} style={styles.quickIcon} />
-                            <Text style={styles.quickButtonText}>Add Liability</Text>
+                    <TouchableOpacity style={style.quickActionBtn} onPress={() => navigation.navigate('My Liabilities')}>
+                        <View style={style.iconTextContainer}>
+                            <Image source={AddLiabilityIcon} style={style.quickIcon} />
+                            <Text style={style.quickButtonText}>Add Liability</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -89,18 +90,11 @@ const HomePage = () => {
     );
 };
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'center',
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingVertical: '10%',
-        paddingHorizontal: '2%',
     },
     userContainer: {
         width: '100%',
@@ -110,20 +104,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         zIndex: 1,
     },
-    welcomeText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#005A75',
-    },
     chartContainer: {
-        height: '47%',
+        height: '43%',
         zIndex: 0,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-        marginBottom: 20,
     },
     quickButtonRow: {
         flexDirection: 'row',
@@ -158,13 +141,8 @@ const styles = StyleSheet.create({
     iconTextContainer: {
         alignItems: 'center',
     },
-    icon: {
-        width: 40,
-        height: 40,
-        marginBottom: 5,
-    },
     buttonText: {
-        fontSize: 16,
+        fontSize: 13,
         color: 'white',
     },
     profileIconContainer: {

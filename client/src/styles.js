@@ -5,12 +5,13 @@ const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   // General
   container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        overflow: 'hidden',
-        paddingTop: '10%'
-    },
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    overflow: 'hidden',
+    paddingTop: '10%',
+    paddingHorizontal: 10
+  },
   content: {
     alignItems: "center",
     justifyContent: "center",
@@ -56,9 +57,8 @@ const styles = StyleSheet.create({
     paddingTop: '15%'
   },
   subHeading: {
-    fontFamily: "Montserrat_500Medium",
+    fontFamily: "Montserrat_700Bold",
     fontSize: 20,
-    fontWeight: "bold",
   },
   pageHeading: {
     textShadowColor: "#F69E35",
@@ -67,6 +67,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "left",
     marginVertical: '10%'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
   },
   topLeftButton: {
     position: "absolute",
@@ -107,9 +113,9 @@ const styles = StyleSheet.create({
     height: 50,
     marginBottom: 20,
     backgroundColor: "#87B6C4",
-    borderWidth: 1, 
-    borderColor: "#F4F9FB", 
-    borderRadius: 5, 
+    borderWidth: 1,
+    borderColor: "#F4F9FB",
+    borderRadius: 5,
   },
   oswaldText: {
     fontFamily: "Oswald_400Regular",
@@ -120,8 +126,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   poppinsText: {
-    fontFamily: "Poppins_500Medium",
-    fontSize: 24,
+    fontFamily: "Poppins_400Regular",
   },
   montserratText: {
     fontFamily: "Montserrat_500Medium",
@@ -139,6 +144,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 60, // Adjust this value as needed
     transform: [{ translateY: -10 }],
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    marginBottom: 5,
   },
   dateBtn: {
     width: 140,
@@ -210,7 +220,7 @@ const styles = StyleSheet.create({
   selectedText: {
     fontWeight: "bold",
   },
-  
+
   //Get Started
   getStartedContainer: {
     flex: 1,
@@ -219,16 +229,16 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   progressBar: {
-        height: 10,
-        width: (width / 1.1),
-        backgroundColor: '#DBDBDB'
-    },
+    height: 10,
+    width: (width / 1.1),
+    backgroundColor: '#DBDBDB'
+  },
   innerContainer: {
-        marginTop: 20,
-        flexDirection: 'row',
-        width: width * 3,
-        alignItems: 'flex-start'
-    },
+    marginTop: 20,
+    flexDirection: 'row',
+    width: width * 3,
+    alignItems: 'flex-start'
+  },
   step: {
     marginTop: "10%",
     marginBottom: "10%",
@@ -243,20 +253,20 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   backButton: {
-        flex: 1,
-        marginRight: 5,
-        backgroundColor: '#DBDBDB',
-    },
-    nextButton: {
-        flex: 1,
-        marginLeft: 5,
-        backgroundColor: '#F69E35',
-    },
-    submitButton: {
-        flex: 1,
-        marginLeft: 5,
-        backgroundColor: '#F69E35',
-    },
+    flex: 1,
+    marginRight: 5,
+    backgroundColor: '#DBDBDB',
+  },
+  nextButton: {
+    flex: 1,
+    marginLeft: 5,
+    backgroundColor: '#F69E35',
+  },
+  submitButton: {
+    flex: 1,
+    marginLeft: 5,
+    backgroundColor: '#F69E35',
+  },
 
   //Transaction
   transactionComponent: {
@@ -589,27 +599,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addButton: {
-        backgroundColor: '#87B6C4',
-        paddingHorizontal: 30,
-        paddingVertical: 10,
-        borderRadius: 5,
-        alignItems: 'center',
-        marginVertical: 10,
-        marginHorizontal: 20
-    },
-    addButtonText: {
-        color: '#fff',
-        fontSize: 16
-    },
-    menuContent: {
-        width: "100%", // Adjust the width here
-    },
-    menuItem: {
-        width: '100%',
-    },
-    dropDownContainer: {
-        padding: 16,
-    },
+    backgroundColor: '#87B6C4',
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+    marginHorizontal: 20
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 16
+  },
+  menuContent: {
+    width: "100%", // Adjust the width here
+  },
+  menuItem: {
+    width: '100%',
+  },
+  dropDownContainer: {
+    padding: 16,
+  },
 });
 
 export default styles;
