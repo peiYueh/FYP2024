@@ -9,15 +9,33 @@ import LottieView from 'lottie-react-native';
 const ExpenseDistributionChart = () => {
     const [focusedIndex, setFocusedIndex] = useState(0);
     const [data, setData] = useState(null);
+    const [initialIncome, setInitialIncome] = useState(null);
+    const [spendingStructure, setSpendingStructure] = useState(true)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`);
-                console.log("DATA: " + response.data)
-                setData(response.data);
+                const hasIncome = response.data.passive_income.length > 0 || response.data.active_income.length > 0;
+                const hasExpenses = response.data.needs_expense.length > 0 || response.data.wants_expense.length > 0 || response.data.savings.length > 0;
+                if (hasIncome && hasExpenses) {
+                    setData(response.data);
+                } else {
+                    fetchInitialIncome();
+                } setData(response.data);
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);
+                fetchInitialIncome();
+            }
+        };
+
+        const fetchInitialIncome = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/initialIncome`);
+                setInitialIncome(response.data);
+                setSpendingStructure(false)
+            } catch (error) {
+                console.error('Error fetching initial income:', error);
             }
         };
 
@@ -37,16 +55,20 @@ const ExpenseDistributionChart = () => {
             { value: (totalSavings / totalAmount) * 100, amount: totalSavings, label: 'Savings', color: '#38B6FF', gradientCenterColor: '#FF7F97', index: 2, focused: focusedIndex === 2 },
         ];
 
-        const idealSpendingData = [
-            { value: 50, amount: totalIncome / 100 * 50, label: 'Needs', color: '#005A5A', gradientCenterColor: '#005A5A', index: 0, focused: focusedIndex === 0 },
-            { value: 30, amount: totalIncome / 100 * 30, label: 'Wants', color: '#2E8B57', gradientCenterColor: '#2E8B57', index: 1, focused: focusedIndex === 1 },
-            { value: 20, amount: totalIncome / 100 * 20, label: 'Savings', color: '#3CB371', gradientCenterColor: '#3CB371', index: 2, focused: focusedIndex === 2 },
-        ];
-
-        return { spendingData, idealSpendingData, totalIncome };
+        return { spendingData, totalIncome };
     };
 
-    if (!data) {
+    const calculateIdealSpendingData = (income) => {
+        const idealSpendingData = [
+            { value: 50, amount: income * 0.50, label: 'Needs', color: '#005A5A', gradientCenterColor: '#005A5A', index: 0, focused: focusedIndex === 0 },
+            { value: 30, amount: income * 0.30, label: 'Wants', color: '#2E8B57', gradientCenterColor: '#2E8B57', index: 1, focused: focusedIndex === 1 },
+            { value: 20, amount: income * 0.20, label: 'Savings', color: '#3CB371', gradientCenterColor: '#3CB371', index: 2, focused: focusedIndex === 2 },
+        ];
+
+        return { idealSpendingData, totalIncome: income };
+    };
+
+    if (!data && !initialIncome) {
         return (
             <View style={styles.loadingContainer}>
                 <LottieView
@@ -56,10 +78,11 @@ const ExpenseDistributionChart = () => {
                     style={styles.lottieAnimation}
                 />
             </View>
-        )
+        );
     }
 
-    const { spendingData, idealSpendingData, totalIncome } = calculateTotals(data);
+    const { spendingData, totalIncome } = data ? calculateTotals(data) : {};
+    const { idealSpendingData } = initialIncome? calculateIdealSpendingData(initialIncome) : calculateIdealSpendingData(totalIncome);
 
     const renderDot = (color) => {
         return (
@@ -163,7 +186,7 @@ const ExpenseDistributionChart = () => {
         </View>
     );
 
-    const renderIdealStucture = () => (
+    const renderIdealStructure = () => (
         <View style={styles.card}>
             <Text style={{ color: '#005A75', fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
                 Ideal Spending Structure
@@ -212,15 +235,15 @@ const ExpenseDistributionChart = () => {
                     alignItems: 'center',
                     marginVertical: 10,
                 }}>
-                <Text style={styles.totalIncome}>Monthly Income: RM {totalIncome}</Text>
+                <Text style={styles.totalIncome}>Monthly Income: RM {totalIncome? totalIncome:initialIncome}</Text>
             </View>
         </View>
     );
 
     return (
         <Swiper loop={false} height={200}>
-            {renderSpendingStructure()}
-            {renderIdealStucture()}
+            {spendingStructure && renderSpendingStructure()}
+            {renderIdealStructure()}
         </Swiper>
     );
 };

@@ -226,5 +226,5 @@ def categorizeTransactions(db):
                     categorized_data["wants_expense"].append(transaction)
             else:
                 categorized_data["savings"].append(transaction)
-    
+    print(categorized_data)
     return jsonify(categorized_data), 200

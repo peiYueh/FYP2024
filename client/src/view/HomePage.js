@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ImageBackground, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, ImageBackground, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import ExpenseDistributionChart from '../components/expense-distribution-piechart';
 import { useNavigation, useRoute } from '@react-navigation/native';

@@ -184,6 +184,11 @@ def categorize_transactions():
     db = get_db()  # Replace with your method of obtaining the database connection
     return categorizeTransactions(db)    
 
+@app.route('/initialIncome', methods=['GET'])
+def initial_income():
+    db = get_db()  # Replace with your method of obtaining the database connection
+    return getInitialIncome(db)    
+
 @app.route('/predictSalary', methods=['GET'])
 def predict_salary_endpoint():
     retirement_age = int(request.args.get('retirementAge')) + 1

@@ -92,7 +92,7 @@ def editAccount(db):
 
 
 def getInitialExpense(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
@@ -103,7 +103,7 @@ def getInitialExpense(db):
     return 0
 
 def getInitialIncome(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
