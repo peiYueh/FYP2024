@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS
 from pymongo import MongoClient
 
@@ -7,7 +7,6 @@ def create_app():
     CORS(app)
     
     # Load configurations
-    print("LOADED!")
     app.config.from_object('app.config.Config')
 
     # Initialize MongoDB
@@ -17,5 +16,6 @@ def create_app():
     # Register blueprints
     from app.routes.user_routes import user_bp
     app.register_blueprint(user_bp, url_prefix='/api')
-    
+    print("SERVER UP")
+
     return app

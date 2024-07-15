@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Modal, TouchableOpacity, Alert, ActivityIndicator, Image, FlatList  } from 'react-native';
+import { View, ScrollView, Modal, TouchableOpacity, Alert, ActivityIndicator, Image, FlatList } from 'react-native';
 import { useTheme, Text, IconButton } from 'react-native-paper';
 import styles from '../styles';
 import { Picker } from '@react-native-picker/picker';
@@ -10,6 +10,8 @@ import { API_BASE_URL } from '../../config';
 import axios from 'axios';
 import LoadingIndicator from '../components/loading-component';
 import { showMessage } from "react-native-flash-message";
+import LottieView from 'lottie-react-native';
+import insufficientDataImage from '../../assets/background/insufficient-transaction.png';
 
 const MyTransactionPage = () => {
     const theme = useTheme();
@@ -27,6 +29,7 @@ const MyTransactionPage = () => {
     const [dataFetched, setDataFetched] = useState(false);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
+    const [chartError, setChartError] = useState(false);
 
     const parseDate = (dateStr) => {
         const [year, month, day] = dateStr.split('-');
@@ -36,6 +39,7 @@ const MyTransactionPage = () => {
     const fetchTransactions = async () => {
         try {
             const response = await axios.get(API_BASE_URL + '/transactions');
+            // console.log(response)
             // Parse and sort transactions by date
             const sortedTransactions = response.data.map(item => ({
                 ...item,
@@ -43,7 +47,7 @@ const MyTransactionPage = () => {
             })).sort((a, b) => parseDate(b.transaction_date) - parseDate(a.transaction_date)); // Sort in descending order
 
             setTransactionData(sortedTransactions);
-            console.log(transactionData)
+            console.log("Transaction Data: " + sortedTransactions)
             setDataFetched(true);
         } catch (error) {
             console.error('Error fetching transactions:', error);
@@ -53,11 +57,29 @@ const MyTransactionPage = () => {
     };
 
     useEffect(() => {
-        if (dataFetched && selectedYear) {
-            const newIncomeData = getTransactionByYear(mapDataToLineFormat(1), selectedYear);
-            const newExpensesData = getTransactionByYear(mapDataToLineFormat(0), selectedYear);
-            setIncomeData(newIncomeData);
-            setExpensesData(newExpensesData);
+        try {
+            if (dataFetched && selectedYear) {
+                const newIncomeData = getTransactionByYear(mapDataToLineFormat(1), selectedYear);
+                const newExpensesData = getTransactionByYear(mapDataToLineFormat(0), selectedYear);
+
+                setIncomeData(newIncomeData);
+                setExpensesData(newExpensesData);
+
+                // Check if the sum of values in newIncomeData is 0
+                const incomeSum = newIncomeData.reduce((total, item) => total + item.value, 0);
+
+                // Check if the sum of values in newExpensesData is 0
+                const expensesSum = newExpensesData.reduce((total, item) => total + item.value, 0);
+
+                if (incomeSum === 0 || expensesSum === 0) {
+                    setChartError(true);
+                } else {
+                    setChartError(false);
+                }
+            }
+        } catch (error) {
+            console.error('Error processing chart data:', error);
+            setChartError(true);
         }
     }, [dataFetched, selectedYear]);  // Run the effect when data is fetched or selectedYear changes
 
@@ -67,17 +89,16 @@ const MyTransactionPage = () => {
             // Fetch transactions when the page gains focus
             fetchTransactions();
         });
-
-        // Clean up subscription on unmount
         return unsubscribe;
     }, [navigation]);
+
     const mapDataToLineFormat = (type) => {
         const monthlyData = {};
-    
+
         transactionData.forEach(item => {
             const [year, month] = item.transaction_date.split('-');
             const key = `${year}-${parseInt(month, 10)}`;
-    
+
             if (!monthlyData[key]) {
                 monthlyData[key] = { 0: 0, 1: 0, 2: 0 };
             }
@@ -85,18 +106,19 @@ const MyTransactionPage = () => {
                 monthlyData[key][type] += item.transaction_amount;
             }
         });
-    
+
         const shortMonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        return shortMonthNames.map((month, index) => {
+        let transactionByMonth = shortMonthNames.map((month, index) => {
             const year = selectedYear;
             const key = `${year}-${index + 1}`;
-    
             return {
                 value: monthlyData[key] ? monthlyData[key][type] : 0,
                 label: shortMonthNames[index],
                 year
             };
         });
+
+        return transactionByMonth;
     };
 
     const getMonthName = (month) => {
@@ -225,7 +247,7 @@ const MyTransactionPage = () => {
     const filteredTransactionData = transactionData.filter(item => {
         const [year, month] = item.transaction_date.split('-');
         const monthStr = getMonthName(month);
-    
+
         if (filterType && filterMonth && filterYear) {
             return item.transaction_type === (filterType === 'income' ? 1 : (filterType === 'savings' ? 2 : 0)) && monthStr === filterMonth && year === filterYear;
         } else if (filterType && filterMonth) {
@@ -252,15 +274,15 @@ const MyTransactionPage = () => {
             const [year, month, day] = item.transaction_date.split('-');
             const monthStr = (parseInt(month, 10)).toString();
             const transaction_amount = Math.abs(item.transaction_amount);
-        
+
             if (!yearlyData[year]) {
                 yearlyData[year] = {};
             }
-        
+
             if (!yearlyData[year][month]) {
                 yearlyData[year][month] = { income: 0, expense: 0 };
             }
-        
+
             if (item.transaction_type == 1) {
                 yearlyData[year][month].income += transaction_amount;
             } else {
@@ -325,18 +347,18 @@ const MyTransactionPage = () => {
 
     const renderTransactionItems = () => {
         let transactionGroups = {};
-    
+
         // Group transactions by month-year
         filteredTransactionData.forEach(item => {
             const [year, month] = item.transaction_date.split('-');
             const transactionMonthYear = `${getMonthName(month)} ${year}`;
-            
+
             if (!transactionGroups[transactionMonthYear]) {
                 transactionGroups[transactionMonthYear] = [];
             }
             transactionGroups[transactionMonthYear].push(item);
         });
-    
+
         // Render transaction groups
         return Object.entries(transactionGroups).map(([monthYear, transactions], index) => (
             <TransactionGroup
@@ -380,7 +402,12 @@ const MyTransactionPage = () => {
 
     const renderLoadingIndicator = () => (
         <View style={styles.loadingContainer}>
-            <ActivityIndicator size={100} color={theme.colors.primary} />
+            <LottieView
+                source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                autoPlay
+                loop
+                style={styles.lottieAnimation}
+            />
         </View>
     );
 
@@ -414,7 +441,7 @@ const MyTransactionPage = () => {
                                     ))}
                                 </Picker>
                             </View>
-                            {dataFetched && (
+                            {!chartError && dataFetched && (
                                 <TransactionLinechart
                                     style={[styles.chart]}
                                     incomeData={incomeData}
@@ -424,6 +451,15 @@ const MyTransactionPage = () => {
                                     stepValue={stepValue}
                                     theme={theme}
                                 />
+                            )}
+                            {chartError && (
+                                <View style={styles.errorContainer}>
+                                    <Image
+                                        source={insufficientDataImage}
+                                        style={styles.errorImage}
+                                        resizeMode="contain"
+                                    />
+                                </View>
                             )}
                         </View>
                         <TouchableOpacity style={styles.filterButton} onPress={() => setShowFilterModal(true)}>
@@ -496,7 +532,7 @@ const MyTransactionPage = () => {
                             </View>
                         </Modal>
                         {renderTransactionPopup()}
-                        </ScrollView>
+                    </ScrollView>
                 )}
 
             </>

@@ -272,6 +272,7 @@ const styles = StyleSheet.create({
   transactionComponent: {
     padding: 15,
     alignItems: "center",
+    width: '100%'
   },
   transactionDetailInput: {
     backgroundColor: "transparent",
@@ -279,6 +280,7 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 55,
     fontSize: 20,
+    width: 320
   },
   chart: {
     margin: 10,
@@ -619,6 +621,15 @@ const styles = StyleSheet.create({
   },
   dropDownContainer: {
     padding: 16,
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  errorImage: {
+    width: 270,
+    height: 270,
   },
 });
 

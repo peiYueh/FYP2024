@@ -67,6 +67,14 @@ const NewTransactionPage = () => {
             });
             return false;
         }
+        if (!transactionCategory && transactionType === 0) {
+            showMessage({
+                message: "Invalid Date",
+                description: "Please select a category",
+                type: "danger",
+            });
+            return false;
+        }
         if (transactionType === 2 && (!savingInterestRate || parseFloat(savingInterestRate) <= 0)) {
             showMessage({
                 message: "Invalid Interest Rate",
@@ -100,19 +108,12 @@ const NewTransactionPage = () => {
             const response = await axios.post(API_BASE_URL + '/newTransaction', {
                 transactionData
             });
-            console.log('Sign up successful!', response.data);
             alert('New Transaction Added!');
             navigation.navigate('My Transactions')
         } catch (error) {
-            console.error('Error Adding New Transaction', error);
             alert('Please try again.');
         } finally {
             setLoading(false); // Set loading to false regardless of login success or failure
-            showMessage({
-                message: "Transaction Created!",
-                description: "Your transaction has been added",
-                type: "success",
-            });
         }
     };
 

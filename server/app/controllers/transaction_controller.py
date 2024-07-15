@@ -8,7 +8,6 @@ from dateutil.relativedelta import relativedelta
 def newTransaction(db):
     # userID = "665094c0c1a89d9d19d13606"
     userID = session.get('user_id')
-
     data = request.get_json().get('transactionData')
     transactionType = data.get('transaction_type')
     amount = data.get('transaction_amount')
@@ -100,8 +99,8 @@ def editTransaction(db):
 
 def getTransactions(db):
     user_id = session.get('user_id')
-    print(user_id)
     # user_id = "665094c0c1a89d9d19d13606"
+    print(user_id)
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     transaction_DAO = Transaction(db)
@@ -111,7 +110,7 @@ def getTransactions(db):
     for transaction in transactions:
         if '_id' in transaction:
             transaction['_id'] = str(transaction['_id'])
-
+    print(transactions)
     return jsonify(transactions)
 
 def getMonthlyExpense(db):

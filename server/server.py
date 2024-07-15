@@ -12,7 +12,7 @@ from app import create_app
 
 app = create_app()
 CORS(app)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = 'secretkey123'
 
 # members API route
 @app.route("/members")
@@ -39,31 +39,29 @@ def update_account():
 
 @app.route('/login', methods=['POST'])
 def login_route():
-    db = get_db()  # Get the database connection
-    data = request.json  # Access JSON data from request body
+    print("Login Action Called")
+    db = get_db()  # Get the database hi
     return login(db)
 
 @app.route('/getStarted', methods=['POST'])
 def getStarted_route():
-    db = get_db()  # Get the database connection
+    db = get_db()  # Get the database hi
     return getStarted(db)
 
 @app.route('/newTransaction', methods=['POST'])
 def create_transaction():
-    data = request.json
     db = get_db()
     return newTransaction(db)
 
 @app.route('/editTransaction', methods=['POST'])
 def update_transaction():
     print("EDITING")
-    data = request.json
     db = get_db()
     return editTransaction(db)
 
 @app.route('/transactions', methods=['GET'])
 def get_transactions():
-    print("getting transaction")
+    print("Login Action Called")
     db = get_db()
     return getTransactions(db)
 
@@ -95,14 +93,12 @@ def get_basic_information():
 
 @app.route('/updatePayment', methods=['POST'])
 def new_payment_update():
-    data = request.json
     db = get_db()
     return newPaymentUpdate(db)
 
 @app.route('/editLiability', methods=['POST'])
 def edit_liability():
     print("EDITING")
-    data = request.json
     db = get_db()
     return editLiability(db)
 
@@ -145,24 +141,8 @@ def get_goal(goal_id):
 @app.route('/editGoal', methods=['POST'])
 def edit_goal():
     print("EDITING")
-    data = request.json
     db = get_db()
     return editGoal(db)
-
-# @app.route('/goal/<goal_id>', methods=['PUT'])
-# def update_goal(goal_id):
-#     try:
-#         updated_goal = request.json['updatedGoal']
-#         result = goals_collection.update_one(
-#             {"_id": ObjectId(goal_id)},
-#             {"$set": updated_goal}
-#         )
-#         if result.matched_count:
-#             return jsonify({"message": "Goal updated successfully"}), 200
-#         else:
-#             return jsonify({"error": "Goal not found"}), 404
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
 
 @app.route('/goal/<goal_id>', methods=['DELETE'])
 def delete_goal(goal_id):
@@ -181,30 +161,25 @@ def classify_category():
 
 @app.route('/categorizeTransaction', methods=['GET'])
 def categorize_transactions():
-    db = get_db()  # Replace with your method of obtaining the database connection
+    db = get_db()  # Replace with your method of obtaining the database hi
     return categorizeTransactions(db)    
 
 @app.route('/initialIncome', methods=['GET'])
 def initial_income():
-    db = get_db()  # Replace with your method of obtaining the database connection
+    db = get_db()  # Replace with your method of obtaining the database hi
     return getInitialIncome(db)    
 
 @app.route('/predictSalary', methods=['GET'])
 def predict_salary_endpoint():
     retirement_age = int(request.args.get('retirementAge')) + 1
     current_salary = float(request.args.get('activeIncome'))
-    if not current_salary:
-        # HAVENT TEST
-        current_salary = getInitialIncome()
-    
+
     # get current age from user data
     db = get_db()
     current_age = getUserAge(db)
-    # print("currentagee"+current_age)
     years_to_predict = (retirement_age - current_age)
 
     result = predictSalary(current_salary * 12, years_to_predict)
-    # print(result)
     if 'error' in result:
         return jsonify(result), 500
     return jsonify({'future_salaries': result})
