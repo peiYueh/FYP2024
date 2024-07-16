@@ -12,9 +12,10 @@ def newLiability(db):
     interest_rate = data.get('interestRate')
     term = data.get('term')
     monthly_payment = data.get('monthlyPayment')
-    remaining_amount = data.get('remainingAmount')
+    remaining_amount = data.get('remaining_amount')
     lender_info = data.get('lenderInfo')
     purpose = data.get('purpose')
+    overall_amount = data.get('overall_amount')
     userID = session.get('user_id')
 
     liability = {
@@ -26,7 +27,8 @@ def newLiability(db):
         'monthly_payment': monthly_payment,
         'remaining_amount': remaining_amount,
         'lender_info': lender_info,
-        'purpose': purpose
+        'purpose': purpose,
+        'overall_amount': overall_amount
     }
 
     liability_DAO = Liability(db)

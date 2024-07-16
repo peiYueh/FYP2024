@@ -20,15 +20,16 @@ const MyLiabilityPage = () => {
 
     const fetchLiabilities = async () => {
         try {
-            console.log("Liability Fetching")
             const response = await axios.get(API_BASE_URL + '/liabilities');
             // Parse and sort transactions by date
+            console.log("Response" + response)
             const fetchedItems = response.data.map((item, index) => ({
                 key: index + 1,
                 name: item.liability_name,
                 amount: item.liability_amount,
                 details: item,
-                remaining_amount: item.remaining_amount
+                remaining_amount: item.remaining_amount,
+                overall_amount: item.overall_amount
             })).sort((a, b) => b.remaining_amount - a.remaining_amount);
             setItems(fetchedItems);
         } catch (error) {
@@ -43,8 +44,6 @@ const MyLiabilityPage = () => {
             // Fetch transactions when the page gains focus
             fetchLiabilities();
         });
-
-        // Clean up subscription on unmount
         return unsubscribe;
     }, [navigation]);
 
@@ -72,8 +71,6 @@ const MyLiabilityPage = () => {
     };
 
     const handleRowPress = (item) => {
-        // Navigate to DetailedView and pass the selected liability item
-        // console.log(item)
         navigation.navigate('Liability Detail', { liability: item.details });
     };
 
@@ -84,14 +81,13 @@ const MyLiabilityPage = () => {
     // Calculate the number of empty rows needed to fill the table
     const emptyRows = Array.from({ length: itemsPerPage - displayedItems.length });
     const calculateTotalLiability = () => {
-        console.log(items)
         return items.reduce((total, item) => total + item.remaining_amount, 0);
     };
 
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.background }]}>
             <View style={styles.totalLiabilityContainer}>
-                <Text style={styles.subHeading}>Total Liabilities</Text>
+                <Text style={[styles.subHeading, {alignItems:'center'}]}>Total Liabilities</Text>
                 <Text style={[styles.heading, {paddingTop: 0}]}>RM {calculateTotalLiability().toLocaleString()}</Text>
             </View>
 

@@ -12,7 +12,7 @@ from app import create_app
 
 app = create_app()
 CORS(app)
-app.secret_key = 'secretkey123'
+app.secret_key = '1111'
 
 # members API route
 @app.route("/members")

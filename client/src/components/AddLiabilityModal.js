@@ -17,6 +17,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
   const [purpose, setPurpose] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [overallAmount, setOverallAmount] = useState('')
 
   useEffect(() => {
     calculateMonthlyPayment();
@@ -81,7 +82,8 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       monthlyPayment: parseFloat(monthlyPayment),
       lenderInfo: lenderInfo,
       purpose: purpose,
-      remaining_amount: parseFloat(totalAmount)
+      remaining_amount: parseFloat(totalAmount),
+      overall_amount: parseFloat(overallAmount)
     };
 
     setLoading(true);
@@ -113,6 +115,9 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
         (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
       setMonthlyPayment(monthlyPayment.toFixed(2));
     }
+
+    const overallAmount = monthlyPayment * numberOfPayments;
+    setOverallAmount(overallAmount.toFixed(2));
   };
 
   return (

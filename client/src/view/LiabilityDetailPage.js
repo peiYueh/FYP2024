@@ -18,10 +18,11 @@ const DetailedView = ({ route, navigation }) => {
     const [updating, setUpdating] = useState(false); // State to track update process
     const today = new Date().toISOString().split('T')[0];
     const [saving, setSaving] = useState(false);
+    
 
     // State to manage liability data
     const [liabilityData, setLiabilityData] = useState({ ...liability });
-
+    console.log(liabilityData)
     // State to manage edited data during edit mode
     const [editedData, setEditedData] = useState({});
 
@@ -40,7 +41,7 @@ const DetailedView = ({ route, navigation }) => {
         }
 
         if (!term || isNaN(parseInt(term, 10))) {
-            Alert.alert('Invalid Input', 'Please enter a valid term in months.');
+            Alert.alert('Invalid Input', 'Please enter a valid term in year.');
             return false;
         }
 
@@ -142,14 +143,6 @@ const DetailedView = ({ route, navigation }) => {
         setPaymentDates(updatedPayments);
         try {
             const response = await axios.delete(API_BASE_URL + `/deletePaymentUpdate/${payment_id}`);
-            // if (response.status === 200) {
-            //     // Update the frontend state to remove the deleted payment
-            //     const updatedPayments = paymentDates.filter((_, i) => i !== index);
-            //     setPaymentDates(updatedPayments);
-            //     Alert.alert('Success', 'Payment date deleted successfully');
-            // } else {
-            //     Alert.alert('Error', 'Failed to delete payment date');
-            // }
         } catch (error) {
             console.error('Error deleting payment date:', error);
             Alert.alert('Error', 'Failed to delete payment date');
@@ -159,6 +152,7 @@ const DetailedView = ({ route, navigation }) => {
     // Function to handle updating liability payment
     const handleUpdateLiability = async () => {
         if (!updateAmount || !selectedDate) {
+            alert("Please enter a valid amount")
             return; // Add validation if necessary
         }
         setUpdating(true);
@@ -265,6 +259,8 @@ const DetailedView = ({ route, navigation }) => {
                 editedData.term
             );
             setEditedData((prevData) => ({ ...prevData, monthly_payment: monthlyPayment }));
+            const overallAmount = monthlyPayment * editedData.term * 12
+            setEditedData((prevData) => ({ ...prevData, overall_amount: overallAmount }));
         }
     }, [editedData.liability_amount, editedData.interest_rate, editedData.term]);
 
@@ -384,6 +380,21 @@ const DetailedView = ({ route, navigation }) => {
                                 />
                             ) : (
                                 <Text style={styles.value}>${liabilityData.monthly_payment.toFixed(2)}</Text>
+                            )}
+                        </View>
+                        <View style={styles.row}>
+                            <Icon name="payment" size={20} color="grey" />
+                            <Text style={styles.label}>Overall Amount:</Text>
+                            {editMode ? (
+                                <TextInput
+                                    style={styles.value}
+                                    value={editedData.overall_amount ? editedData.overall_amount.toFixed(2).toString() : ''}
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => handleChange('overall_amount', parseFloat(text))}
+                                    disabled
+                                />
+                            ) : (
+                                <Text style={styles.value}>${parseFloat(liabilityData.overall_amount).toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
