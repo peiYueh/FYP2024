@@ -62,7 +62,7 @@ const LoginPage = () => {
 
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.primary,paddingHorizontal: 0 }]}>
       <Text
         style={[
           styles.pageHeading,

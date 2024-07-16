@@ -2,6 +2,8 @@ import React from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { LogBox } from 'react-native';
+import { useEffect } from 'react';
 
 import LandingPage from "./src/view/LandingPage"; // Import your LandingPage component
 import LoginPage from "./src/view/LoginPage";
@@ -177,18 +179,27 @@ const App = () => {
     Roboto,
     OpenSans,
   });
+  // Ignore all log notifications:
+  LogBox.ignoreAllLogs();
 
+  // Ignore specific log notifications:
+  LogBox.ignoreLogs(['Warning: ...']);
+
+  useEffect(() => {
+    console.warn = () => { }; // Suppress console warnings
+  }, []);
+  
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home Page">
+        <Stack.Navigator initialRouteName="My Liabilities">
           <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="Sign Up" component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
           <Stack.Screen name="New Transaction Page" component={NewTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: false }} />
           <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true }} />
-          <Stack.Screen name="EditTransactionPage" component={EditTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="Edit Transaction" component={EditTransactionPage} options={{ headerShown: true }} />
           <Stack.Screen name="New Goal" component={NewGoalPage} options={{ headerShown: true }} />
           <Stack.Screen name="View Goal" component={GoalDetailPage} options={{ headerShown: true }} />
           <Stack.Screen name="My Goals" component={MyGoalPage} options={{ headerShown: true }} />

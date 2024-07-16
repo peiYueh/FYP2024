@@ -137,7 +137,7 @@ const MyTransactionPage = () => {
     };
 
     const handleEdit = () => {
-        navigation.navigate('EditTransactionPage', { transactionData: selectedTransaction });
+        navigation.navigate('Edit Transaction', { transactionData: selectedTransaction });
     };
 
     const handleDelete = () => {

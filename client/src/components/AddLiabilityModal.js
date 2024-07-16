@@ -81,7 +81,7 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
       monthlyPayment: parseFloat(monthlyPayment),
       lenderInfo: lenderInfo,
       purpose: purpose,
-      remainingAmount: parseFloat(totalAmount)
+      remaining_amount: parseFloat(totalAmount)
     };
 
     setLoading(true);

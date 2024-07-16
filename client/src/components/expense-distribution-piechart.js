@@ -10,7 +10,7 @@ const ExpenseDistributionChart = () => {
     const [focusedIndex, setFocusedIndex] = useState(0);
     const [data, setData] = useState(null);
     const [initialIncome, setInitialIncome] = useState(null);
-    const [spendingStructure, setSpendingStructure] = useState(true)
+    const [spendingStructure, setSpendingStructure] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,6 +20,7 @@ const ExpenseDistributionChart = () => {
                 const hasExpenses = response.data.needs_expense.length > 0 || response.data.wants_expense.length > 0 || response.data.savings.length > 0;
                 if (hasIncome && hasExpenses) {
                     setData(response.data);
+                    setSpendingStructure(true)
                 } else {
                     fetchInitialIncome();
                 } setData(response.data);

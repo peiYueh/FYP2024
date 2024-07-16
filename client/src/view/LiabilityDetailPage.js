@@ -95,8 +95,8 @@ const DetailedView = ({ route, navigation }) => {
     const handleAmountChange = (inputAmount) => {
         const paymentAmount = parseFloat(inputAmount);
         if (paymentAmount > remainingAmount) {
-            setUpdateAmount(remainingAmount.toFixed(2));
-            Alert.alert('Amount Adjusted', `The payment amount has been adjusted to the remaining liability amount of ${remainingAmount.toFixed(2)}`);
+            setUpdateAmount(remainingAmount);
+            // Alert.alert('Amount Adjusted', `The payment amount has been adjusted to the remaining liability amount of ${remainingAmount.toFixed(2)}`);
         } else {
             setUpdateAmount(inputAmount);
         }
@@ -259,7 +259,6 @@ const DetailedView = ({ route, navigation }) => {
 
     useEffect(() => {
         if (editedData.liability_amount && editedData.interest_rate && editedData.term) {
-            console.log("Calculating")
             const monthlyPayment = calculateMonthlyPayment(
                 editedData.liability_amount,
                 editedData.interest_rate,

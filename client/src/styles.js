@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     left: 0,
+    right: 0,
     width: "100%",
     height: 350,
     zIndex: -1, // Set a lower zIndex to keep it behind the content
@@ -329,13 +330,16 @@ const styles = StyleSheet.create({
   },
   transactionHeader: {
     // width: '100%',
-    backgroundColor: "#D5E5EB",
+    backgroundColor: "#F69E35",
     paddingHorizontal: 10,
     marginHorizontal: 10,
     marginTop: 15,
+    elevation: 5,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15
   },
   transactionContent: {
-    backgroundColor: "#FBFCFE",
+    backgroundColor: "#FBFCFE", //HERE
     marginHorizontal: 10,
     padding: 10,
   },

@@ -20,6 +20,7 @@ const MyLiabilityPage = () => {
 
     const fetchLiabilities = async () => {
         try {
+            console.log("Liability Fetching")
             const response = await axios.get(API_BASE_URL + '/liabilities');
             // Parse and sort transactions by date
             const fetchedItems = response.data.map((item, index) => ({
@@ -83,7 +84,7 @@ const MyLiabilityPage = () => {
     // Calculate the number of empty rows needed to fill the table
     const emptyRows = Array.from({ length: itemsPerPage - displayedItems.length });
     const calculateTotalLiability = () => {
-        console.log(items.reduce((total, item) => total + item.remaining_amount, 0))
+        console.log(items)
         return items.reduce((total, item) => total + item.remaining_amount, 0);
     };
 
@@ -91,7 +92,7 @@ const MyLiabilityPage = () => {
         <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.background }]}>
             <View style={styles.totalLiabilityContainer}>
                 <Text style={styles.subHeading}>Total Liabilities</Text>
-                <Text style={styles.heading}>RM {calculateTotalLiability().toLocaleString()}</Text>
+                <Text style={[styles.heading, {paddingTop: 0}]}>RM {calculateTotalLiability().toLocaleString()}</Text>
             </View>
 
             <View style={{ position: 'relative', width: '90%', paddingTop: 10 }}>
