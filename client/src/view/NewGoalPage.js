@@ -111,7 +111,6 @@ const NewGoalPage = () => {
         };
 
         // Validate goalData based on goalType
-        console.log("edited : " + editedData);
         if (goalType === 0) { // Buy Property
             const { propertyPrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
             if (isNaN(propertyPrice) || propertyPrice <= 0) {

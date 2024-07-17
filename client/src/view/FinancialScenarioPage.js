@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useCallback  } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Modal, Button } from 'react-native';
 import { BarChart } from "react-native-gifted-charts";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import LottieView from 'lottie-react-native';
 
 const FinancialScenarioPage = ({ route }) => {
+    const [dataLoaded, setDataLoaded] = useState(false);
     const {
         activeIncome,
         passiveIncome,
@@ -80,7 +82,7 @@ const FinancialScenarioPage = ({ route }) => {
             passive_income: passiveIncome,
             expenses: predictedExpense[index] || 0,
         }));
-        
+
 
         let remainingSavings = parseInt(initialSavings);
         const tempStackData = combinedData.map((yearData, index) => {
@@ -120,8 +122,7 @@ const FinancialScenarioPage = ({ route }) => {
                 topLabelComponent: () => getIconsForAge(currentAge + index) // Add top label component
             };
         });
-        console.log(tempStackData)
-
+        setDataLoaded(true)
         return tempStackData;
     };
 
@@ -237,92 +238,106 @@ const FinancialScenarioPage = ({ route }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={[styles.rotatedContainer, { width: height, height: width }]}>
-                <View style={styles.chartContainer}>
-                    <Text style={styles.title}>My Financial Scenario</Text>
-                    <BarChart
-                        width={height / 100 * 55}
-                        noOfSections={5}
-                        stackData={stackData}
-                        barWidth={19}
-                        spacing={3}
-                        labelStyle={{ fontSize: 10 }}
-                        onPress={(barItem) => handleBarClick(barItem)}
-                        yAxisExtraHeight={30}
-                        xAxisThickness={0}
-                        yAxisThickness={0}
-                        xAxisLabelTextStyle={{fontSize: 10}}
-                        yAxisTextStyle={{fontSize: 10}}
-                        yAxisTextNumberOfLines={2}
-                        yAxisLabelWidth={60}
-                        yAxisLabelPrefix={"RM"}
-                    />
-                    <Legend />
-                </View>
-                <View>
-                    <View style={[styles.goalContainer, styles.sideContainer]}>
-                        <Text style={styles.sideTitle}>My Goals</Text>
-                        <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
-                            {goals.map(goal => (
-                                <TouchableOpacity
-                                    key={goal._id}
-                                    onPress={() => toggleGoalCompletion(goal._id)}
-                                    style={styles.goalItem}
-                                >
-                                    <Icon name={goal.apply ? 'check-square' : 'square-o'} size={25} color="black" />
-                                    <Text style={[styles.goalText, { textDecorationLine: goal.apply ? 'line-through' : 'none' }]}>
-                                        {goal.goal_description}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
+        <>
+            {dataLoaded ? (
+                <View style={styles.container}>
+                    <View style={[styles.rotatedContainer, { width: height, height: width }]}>
+                        <View style={styles.chartContainer}>
+                            <Text style={styles.title}>My Financial Scenario</Text>
+                            <BarChart
+                                width={height / 100 * 55}
+                                noOfSections={5}
+                                stackData={stackData}
+                                barWidth={19}
+                                spacing={3}
+                                labelStyle={{ fontSize: 10 }}
+                                onPress={(barItem) => handleBarClick(barItem)}
+                                yAxisExtraHeight={30}
+                                xAxisThickness={0}
+                                yAxisThickness={0}
+                                xAxisLabelTextStyle={{ fontSize: 10 }}
+                                yAxisTextStyle={{ fontSize: 10 }}
+                                yAxisTextNumberOfLines={2}
+                                yAxisLabelWidth={60}
+                                yAxisLabelPrefix={"RM"}
+                            />
+                            <Legend />
+                        </View>
+                        <View>
+                            <View style={[styles.goalContainer, styles.sideContainer]}>
+                                <Text style={styles.sideTitle}>My Goals</Text>
+                                <ScrollView contentContainerStyle={{ flexGrow: 1, width: '100%' }}>
+                                    {goals.map(goal => (
+                                        <TouchableOpacity
+                                            key={goal._id}
+                                            onPress={() => toggleGoalCompletion(goal._id)}
+                                            style={styles.goalItem}
+                                        >
+                                            <Icon name={goal.apply ? 'check-square' : 'square-o'} size={25} color="black" />
+                                            <Text style={[styles.goalText, { textDecorationLine: goal.apply ? 'line-through' : 'none' }]}>
+                                                {goal.goal_description}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </ScrollView>
+                            </View>
+                            <View style={[styles.infoContainer, styles.sideContainer]}>
+                                <Text style={styles.sideTitle}>Financial Information</Text>
+                                <Text style={styles.infoText}>Active Income: RM {activeIncome}</Text>
+                                <Text style={styles.infoText}>Passive Income: RM {passiveIncome}</Text>
+                                <Text style={styles.infoText}>Total Spending: RM {totalSpending}</Text>
+                            </View>
+                        </View>
                     </View>
-                    <View style={[styles.infoContainer, styles.sideContainer]}>
-                        <Text style={styles.sideTitle}>Financial Information</Text>
-                        <Text style={styles.infoText}>Active Income: RM {activeIncome}</Text>
-                        <Text style={styles.infoText}>Passive Income: RM {passiveIncome}</Text>
-                        <Text style={styles.infoText}>Total Spending: RM {totalSpending}</Text>
-                    </View>
-                </View>
-            </View>
 
-            {selectedYearData && (
-    <Modal
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-    >
-        <View style={styles.modalBackground}>
-            <View style={styles.modalContainer}>
-                <Text style={styles.modalTitle}>Year {selectedYearData.label}</Text>
-                <Text style={styles.modalText}>Active Income: RM {selectedYearData.yearData.active_income.toFixed()}</Text>
-                <Text style={styles.modalText}>Passive Income: RM {selectedYearData.yearData.passive_income.toFixed()}</Text>
-                <Text style={styles.modalText}>Savings: RM {selectedYearData.yearData.savings.toFixed()}</Text>
-                <Text style={styles.modalText}>Downfall: RM {selectedYearData.stacks[3].value.toFixed()}</Text>
-                <Text style={styles.modalText}>Expenses: RM {selectedYearData.yearData.expenses.toFixed()}</Text>
-                
-                {/* Add yearly goals if available */}
-                {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).length > 0 && (
-                    <View style={styles.modalGoalsContainer}>
-                        <Text style={styles.modalText}>Yearly Goals:</Text>
-                        {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).map((goal, index) => (
-                            <Text key={index} style={styles.modalGoalText}>
-                                - {goal.goal_description}
-                            </Text>
-                        ))}
-                    </View>
-                )}
-                
-                <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-                    <Text style={styles.modalButtonText}>Close</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    </Modal>
-)}
+                    {selectedYearData && (
+                        <Modal
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => setModalVisible(false)}
+                        >
+                            <View style={styles.modalBackground}>
+                                <View style={styles.modalContainer}>
+                                    <Text style={styles.modalTitle}>Year {selectedYearData.label}</Text>
+                                    <Text style={styles.modalText}>Active Income: RM {selectedYearData.yearData.active_income.toFixed()}</Text>
+                                    <Text style={styles.modalText}>Passive Income: RM {selectedYearData.yearData.passive_income.toFixed()}</Text>
+                                    <Text style={styles.modalText}>Savings: RM {selectedYearData.yearData.savings.toFixed()}</Text>
+                                    <Text style={styles.modalText}>Downfall: RM {selectedYearData.stacks[3].value.toFixed()}</Text>
+                                    <Text style={styles.modalText}>Expenses: RM {selectedYearData.yearData.expenses.toFixed()}</Text>
 
-        </View>
+                                    {/* Add yearly goals if available */}
+                                    {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).length > 0 && (
+                                        <View style={styles.modalGoalsContainer}>
+                                            <Text style={styles.modalText}>Yearly Goals:</Text>
+                                            {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).map((goal, index) => (
+                                                <Text key={index} style={styles.modalGoalText}>
+                                                    - {goal.goal_description}
+                                                </Text>
+                                            ))}
+                                        </View>
+                                    )}
+
+                                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
+                                        <Text style={styles.modalButtonText}>Close</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
+                    )}
+                </View>
+            ) : (
+                <View style={styles.loadingContainer}>
+                            <LottieView
+                                source={{ uri: 'https://lottie.host/40cb96b7-3b31-41c3-98f8-ef82c9e4d8b2/QpBixwoxyq.json' }}
+                                autoPlay
+                                loop
+                                style={styles.lottieAnimation}
+                            />
+                            <Text>Generating Scenario...</Text>
+                        </View>
+            )}
+        </>
+
     );
 };
 
@@ -483,6 +498,26 @@ const styles = StyleSheet.create({
     modalGoalText: {
         fontSize: 14,
         marginBottom: 5,
+    },
+    
+    loadingContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 700,
+    },
+    noDataImage: {
+        width: 400,
+        height: 400,
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
     },
 });
 

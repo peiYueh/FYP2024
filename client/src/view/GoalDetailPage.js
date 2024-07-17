@@ -8,15 +8,14 @@ import { API_BASE_URL } from '../../config';
 import LoadingIndicator from '../components/loading-component';
 import DropDown from "react-native-paper-dropdown";
 import { PieChart } from 'react-native-gifted-charts';
+import LottieView from 'lottie-react-native';
+
 
 const ViewGoalPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const route = useRoute();
-    console.log(route)
-    const { goalId } = route.params; // Assumes goalId is passed via navigation params
-    // const goalId = "667da042ce513693892d65ed"
-    console.log("Goal ID: " + goalId)
+    const { goalId } = route.params;
 
     // const [loading, setLoading] = useState(true);
     const [goal, setGoal] = useState({});
@@ -40,7 +39,6 @@ const ViewGoalPage = () => {
     const fetchUserAge = async () => {
         try {
             const response = await axios.get(API_BASE_URL + '/userAge');
-            console.log(response.data)
             setUserAge(response.data)
         } catch (error) {
             console.error('Error fetching user age:', error);
@@ -115,9 +113,9 @@ const ViewGoalPage = () => {
     const renderGoalComponent = () => {
         switch (goalType) {
             case 0:
-                return <BuyProperty goalData={goalData} setEditedData={setEditedData} targetAge={targetAge}/>;
+                return <BuyProperty goalData={goalData} setEditedData={setEditedData} targetAge={targetAge} />;
             case 1:
-                return <BuyVehicle goalData={goalData} setEditedData={setEditedData} targetAge={targetAge}/>;
+                return <BuyVehicle goalData={goalData} setEditedData={setEditedData} targetAge={targetAge} />;
             case 2:
                 return <Traveling goalData={goalData} setEditedData={setEditedData} />;
             case 3:
@@ -132,24 +130,24 @@ const ViewGoalPage = () => {
             alert("Please enter a valid target age.");
             return;
         }
-    
+
         if (targetAge < userAge || targetAge > 80) {
             alert("Target age should be in range " + userAge.toString() + " years old to 80 years old.");
             return;
         }
-    
+
         // Validate goalDescription
         if (!goalDescription.trim()) {
             alert("Please enter a goal description.");
             return;
         }
-    
+
         // Validate goalType early
         if (![0, 1, 2, 3].includes(goalType)) {
             alert("Please select a valid goal type!");
             return;
         }
-    
+
         // Common validation for downPaymentPercentage, loanPeriodYears, and interestRate
         const validateFinancialFields = ({ down_payment_percentage, loan_period, interest_rate }) => {
             if (isNaN(down_payment_percentage) || down_payment_percentage <= 9 || down_payment_percentage > 100) {
@@ -166,12 +164,11 @@ const ViewGoalPage = () => {
             }
             return true;
         };
-        console.log("edited : " + JSON.stringify(editedData));
-    
+
         // Validate goalData based on goalType]
+        console.log(JSON.stringify(editedData));
         if (goalType === 0) { // Buy Property
             const { property_price, down_payment_percentage, loan_period, interest_rate } = editedData;
-            console.log(property_price)
             if (isNaN(property_price) || property_price <= 0) {
                 alert("Please enter a valid property price.");
                 return;
@@ -201,7 +198,7 @@ const ViewGoalPage = () => {
                 return;
             }
         }
-    
+
         const updatedGoal = {
             _id: goalId,
             goal_type: goalType,
@@ -209,8 +206,7 @@ const ViewGoalPage = () => {
             target_age: targetAge,
             component_data: editedData
         };
-        console.log(updatedGoal);
-    
+
         // Set component total amount to float
         if (updatedGoal.goal_type === 2) {
             console.log("Goal 2 total amount: " + updatedGoal.component_data.overallCost);
@@ -219,7 +215,7 @@ const ViewGoalPage = () => {
             console.log("Goal 3 total amount: " + updatedGoal.component_data.goalCost);
             updatedGoal.component_data.goalCost = parseFloat(updatedGoal.component_data.goalCost).toFixed(2);
         }
-    
+        // return
         setSaving(true);
         try {
             // Make API call to update liability data
@@ -237,7 +233,7 @@ const ViewGoalPage = () => {
             setSaving(false); // Deactivate loading indicator
         }
     };
-    
+
 
     return (
         <KeyboardAvoidingView
@@ -250,8 +246,15 @@ const ViewGoalPage = () => {
                 keyboardShouldPersistTaps='handled'
             >
                 <View style={[styles.container, { backgroundColor: theme.colors.onPrimary }]}>
-                    {loading ? ( // Display loading spinner while updating
-                        <ActivityIndicator size="large" color={theme.colors.primary} />
+                    {loading ? (
+                        <View style={styles.loadingContainer}>
+                            <LottieView
+                                source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                                autoPlay
+                                loop
+                                style={styles.lottieAnimation}
+                            />
+                        </View>
                     ) : (
                         <View style={styles.content}>
                             <View style={styles.row}>
@@ -398,18 +401,37 @@ const styles = {
         fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
-    }
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 700,
+    },
+    noDataImage: {
+        width: 400,
+        height: 400,
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
+    },
 };
 
 const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
     const theme = useTheme();
-
+    console.log(JSON.stringify(goalData));
     const [propertyPrice, setPropertyPrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
     const [loanPeriodYears, setLoanPeriodYears] = useState('');
     const [interestRate, setInterestRate] = useState('');
     const [downPaymentAmount, setDownPaymentAmount] = useState('');
-    const [monthlyPayment, setMonthlyPayment] = useState('');
+    const [monthlyPayment, setMonthlyPayment] = useState(0);
     const [principal, setPrincipal] = useState(0);
     const [interest, setInterest] = useState(0);
     const [showPieChart, setShowPieChart] = useState(false);
@@ -418,12 +440,12 @@ const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
     // Update state values when goalData changes and has valid data
     useEffect(() => {
         if (goalData && Object.keys(goalData).length > 0) {
-            console.log(goalData)
             setPropertyPrice(goalData.property_price || '0');
             setDownPaymentPercentage(goalData.down_payment_percentage || '0');
             setLoanPeriodYears(goalData.loan_period || '0');
             setInterestRate(goalData.interest_rate || '0');
             setDataLoaded(true)
+            calculateMonthlyPayment()
         }
     }, [goalData]);
 
@@ -433,7 +455,7 @@ const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
 
     useEffect(() => {
         calculateMonthlyPayment();
-    }, [interestRate, loanPeriodYears, propertyPrice,downPaymentAmount, downPaymentPercentage]);
+    }, [interestRate, loanPeriodYears, propertyPrice, downPaymentAmount, downPaymentPercentage]);
 
     useEffect(() => {
         setEditedData({
@@ -444,7 +466,7 @@ const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
             interest_rate: interestRate,
             monthly_payment: monthlyPayment,
         });
-    }, [dataLoaded, propertyPrice, downPaymentPercentage, loanPeriodYears, interestRate]);
+    }, [monthlyPayment]);
 
     const calculateDownPayment = () => {
         const price = parseFloat(propertyPrice);
@@ -462,6 +484,7 @@ const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
     };
 
     const calculateMonthlyPayment = () => {
+        console.log("Calculated")
         if (!isNaN(downPaymentPercentage) && downPaymentPercentage > 100) {
             setDownPaymentPercentage('100');
         }
@@ -486,7 +509,7 @@ const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
         if (!isNaN(P) && !isNaN(r) && !isNaN(n) && r !== 0) {
             const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
             setMonthlyPayment(monthly.toFixed(2));
-
+            console.log(monthlyPayment)
             const totalPayment = monthly * n;
             const totalInterest = totalPayment - P;
             setPrincipal(P);
@@ -618,8 +641,7 @@ const BuyVehicle = ({ goalData, setEditedData, targetAge }) => {
             interest_rate: interestRate,
             monthly_payment: monthlyPayment,
         });
-    }, [dataLoaded, vehiclePrice, downPaymentPercentage, loanPeriodYears, interestRate]);
-
+    }, [monthlyPayment]);
 
     const calculateDownPayment = () => {
 
@@ -775,9 +797,7 @@ const Traveling = ({ goalData, setEditedData }) => {
 
     useEffect(() => {
         if (goalData && Object.keys(goalData).length > 0) {
-            // console.log(goalData)
             setOverallCost(goalData.total_amount.toString());
-            console.log("OVERALL"+overallCost)
             const details = {
                 transport: goalData?.transport !== '-' ? goalData.transport : '',
                 food: goalData?.food_and_beverage !== '-' ? goalData.food_and_beverage : '',
@@ -893,7 +913,6 @@ const CustomGoal = ({ goalData, setEditedData }) => {
 
     useEffect(() => {
         if (goalData && Object.keys(goalData).length > 0) {
-            console.log(goalData)
             setGoalCost(goalData.total_amount || '0');
             setDataLoaded(true)
         }

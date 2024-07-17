@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Card, Title, TextInput, Button, Appbar, IconButton, Checkbox } from 'react-native-paper';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import LottieView from 'lottie-react-native';
 
 const FinancialScenarioSetting = ({ navigation }) => {
     const [lifeExpectancy, setLifeExpectancy] = useState('');
@@ -23,9 +24,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
     useEffect(() => {
         const fetchBasicInformation = async () => {
             try {
-                console.log("getting information")
                 const response = await axios.get(`${API_BASE_URL}/basicInformation`);
-                console.log(response.data);
                 setLifeExpectancy(response.data.lifeExpectancy.toString())
                 setRetirementAge(response.data.retirementAge.toString())
                 setInitialSavings(response.data.savings.toString())
@@ -36,9 +35,8 @@ const FinancialScenarioSetting = ({ navigation }) => {
         }
 
         const fetchData = async () => {
-            const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
             try {
-                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
+                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`);
                 const fetchedData = response.data;
 
                 const totalNeeds = Math.abs(fetchedData.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
@@ -74,7 +72,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
             setDataLoaded(true);
         };
 
-        console.log("DATALOADED: " + dataLoaded)
         if (!dataLoaded) {
             fetchBasicInformation();
             console.log("Information Fetched")
@@ -88,7 +85,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
     }, [useHistoricalDataForIncome, useHistoricalDataForExpenses]);
 
     const addGoal = () => {
-        setGoalsData([...goalsData, { _id:  Date.now().toString(), goal_description: '', total_amount: '', target_age: '', apply: false, goal_type: 3 }]);
+        setGoalsData([...goalsData, { _id: Date.now().toString(), goal_description: '', total_amount: '', target_age: '', apply: false, goal_type: 3 }]);
     };
 
     const handleGoalChange = (index, field, value) => {
@@ -130,161 +127,182 @@ const FinancialScenarioSetting = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            <Appbar.Header>
-                <Appbar.BackAction onPress={() => navigation.goBack()} />
-                <Appbar.Content title="Financial Scenario Settings" />
-            </Appbar.Header>
-            <ScrollView style={styles.content}>
-                <Card style={styles.card}>
-                    <Card.Content>
-                        <Title>Basic Information</Title>
-                        <View style={styles.row}>
-                            <TextInput
-                                label="Life Expectancy"
-                                value={lifeExpectancy}
-                                onChangeText={setLifeExpectancy}
-                                keyboardType="numeric"
-                                style={styles.input}
-                            />
-                            <TextInput
-                                label="Retirement Age"
-                                value={retirementAge}
-                                onChangeText={setRetirementAge}
-                                keyboardType="numeric"
-                                style={styles.input}
-                            />
-                        </View>
-                    </Card.Content>
-                </Card>
-                <Card style={styles.card}>
-                    <Card.Content>
-                        <Title>Income & Expenses</Title>
-                        <Checkbox.Item
-                            label="Simulate with Historical Data"
-                            status={useHistoricalDataForIncome ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setUseHistoricalDataForIncome(!useHistoricalDataForIncome);
-                                if (!useHistoricalDataForIncome) {
-                                    setActiveIncome(initialActiveIncome);
-                                    setPassiveIncome(initialPassiveIncome);
-                                } else {
-                                    setActiveIncome('');
-                                    setPassiveIncome('');
-                                }
-                            }}
-                        />
-                        <View style={styles.row}>
-                            <TextInput
-                                label="Active (RM)"
-                                value={activeIncome}
-                                onChangeText={setActiveIncome}
-                                keyboardType="numeric"
-                                style={styles.input}
-                                disabled={useHistoricalDataForIncome}
-                            />
-                            <TextInput
-                                label="Passive (RM)"
-                                value={passiveIncome}
-                                onChangeText={setPassiveIncome}
-                                keyboardType="numeric"
-                                style={styles.input}
-                                disabled={useHistoricalDataForIncome}
-                            />
-                        </View>
-                        <Checkbox.Item
-                            label="Simulate with Historical Data"
-                            status={useHistoricalDataForExpenses ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setUseHistoricalDataForExpenses(!useHistoricalDataForExpenses);
-                                if (!useHistoricalDataForExpenses) {
-                                    setTotalSpending(initialTotalSpending);
-                                } else {
-                                    setTotalSpending('');
-                                }
-                            }}
-                        />
-                        <View style={styles.row}>
-                            <TextInput
-                                label="Expenses (RM)"
-                                value={totalSpending}
-                                onChangeText={setTotalSpending}
-                                keyboardType="numeric"
-                                style={styles.input}
-                                disabled={useHistoricalDataForExpenses}
-                            />
-                        </View>
-                    </Card.Content>
-                </Card>
-
-                <Card style={styles.card}>
-                    <Card.Content>
-                        <Title>Savings</Title>
-                        <TextInput
-                                label="Initial Savings"
-                                value={initialSavings}
-                                onChangeText={setInitialSavings}
-                                keyboardType="numeric"
-                                style={styles.input}
-                            />
-
-                    </Card.Content>
-                </Card>
-
-                <Card style={styles.card}>
-                    <Card.Content>
-                        <Title>Goals</Title>
-                        {goalsData.map((goal, index) => (
-                            <Card key={index} style={styles.savingCard}>
-                                <Card.Content>
-                                    <View style={styles.titleRow}>
-                                        <Title>{`Goal ${index + 1}`}</Title>
-                                        <IconButton
-                                            icon="delete"
-                                            size={20}
-                                            onPress={() => deleteGoal(index)}
-                                            style={styles.deleteButton}
-                                        />
-                                    </View>
-                                    <View key={index} style={styles.goalRow}>
-                                        <TextInput
-                                            label="Goal Description"
-                                            value={goal.goal_description}
-                                            onChangeText={(text) => handleGoalChange(index, 'goal_description', text)}
-                                            style={[styles.input, { flex: 2 }]}
+        <>
+            {
+                dataLoaded ? (
+                    <>
+                        <View style={styles.container}>
+                            <Appbar.Header>
+                                <Appbar.BackAction onPress={() => navigation.goBack()} />
+                                <Appbar.Content title="Financial Scenario Settings" />
+                            </Appbar.Header>
+                            <ScrollView style={styles.content}>
+                                <Card style={styles.card}>
+                                    <Card.Content>
+                                        <Title>Basic Information</Title>
+                                        <View style={styles.row}>
+                                            <TextInput
+                                                label="Life Expectancy"
+                                                value={lifeExpectancy}
+                                                onChangeText={setLifeExpectancy}
+                                                keyboardType="numeric"
+                                                style={styles.input}
+                                            />
+                                            <TextInput
+                                                label="Retirement Age"
+                                                value={retirementAge}
+                                                onChangeText={setRetirementAge}
+                                                keyboardType="numeric"
+                                                style={styles.input}
+                                            />
+                                        </View>
+                                    </Card.Content>
+                                </Card>
+                                <Card style={styles.card}>
+                                    <Card.Content>
+                                        <Title>Income & Expenses</Title>
+                                        <Checkbox.Item
+                                            label="Simulate with Historical Data"
+                                            status={useHistoricalDataForIncome ? 'checked' : 'unchecked'}
+                                            onPress={() => {
+                                                setUseHistoricalDataForIncome(!useHistoricalDataForIncome);
+                                                if (!useHistoricalDataForIncome) {
+                                                    setActiveIncome(initialActiveIncome);
+                                                    setPassiveIncome(initialPassiveIncome);
+                                                } else {
+                                                    setActiveIncome('');
+                                                    setPassiveIncome('');
+                                                }
+                                            }}
                                         />
                                         <View style={styles.row}>
                                             <TextInput
-                                                label="Amount (RM)"
-                                                value={goal.total_amount.toString()}
-                                                onChangeText={(text) => handleGoalChange(index, 'total_amount', text)}
+                                                label="Active (RM)"
+                                                value={activeIncome}
+                                                onChangeText={setActiveIncome}
                                                 keyboardType="numeric"
-                                                style={[styles.input, { flex: 1, marginLeft: 4 }]}
+                                                style={styles.input}
+                                                disabled={useHistoricalDataForIncome}
                                             />
                                             <TextInput
-                                                label="Target Age"
-                                                value={goal.target_age}
-                                                onChangeText={(text) => handleGoalChange(index, 'target_age', text)}
+                                                label="Passive (RM)"
+                                                value={passiveIncome}
+                                                onChangeText={setPassiveIncome}
                                                 keyboardType="numeric"
-                                                style={[styles.input, { flex: 1, marginLeft: 4 }]}
+                                                style={styles.input}
+                                                disabled={useHistoricalDataForIncome}
                                             />
                                         </View>
+                                        <Checkbox.Item
+                                            label="Simulate with Historical Data"
+                                            status={useHistoricalDataForExpenses ? 'checked' : 'unchecked'}
+                                            onPress={() => {
+                                                setUseHistoricalDataForExpenses(!useHistoricalDataForExpenses);
+                                                if (!useHistoricalDataForExpenses) {
+                                                    setTotalSpending(initialTotalSpending);
+                                                } else {
+                                                    setTotalSpending('');
+                                                }
+                                            }}
+                                        />
+                                        <View style={styles.row}>
+                                            <TextInput
+                                                label="Expenses (RM)"
+                                                value={totalSpending}
+                                                onChangeText={setTotalSpending}
+                                                keyboardType="numeric"
+                                                style={styles.input}
+                                                disabled={useHistoricalDataForExpenses}
+                                            />
+                                        </View>
+                                    </Card.Content>
+                                </Card>
 
-                                    </View>
-                                </Card.Content>
-                            </Card>
-                        ))}
-                        <Button mode="outlined" onPress={addGoal} style={styles.addButton}>
-                            Add Goal
-                        </Button>
-                    </Card.Content>
-                </Card>
+                                <Card style={styles.card}>
+                                    <Card.Content>
+                                        <Title>Savings</Title>
+                                        <TextInput
+                                            label="Initial Savings"
+                                            value={initialSavings}
+                                            onChangeText={setInitialSavings}
+                                            keyboardType="numeric"
+                                            style={styles.input}
+                                        />
 
-                <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-                    Generate Scenario
-                </Button>
-            </ScrollView>
-        </View>
+                                    </Card.Content>
+                                </Card>
+
+                                <Card style={styles.card}>
+                                    <Card.Content>
+                                        <Title>Goals</Title>
+                                        {goalsData.map((goal, index) => (
+                                            <Card key={index} style={styles.savingCard}>
+                                                <Card.Content>
+                                                    <View style={styles.titleRow}>
+                                                        <Title>{`Goal ${index + 1}`}</Title>
+                                                        <IconButton
+                                                            icon="delete"
+                                                            size={20}
+                                                            onPress={() => deleteGoal(index)}
+                                                            style={styles.deleteButton}
+                                                        />
+                                                    </View>
+                                                    <View key={index} style={styles.goalRow}>
+                                                        <TextInput
+                                                            label="Goal Description"
+                                                            value={goal.goal_description}
+                                                            onChangeText={(text) => handleGoalChange(index, 'goal_description', text)}
+                                                            style={[styles.input, { flex: 2 }]}
+                                                        />
+                                                        <View style={styles.row}>
+                                                            <TextInput
+                                                                label="Amount (RM)"
+                                                                value={goal.total_amount.toString()}
+                                                                onChangeText={(text) => handleGoalChange(index, 'total_amount', text)}
+                                                                keyboardType="numeric"
+                                                                style={[styles.input, { flex: 1, marginLeft: 4 }]}
+                                                            />
+                                                            <TextInput
+                                                                label="Target Age"
+                                                                value={goal.target_age}
+                                                                onChangeText={(text) => handleGoalChange(index, 'target_age', text)}
+                                                                keyboardType="numeric"
+                                                                style={[styles.input, { flex: 1, marginLeft: 4 }]}
+                                                            />
+                                                        </View>
+
+                                                    </View>
+                                                </Card.Content>
+                                            </Card>
+                                        ))}
+                                        <Button mode="outlined" onPress={addGoal} style={styles.addButton}>
+                                            Add Goal
+                                        </Button>
+                                    </Card.Content>
+                                </Card>
+
+                                <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+                                    Generate Scenario
+                                </Button>
+                            </ScrollView>
+                        </View>
+                    </>
+                ) : (
+                    <>
+                    <View style={styles.loadingContainer}>
+                            <LottieView
+                                source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                                autoPlay
+                                loop
+                                style={styles.lottieAnimation}
+                            />
+                        </View>
+                    </>
+                )
+            }
+        </>
+
+
     );
 };
 
@@ -308,7 +326,8 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     button: {
-        marginTop: 16,
+        marginTop: 10,
+        marginBottom: '10%'
     },
     savingRow: {
         marginBottom: 8,
@@ -318,6 +337,7 @@ const styles = StyleSheet.create({
     },
     savingCard: {
         marginBottom: 12,
+        backgroundColor:'#F4F9FB'
     },
     deleteButton: {
         marginLeft: 8,
@@ -327,6 +347,25 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 8,
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 700,
+    },
+    noDataImage: {
+        width: 400,
+        height: 400,
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
     },
 });
 
