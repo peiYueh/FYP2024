@@ -3,8 +3,7 @@ from app.dao.scenarioDAO import Scenario
 from bson import ObjectId
 
 def newGoal(db):
-    print("HI u are here")
-    userID = "665094c0c1a89d9d19d13606" ##############################
+    userID = session.get('user_id')
     goalData = request.get_json().get('goalPayload')
     # separate based on goal type
     goalType = goalData.get('goal_type')
@@ -28,7 +27,8 @@ def newGoal(db):
             'down_payment_percentage': downPaymentPercentage,
             'interest_rate': interestRate,
             'loan_period': loanPeriod,
-            'monthly_payment': monthlyPayment
+            'monthly_payment': monthlyPayment,
+            'apply': False
         }
     elif(goalType == 1):
         componentData = goalData.get('component_data')
@@ -48,7 +48,8 @@ def newGoal(db):
             'down_payment_percentage': downPaymentPercentage,
             'interest_rate': interestRate,
             'loan_period': loanPeriod,
-            'monthly_payment': monthlyPayment
+            'monthly_payment': monthlyPayment,
+            'apply': False
         }
     elif(goalType == 2):
         componentData = goalData.get('component_data')
@@ -67,7 +68,8 @@ def newGoal(db):
             'accommodation_cost': accommodation,
             'activities_cost': activities,
             'food_and_beverage': food,
-            'transport': transport
+            'transport': transport,
+            'apply': False
         }
     else:
         totalAmount = goalData.get('component_data').get('goalCost')
@@ -76,14 +78,15 @@ def newGoal(db):
             'goal_type': goalType,
             'target_age': targetAge,
             'goal_description': goalDescription,
-            'total_amount': totalAmount
+            'total_amount': totalAmount,
+            'apply': False
         }
     scenario_DAO = Scenario(db)
     inserted_id = scenario_DAO.insert_goal(goal)
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
 def myGoal(db):
-    user_id = "665094c0c1a89d9d19d13606" ##############################
+    user_id = session.get('user_id')
     
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
@@ -111,7 +114,7 @@ def getGoal(db, goal_id):
     # print(data)
 
 def editGoal(db):
-    userID = "665094c0c1a89d9d19d13606"
+    userID = session.get('user_id')
     goalData = request.get_json()
     goal_id = goalData.get('_id')
     if not goal_id:

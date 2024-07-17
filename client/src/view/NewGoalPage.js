@@ -12,11 +12,35 @@ import DropDown from "react-native-paper-dropdown";
 
 const NewGoalPage = () => {
     const theme = useTheme();
+    const navigation = useNavigation();
     const [targetAge, setTargetAge] = useState('');
     const [goalDescription, setGoalDescription] = useState('');
     const [menuVisible, setMenuVisible] = useState(false);
     const [goalData, setGoalData] = useState([]);
     const [showDropDown, setShowDropDown] = useState(false);
+    const [userAge, setUserAge] = useState(0)
+    const [loading, setLoading] = useState(false);
+
+
+    const fetchUserAge = async () => {
+        try {
+            const response = await axios.get(API_BASE_URL + '/userAge');
+            console.log(response.data)
+            setUserAge(response.data)
+        } catch (error) {
+            console.error('Error fetching user age:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Fetch transactions when the page gains focus
+            fetchUserAge();
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     const itemList = [
         { label: 'Buy Property', value: 0 },
@@ -33,9 +57,9 @@ const NewGoalPage = () => {
     const renderGoalComponent = () => {
         switch (goalType) {
             case 0:
-                return <BuyProperty setGoalData={setGoalData} />;
+                return <BuyProperty setGoalData={setGoalData} targetAge={targetAge} />;
             case 1:
-                return <BuyVehicle setGoalData={setGoalData} />;
+                return <BuyVehicle setGoalData={setGoalData} targetAge={targetAge} />;
             case 2:
                 return <Traveling setGoalData={setGoalData} />;
             case 3:
@@ -48,19 +72,18 @@ const NewGoalPage = () => {
         // validate data
         // Validate targetAge
         if (isNaN(targetAge) || targetAge <= 0) {
-            showMessage({
-                message: "Please enter a valid target age.",
-                type: "danger",
-            });
+            alert("Please enter a valid target age.")
+            return;
+        }
+
+        if (targetAge < userAge || targetAge > 80) {
+            alert("Target age should be in range " + userAge.toString() + " years old to 80 years old!")
             return;
         }
 
         // Validate goalDescription
         if (!goalDescription.trim()) {
-            showMessage({
-                message: "Please enter a goal description.",
-                type: "danger",
-            });
+            alert("Please enter a goal description.")
             return;
         }
 
@@ -68,81 +91,54 @@ const NewGoalPage = () => {
         if (goalType === 0) { // Buy Property
             const { propertyPrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
             if (isNaN(propertyPrice) || propertyPrice <= 0) {
-                showMessage({
-                    message: "Please enter a valid property price.",
-                    type: "danger",
-                });
+                alert("Please enter a valid property price")
                 return;
             }
-            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 10 || downPaymentPercentage > 100) {
-                showMessage({
-                    message: "Down payment percentage should be more than 10% and less than 100%.",
-                    type: "danger",
-                });
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 9 || downPaymentPercentage > 100) {
+                alert("Down payment percentage should be more than 10% and less than 100%.")
                 return;
             }
             if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
-                showMessage({
-                    message: "Please enter a valid loan period (1-35 years).",
-                    type: "danger",
-                });
+                alert("Please enter a valid loan period.")
                 return;
             }
             if (isNaN(interestRate) || interestRate <= 0 || interestRate > 100) {
-                showMessage({
-                    message: "Please enter a valid interest rate (1-100%).",
-                    type: "danger",
-                });
+                alert("Please enter a valid interest rate (1-100%).")
                 return;
             }
         } else if (goalType === 1) { // Buy Vehicle
             const { vehiclePrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
             if (isNaN(vehiclePrice) || vehiclePrice <= 0) {
-                showMessage({
-                    message: "Please enter a valid vehicle price.",
-                    type: "danger",
-                });
+                alert("Please enter a valid vehicle price")
                 return;
             }
-            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 0 || downPaymentPercentage > 100) {
-                showMessage({
-                    message: "Down payment percentage should be more than 10% and less than 100%.",
-                    type: "danger",
-                });
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 9 || downPaymentPercentage > 100) {
+                alert("Down payment percentage should be more than 10% and less than 100%.")
                 return;
             }
             if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
-                showMessage({
-                    message: "Please enter a valid loan period (1-35 years).",
-                    type: "danger",
-                });
+                alert("Please enter a valid loan period.")
                 return;
             }
             if (isNaN(interestRate) || interestRate <= 0 || interestRate > 100) {
-                showMessage({
-                    message: "Please enter a valid interest rate (1-100%).",
-                    type: "danger",
-                });
+                alert("Please enter a valid interest rate (1-100%).")
                 return;
             }
         } else if (goalType === 2) { // Traveling
             const { overallCost } = goalData;
             if (isNaN(overallCost) || overallCost <= 0) {
-                showMessage({
-                    message: "Please enter a valid overall traveling cost.",
-                    type: "danger",
-                });
+                alert("Please enter a valid overall traveling cost.")
                 return;
             }
         } else if (goalType === 3) { // Custom Goal
             const { goalCost } = goalData;
             if (isNaN(goalCost) || goalCost <= 0) {
-                showMessage({
-                    message: "Please enter a valid cost.",
-                    type: "danger",
-                });
+                alert("Please enter a valid cost.")
                 return;
             }
+        } else{
+            alert("please select a goal type!")
+            return;
         }
 
         const goalPayload = {
@@ -159,22 +155,19 @@ const NewGoalPage = () => {
         }
 
         console.log(goalPayload)
-
+        setLoading(true)
         axios.post(API_BASE_URL + '/newGoal', { goalPayload })
             .then(response => {
                 console.log('Goal Data:', response.data);
-                showMessage({
-                    message: "Goal added successfully!",
-                    type: "success",
-                });
+                alert("Goal added successfully!")
+                setLoading(false)
+                navigation.navigate('My Goals')
             })
             .catch(error => {
                 console.error('Error adding goal:', error);
-                showMessage({
-                    message: "Failed to add goal!",
-                    type: "danger",
-                });
-            });
+                alert("Failed to add goal!")
+                setLoading(false)
+            })
     };
 
     return (
@@ -242,6 +235,9 @@ const NewGoalPage = () => {
                         </Pressable>
                     </View>
                 </View>
+                {(loading &&
+                        <LoadingIndicator theme={theme} />
+                    )}
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -332,7 +328,7 @@ const styles = {
     }
 };
 
-const BuyProperty = ({ setGoalData }) => {
+const BuyProperty = ({ setGoalData, targetAge }) => {
     const theme = useTheme();
     const [propertyPrice, setPropertyPrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -377,6 +373,10 @@ const BuyProperty = ({ setGoalData }) => {
 
         if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
             setLoanPeriodYears('35');
+        }
+
+        if(!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)){
+            setLoanPeriodYears((70 - targetAge) >0 ? (70 - targetAge).toString() : '0');
         }
 
         const P = parseFloat(propertyPrice) - parseFloat(downPaymentAmount);
@@ -491,7 +491,7 @@ const BuyProperty = ({ setGoalData }) => {
     );
 };
 
-const BuyVehicle = ({ setGoalData }) => {
+const BuyVehicle = ({ setGoalData, targetAge }) => {
     const theme = useTheme();
     const [vehiclePrice, setVehiclePrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -548,6 +548,9 @@ const BuyVehicle = ({ setGoalData }) => {
 
         if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
             setLoanPeriodYears('35');
+        }
+        if(!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)){
+            setLoanPeriodYears((70 - targetAge) >0 ? (70 - targetAge).toString() : '0');
         }
         const P = parseFloat(vehiclePrice) - parseFloat(downPaymentAmount);
         const r = parseFloat(interestRate) / 100 / 12;

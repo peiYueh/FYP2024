@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, View, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { FlatList, View, StyleSheet, ImageBackground, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import { useTheme, Card, Text, Provider as PaperProvider, Title, Button, IconButton, Snackbar, Portal, Dialog, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config'; // Ensure API_BASE_URL is correctly imported
 import LoadingIndicator from '../components/loading-component';
 import { showMessage } from "react-native-flash-message";
+import LottieView from 'lottie-react-native';
+
 // Importing local images
 import propertyImage from '../../assets/background/goals_background/property-1.jpg';
 import vehicleImage from '../../assets/background/goals_background/vehicle-2.jpg';
@@ -20,9 +22,14 @@ const MyGoals = ({ navigation }) => {
     const [goalToDelete, setGoalToDelete] = useState(null);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState(false);
+
     useEffect(() => {
-        fetchGoals();
-    }, []);
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Fetch transactions when the page gains focus
+            fetchGoals();
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     const fetchGoals = async () => {
         try {
@@ -70,7 +77,12 @@ const MyGoals = ({ navigation }) => {
 
     const renderLoadingIndicator = () => (
         <View style={styles.loadingContainer}>
-            <ActivityIndicator size={100} color={theme.colors.primary} />
+            <LottieView
+                source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                autoPlay
+                loop
+                style={styles.lottieAnimation}
+            />
         </View>
     );
 
@@ -149,40 +161,52 @@ const MyGoals = ({ navigation }) => {
         <PaperProvider>
             {loading ? (
                 renderLoadingIndicator() // Render loading indicator if data is still fetching
-            ) : (<>
-                <View style={styles.container}>
-                    <Button
-                        mode="contained"
-                        icon="plus"
-                        onPress={() => navigation.navigate('New Goal')}
-                        style={styles.addButton}
-                    >
-                        Add Goal
-                    </Button>
-                    <FlatList
-                        data={userGoals}
-                        keyExtractor={(item) => item._id}
-                        renderItem={({ item }) => (
-                            <GoalCard goal={item} />
-                        )}
-                    />
-                    <Portal>
-                        <Dialog visible={deleteConfirmationVisible} onDismiss={cancelDelete}>
-                            <Dialog.Title>Confirm Delete</Dialog.Title>
-                            <Dialog.Content>
-                                <Paragraph>Are you sure you want to delete this goal?</Paragraph>
-                            </Dialog.Content>
-                            <Dialog.Actions>
-                                <Button onPress={cancelDelete}>Cancel</Button>
-                                <Button onPress={deleteGoal}>Delete</Button>
-                            </Dialog.Actions>
-                        </Dialog>
-                    </Portal>
-                    {(deleting &&
-                        <LoadingIndicator theme={theme} />
-                    )}
-                </View>
-            </>)}
+            ) : (
+                <>
+                    {userGoals.length === 0 ? (
+                        <View style={[styles.noDataContainer]}>
+                            <Image source={require('../../assets/background/no-goal.png')} style={styles.noDataImage} />
+                            <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('New Goal')}>
+                                <Text style={styles.addButtonText}>Add Goal</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <>
+                            <View style={styles.container}>
+                                <Button
+                                    mode="contained"
+                                    icon="plus"
+                                    onPress={() => navigation.navigate('New Goal')}
+                                    style={styles.addButton}
+                                >
+                                    Add Goal
+                                </Button>
+                                <FlatList
+                                    data={userGoals}
+                                    keyExtractor={(item) => item._id}
+                                    renderItem={({ item }) => (
+                                        <GoalCard goal={item} />
+                                    )}
+                                />
+                                <Portal>
+                                    <Dialog visible={deleteConfirmationVisible} onDismiss={cancelDelete}>
+                                        <Dialog.Title>Confirm Delete</Dialog.Title>
+                                        <Dialog.Content>
+                                            <Paragraph>Are you sure you want to delete this goal?</Paragraph>
+                                        </Dialog.Content>
+                                        <Dialog.Actions>
+                                            <Button onPress={cancelDelete}>Cancel</Button>
+                                            <Button onPress={deleteGoal}>Delete</Button>
+                                        </Dialog.Actions>
+                                    </Dialog>
+                                </Portal>
+                                {(deleting &&
+                                    <LoadingIndicator theme={theme} />
+                                )}
+                            </View>
+                        </>)}
+                </>
+            )}
         </PaperProvider>
 
     );
@@ -229,6 +253,38 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: '#FFF',
         borderRadius: 20,
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 700,
+    },
+    noDataImage: {
+        width: 400,
+        height: 400,
+    },
+    noDataContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButton: {
+        backgroundColor: '#87B6C4',
+        paddingHorizontal: 30,
+        paddingVertical: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        marginVertical: 10,
+        marginHorizontal: 20
+    },
+    addButtonText: {
+        color: '#fff',
+        fontSize: 16
     },
 });
 
