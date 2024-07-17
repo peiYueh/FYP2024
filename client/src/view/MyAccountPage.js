@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, ImageBackground, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import { IconButton, useTheme, Button } from 'react-native-paper'; // Added Button import
+import { IconButton, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IncomeExpenseChart from '../components/income-expense-chart';
@@ -8,11 +8,15 @@ import axios from 'axios';
 import { API_BASE_URL } from '../../config';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { showMessage } from "react-native-flash-message";
+import LoadingIndicator from '../components/loading-component';
+import LottieView from 'lottie-react-native';
 
 const AccountPage = () => {
     const theme = useTheme();
     const navigation = useNavigation();
     const [isEditMode, setIsEditMode] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true)
     const [userAccount, setUserAccount] = useState({
         _id: '',
         user_birthDate: '',
@@ -21,19 +25,12 @@ const AccountPage = () => {
         user_name: '',
         user_password: ''
     });
-    const [originalUserAccount, setOriginalUserAccount] = useState({}); // Added to store original data
+    const [originalUserAccount, setOriginalUserAccount] = useState({});
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const toggleEditMode = () => {
-        if (!isEditMode) {
-            // Save original data when entering edit mode
-            setOriginalUserAccount({ ...userAccount });
-        } else {
-            // Reset to original data when exiting edit mode
-            setUserAccount({ ...originalUserAccount });
-        }
-        setIsEditMode(!isEditMode);
-    };
+    useEffect(() => {
+        fetchUserAccount();
+    }, []);
 
     const fetchUserAccount = async () => {
         try {
@@ -41,15 +38,21 @@ const AccountPage = () => {
             setUserAccount(response.data);
         } catch (error) {
             console.error('Error fetching user account:', error);
+        } finally {
+            setLoading(false)
         }
     };
 
-    useEffect(() => {
-        fetchUserAccount();
-    }, []);
+    const toggleEditMode = () => {
+        if (!isEditMode) {
+            setOriginalUserAccount({ ...userAccount });
+        } else {
+            setUserAccount({ ...originalUserAccount });
+        }
+        setIsEditMode(!isEditMode);
+    };
 
     const handleDateOfBirthChange = (date) => {
-        console.log(date)
         if (date) {
             setDatePickerVisibility(false);
             setUserAccount({ ...userAccount, user_birthDate: date.date.toISOString().split('T')[0] });
@@ -64,117 +67,170 @@ const AccountPage = () => {
         setDatePickerVisibility(true);
     };
 
-    const hideDatePicker = () => {
-        setDatePickerVisibility(false);
-    };
-
     const handleGenderChange = () => {
         const newGender = userAccount.user_gender === 'male' ? 'female' : 'male';
         setUserAccount({ ...userAccount, user_gender: newGender });
     };
 
     const handleSave = async () => {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(userAccount.user_email)) {
+            alert("Valid email address required!");
+            return;
+        }
+
+        if (userAccount.user_name.length < 3) {
+            alert("Name must be at least 3 characters long!");
+            return;
+        }
+
+        setSaving(true);
         try {
-            const response = await axios.post(API_BASE_URL+'/editAccount', userAccount);
-            // Alert.alert('Success', 'User account saved successfully.');
-            if (response.status === 201) {
+            const response = await axios.post(`${API_BASE_URL}/editAccount`, userAccount);
+
+            if (response.status === 200) {
                 showMessage({
-                  message: "Account Updated!",
-                  description: "Your account has been updated successfully",
-                  type: "success",
+                    message: "Account Updated!",
+                    description: "Your account has been updated successfully",
+                    type: "success",
                 });
-                setOriginalUserAccount({ ...userAccount }); // Update original data to current state
-                setIsEditMode(false); // Exit edit mode after save
-              }
+                setOriginalUserAccount({ ...userAccount });
+                setIsEditMode(false);
+            } else {
+                throw new Error('Unexpected response status');
+            }
         } catch (error) {
             console.error('Error saving user account:', error);
-            Alert.alert('Error', 'Failed to save user account. Please try again later.');
+            let errorMessage = 'Failed to save user account. Please try again later.';
+
+            if (error.response && error.response.data && error.response.data.error) {
+                errorMessage = error.response.data.error;
+            }
+
+            alert(errorMessage);
+        } finally {
+            setSaving(false);
         }
-    }
+    };
 
     return (
         <View style={styles.container}>
-            <View style={styles.card}>
-                <ImageBackground
-                    source={require('../../assets/background/card-background.png')}
-                    style={styles.cardBackground}
-                    imageStyle={{ borderRadius: 20 }}
-                >
-                    <Text style={styles.infoHeader}>{userAccount.user_name}</Text>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.infoRow}>
-                            <Icon name="email" size={24} color="black" style={styles.icon} />
-                            {isEditMode ? (
-                                <TextInput
-                                    style={styles.infoText}
-                                    value={userAccount.user_email}
-                                    onChangeText={(text) => setUserAccount({ ...userAccount, user_email: text })}
-                                    autoFocus={true}
-                                />
-                            ) : (
-                                <Text style={styles.infoText}>{userAccount.user_email}</Text>
-                            )}
-                        </View>
-                        <View style={styles.infoRow}>
-                            <Icon name="cake" size={24} color="black" style={styles.icon} />
-                            {isEditMode ? (
-                                <>
-                                    <Pressable onPress={showDatePicker} style={styles.datePickerButton}>
-                                        <Text style={styles.infoText}>{userAccount.user_birthDate}</Text>
-                                    </Pressable>
-                                    <DatePickerModal
-                                        mode="single"
-                                        visible={isDatePickerVisible}
-                                        onDismiss={hideDatePicker}
-                                        date={userAccount.user_birthDate ? new Date(userAccount.user_birthDate) : new Date()} // Adjust as per your date format
-                                        onConfirm={handleDateOfBirthChange}
-                                        validRange={{ endDate: new Date() }}
-                                    />
-                                </>
-                            ) : (
-                                <Text style={styles.infoText}>{userAccount.user_birthDate}</Text>
-                            )}
-                        </View>
-                        <View style={styles.infoRow}>
-                            <Icon name="wc" size={24} color="black" style={styles.icon} />
-                            {isEditMode ? (
-                                <Pressable onPress={handleGenderChange} style={styles.genderButton}>
-                                    <Text style={styles.infoText}>{userAccount.user_gender}</Text>
-                                </Pressable>
-                            ) : (
-                                <Text style={styles.infoText}>{userAccount.user_gender}</Text>
-                            )}
-                        </View>
+            {loading ? (
+                <View style={styles.card}>
+                    <View style={styles.loadingContainer}>
+                        <LottieView
+                            source={{ uri: 'https://lottie.host/b245a6c0-b482-42ea-a878-331cef236d6a/pHsFeCjBNs.json' }}
+                            autoPlay
+                            loop
+                            style={styles.lottieAnimation}
+                        />
                     </View>
-                    {isEditMode ? (
-                        <View style={styles.editButtonContainer}>
+                </View>
+            ) : (
+                <View style={styles.card}>
+                    <ImageBackground
+                        source={require('../../assets/background/card-background.png')}
+                        style={styles.cardBackground}
+                        imageStyle={{ borderRadius: 20 }}
+                    >
+                        {isEditMode ? (
+                            <TextInput
+                                style={styles.infoHeader}
+                                value={userAccount.user_name}
+                                onChangeText={(text) => setUserAccount({ ...userAccount, user_name: text })}
+                                autoFocus={true}
+                            />
+                        ) : (
+                            <Text style={styles.infoHeader}>{userAccount.user_name}</Text>
+                        )}
+                        <View style={styles.infoContainer}>
+                            <InfoRow
+                                icon="email"
+                                value={userAccount.user_email}
+                                isEditMode={isEditMode}
+                                onChangeText={(text) => setUserAccount({ ...userAccount, user_email: text })}
+                            />
+                            <InfoRow
+                                icon="cake"
+                                value={userAccount.user_birthDate}
+                                isEditMode={isEditMode}
+                                onPress={showDatePicker}
+                            />
+                            {isEditMode && (
+                                <DatePickerModal
+                                    mode="single"
+                                    visible={isDatePickerVisible}
+                                    onDismiss={handleCancelDateOfBirth}
+                                    date={userAccount.user_birthDate ? new Date(userAccount.user_birthDate) : new Date()}
+                                    onConfirm={handleDateOfBirthChange}
+                                    validRange={{ endDate: new Date() }}
+                                />
+                            )}
+                            <InfoRow
+                                icon={userAccount.user_gender === 'male' ? 'male' : 'female'}
+                                value={userAccount.user_gender.toLocaleUpperCase()}
+                                isEditMode={isEditMode}
+                                onPress={handleGenderChange}
+                                isGenderRow={true}
+                            />
+                        </View>
+                        {isEditMode ? (
+                            <View style={styles.editButtonContainer}>
+                                <IconButton
+                                    icon="close"
+                                    size={25}
+                                    onPress={toggleEditMode}
+                                    style={styles.saveButton}
+                                />
+                                <IconButton
+                                    icon="content-save"
+                                    size={25}
+                                    onPress={handleSave}
+                                    style={styles.saveButton}
+                                />
+                            </View>
+                        ) : (
                             <IconButton
-                                icon="close"
+                                icon="pencil"
                                 size={25}
                                 onPress={toggleEditMode}
-                                style={styles.saveButton}
+                                style={styles.editButton}
                             />
-                            <IconButton
-                                icon="content-save"
-                                size={25}
-                                onPress={handleSave} // should change to save
-                                style={styles.saveButton}
-                            />
-                        </View>
-                    ) : (
-                        <IconButton
-                            icon="pencil"
-                            size={25}
-                            onPress={toggleEditMode}
-                            style={styles.editButton}
-                        />
-                    )}
-                </ImageBackground>
-            </View>
+                        )}
+                    </ImageBackground>
+                    {saving && <LoadingIndicator theme={theme} />}
+                </View>
+            )}
             <IncomeExpenseChart />
         </View>
     );
-}
+};
+
+const InfoRow = ({ icon, value, isEditMode, onChangeText, onPress, isGenderRow }) => (
+    <View style={styles.infoRow}>
+        {isGenderRow ? (
+            <Icon name={icon} size={24} color="black" style={styles.icon} />
+        ) : (
+            <Icon name={icon} size={24} color="black" style={styles.icon} />
+        )}
+        {isEditMode ? (
+            onPress ? (
+                <Pressable onPress={onPress} style={styles.datePickerButton}>
+                    <Text style={styles.infoText}>{value}</Text>
+                </Pressable>
+            ) : (
+                <TextInput
+                    style={styles.infoText}
+                    value={value}
+                    onChangeText={onChangeText}
+                />
+            )
+        ) : (
+            <Text style={styles.infoText}>{value}</Text>
+        )}
+    </View>
+);
+
 
 const styles = StyleSheet.create({
     container: {
@@ -188,10 +244,10 @@ const styles = StyleSheet.create({
     card: {
         margin: 15,
         padding: 2,
-        borderRadius: 20,
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        borderRadius: 10,
+        elevation: 5,
+        shadowColor: '#EDC8AB',
+        shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
         height: 250
@@ -233,13 +289,19 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 5,
     },
-    cancelButton: {
-        borderRadius: 5,
-        borderColor: 'red', // Customize cancel button style as needed
-        marginRight: 10,
+    datePickerButton: {
+        flex: 1,
     },
-    buttonLabel: {
-        fontSize: 14,
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#E8C6A4',
+        borderRadius: 10,
+    },
+    lottieAnimation: {
+        width: 200,
+        height: 200,
     },
 });
 

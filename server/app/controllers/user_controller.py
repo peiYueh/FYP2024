@@ -55,7 +55,7 @@ def getStarted(db):
     return jsonify({"message": "Data inserted successfully", "inserted_id": str(inserted_id)}), 201
 
 def getAccountDetails(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     user_DAO = User(db)
     try:
         user = user_DAO.get_account_by_id(user_id)
@@ -74,7 +74,6 @@ def getAccountDetails(db):
 def editAccount(db):
     print("Editing")
     data = request.get_json()
-    print(data)
     userID = data.get('_id')
 
     if not userID:
@@ -84,11 +83,19 @@ def editAccount(db):
     try:
         userID = ObjectId(userID)
     except Exception as e:
+        print(f"Invalid User ID format: {e}")
         return jsonify({"error": "Invalid User ID format"}), 400
-    
+
     user_DAO = User(db)
-    user_DAO.update_account(data)
-    return jsonify({"message": "Data updated successfully"}), 201
+    try:
+        response = user_DAO.update_account(data)
+        if 'error' in response:
+            print(response)
+            return jsonify(response), 400
+        return jsonify(response), 200
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return jsonify({"error": "An internal error occurred"}), 500
 
 
 def getInitialExpense(db):

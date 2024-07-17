@@ -30,6 +30,7 @@ const LoginPage = () => {
     }
     setLoading(true);
     try {
+      console.log(API_BASE_URL)
       const response = await axios.post(
         `${API_BASE_URL}/login`,
         { email, password },

@@ -171,7 +171,8 @@ def deleteTransaction(db, transaction_id):
         return jsonify({'message': str(e)}), 500
     
 def categorizeTransactions(db):
-    user_id = session.get('user_id')  # Replace with dynamic user ID retrieval
+    # user_id = session.get('user_id')  # Replace with dynamic user ID retrieval
+    user_id = "66902a84556fecfdbb994736"
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     

@@ -2,20 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import axios from 'axios'; // Import axios if not already
 import { API_BASE_URL } from '../../config';
+import LottieView from 'lottie-react-native';
 
 const IncomeExpenseChart = () => {
     const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const userId = '665094c0c1a89d9d19d13606'; // Replace with dynamic user ID retrieval
-
             try {
-                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`, { params: { userId } });
+                const response = await axios.get(`${API_BASE_URL}/categorizeTransaction`);
                 setData(response.data);
-                console.log(response.data.savings)
             } catch (error) {
                 console.error('Error fetching categorized transactions:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -23,6 +24,8 @@ const IncomeExpenseChart = () => {
     }, []);
 
     const calculateTotals = (data) => {
+        if (!data) return { incomeData: [], expenseData: [] };
+
         const incomeData = [
             { value: data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Active', frontColor: '#177AD5' },
             { value: data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Passive', frontColor: '#FF5733' }
@@ -37,8 +40,19 @@ const IncomeExpenseChart = () => {
         return { incomeData, expenseData };
     };
 
-    if (!data) {
-        return <Text>Loading...</Text>;
+    const renderLoadingIndicator = () => (
+        <View style={styles.loadingContainer}>
+            <LottieView
+                source={{ uri: 'https://lottie.host/6a21c22c-36b8-4fa1-bc75-b73732cafc3a/YpSTs5jeHP.json' }}
+                autoPlay
+                loop
+                style={styles.lottieAnimation}
+            />
+        </View>
+    );
+
+    if (loading) {
+        return renderLoadingIndicator();
     }
 
     const { incomeData, expenseData } = calculateTotals(data);
@@ -137,7 +151,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         margin: 5,
-        height: 'auto', 
+        height: 'auto',
         justifyContent: 'center',
     },
     row: {
@@ -219,6 +233,15 @@ const styles = StyleSheet.create({
         bottom: 10,
         right: 10,
         position: 'absolute',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    lottieAnimation: {
+        width: 300,
+        height: 300,
     },
 });
 
