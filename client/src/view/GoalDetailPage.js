@@ -26,7 +26,7 @@ const ViewGoalPage = () => {
     const [goalData, setGoalData] = useState({});
     const [showDropDown, setShowDropDown] = useState(false);
     const [editedData, setEditedData] = useState({})
-
+    const [userAge, setUserAge] = useState(0)
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
@@ -36,6 +36,26 @@ const ViewGoalPage = () => {
         { label: 'Traveling', value: 2 },
         { label: 'Custom Goal', value: 3 },
     ];
+
+    const fetchUserAge = async () => {
+        try {
+            const response = await axios.get(API_BASE_URL + '/userAge');
+            console.log(response.data)
+            setUserAge(response.data)
+        } catch (error) {
+            console.error('Error fetching user age:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Fetch transactions when the page gains focus
+            fetchUserAge();
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     useEffect(() => {
         const fetchGoalData = async () => {
@@ -95,9 +115,9 @@ const ViewGoalPage = () => {
     const renderGoalComponent = () => {
         switch (goalType) {
             case 0:
-                return <BuyProperty goalData={goalData} setEditedData={setEditedData} />;
+                return <BuyProperty goalData={goalData} setEditedData={setEditedData} targetAge={targetAge}/>;
             case 1:
-                return <BuyVehicle goalData={goalData} setEditedData={setEditedData} />;
+                return <BuyVehicle goalData={goalData} setEditedData={setEditedData} targetAge={targetAge}/>;
             case 2:
                 return <Traveling goalData={goalData} setEditedData={setEditedData} />;
             case 3:
@@ -108,6 +128,80 @@ const ViewGoalPage = () => {
     };
 
     const handleSaveGoal = async () => {
+        if (isNaN(targetAge) || targetAge <= 0) {
+            alert("Please enter a valid target age.");
+            return;
+        }
+    
+        if (targetAge < userAge || targetAge > 80) {
+            alert("Target age should be in range " + userAge.toString() + " years old to 80 years old.");
+            return;
+        }
+    
+        // Validate goalDescription
+        if (!goalDescription.trim()) {
+            alert("Please enter a goal description.");
+            return;
+        }
+    
+        // Validate goalType early
+        if (![0, 1, 2, 3].includes(goalType)) {
+            alert("Please select a valid goal type!");
+            return;
+        }
+    
+        // Common validation for downPaymentPercentage, loanPeriodYears, and interestRate
+        const validateFinancialFields = ({ down_payment_percentage, loan_period, interest_rate }) => {
+            if (isNaN(down_payment_percentage) || down_payment_percentage <= 9 || down_payment_percentage > 100) {
+                alert("Down payment percentage should be more than 10% and less than 100%.");
+                return false;
+            }
+            if (isNaN(loan_period) || loan_period <= 0 || loan_period > 35) {
+                alert("Please enter a valid loan period.");
+                return false;
+            }
+            if (isNaN(interest_rate) || interest_rate <= 0 || interest_rate > 100) {
+                alert("Please enter a valid interest rate (1-100%).");
+                return false;
+            }
+            return true;
+        };
+        console.log("edited : " + JSON.stringify(editedData));
+    
+        // Validate goalData based on goalType]
+        if (goalType === 0) { // Buy Property
+            const { property_price, down_payment_percentage, loan_period, interest_rate } = editedData;
+            console.log(property_price)
+            if (isNaN(property_price) || property_price <= 0) {
+                alert("Please enter a valid property price.");
+                return;
+            }
+            if (!validateFinancialFields({ down_payment_percentage, loan_period, interest_rate })) {
+                return;
+            }
+        } else if (goalType === 1) { // Buy Vehicle
+            const { vehicle_price, down_payment_percentage, loan_period, interest_rate } = editedData;
+            if (isNaN(vehicle_price) || vehicle_price <= 0) {
+                alert("Please enter a valid vehicle price.");
+                return;
+            }
+            if (!validateFinancialFields({ down_payment_percentage, loan_period, interest_rate })) {
+                return;
+            }
+        } else if (goalType === 2) { // Traveling
+            const { overallCost } = editedData;
+            if (isNaN(overallCost) || overallCost <= 0) {
+                alert("Please enter a valid overall traveling cost.");
+                return;
+            }
+        } else if (goalType === 3) { // Custom Goal
+            const { goalCost } = editedData;
+            if (isNaN(goalCost) || goalCost <= 0) {
+                alert("Please enter a valid cost.");
+                return;
+            }
+        }
+    
         const updatedGoal = {
             _id: goalId,
             goal_type: goalType,
@@ -115,29 +209,25 @@ const ViewGoalPage = () => {
             target_age: targetAge,
             component_data: editedData
         };
-        console.log(updatedGoal)
-
-        // set component -> total amount -> to float
-
-        if (updatedGoal.goal_type == 2) {
+        console.log(updatedGoal);
+    
+        // Set component total amount to float
+        if (updatedGoal.goal_type === 2) {
             console.log("Goal 2 total amount: " + updatedGoal.component_data.overallCost);
             updatedGoal.component_data.overallCost = parseFloat(updatedGoal.component_data.overallCost).toFixed(2);
-        } else if (updatedGoal.goal_type == 3) {
+        } else if (updatedGoal.goal_type === 3) {
             console.log("Goal 3 total amount: " + updatedGoal.component_data.goalCost);
             updatedGoal.component_data.goalCost = parseFloat(updatedGoal.component_data.goalCost).toFixed(2);
         }
     
-        setSaving(true)
+        setSaving(true);
         try {
             // Make API call to update liability data
             const response = await axios.post(API_BASE_URL + '/editGoal', updatedGoal);
             if (response.status === 200) {
-                // Handle success if necessary
                 Alert.alert('Success', 'Goal updated successfully!');
-                // setEditMode(false); // Exit edit mode after saving
-
+                navigation.navigate('My Goals')
             } else {
-                // Handle other statuses if needed
                 Alert.alert('Error', 'Failed to update goal');
             }
         } catch (error) {
@@ -147,6 +237,7 @@ const ViewGoalPage = () => {
             setSaving(false); // Deactivate loading indicator
         }
     };
+    
 
     return (
         <KeyboardAvoidingView
@@ -310,7 +401,7 @@ const styles = {
     }
 };
 
-const BuyProperty = ({ goalData, setEditedData }) => {
+const BuyProperty = ({ goalData, setEditedData, targetAge }) => {
     const theme = useTheme();
 
     const [propertyPrice, setPropertyPrice] = useState('');
@@ -342,7 +433,7 @@ const BuyProperty = ({ goalData, setEditedData }) => {
 
     useEffect(() => {
         calculateMonthlyPayment();
-    }, [interestRate, loanPeriodYears, propertyPrice, downPaymentAmount]);
+    }, [interestRate, loanPeriodYears, propertyPrice,downPaymentAmount, downPaymentPercentage]);
 
     useEffect(() => {
         setEditedData({
@@ -381,6 +472,10 @@ const BuyProperty = ({ goalData, setEditedData }) => {
 
         if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
             setLoanPeriodYears('35');
+        }
+
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)) {
+            setLoanPeriodYears((70 - targetAge) > 0 ? (70 - targetAge).toString() : '0');
         }
 
         const P = parseFloat(propertyPrice) - parseFloat(downPaymentAmount);
@@ -482,7 +577,7 @@ const BuyProperty = ({ goalData, setEditedData }) => {
 };
 
 
-const BuyVehicle = ({ goalData, setEditedData }) => {
+const BuyVehicle = ({ goalData, setEditedData, targetAge }) => {
     const theme = useTheme();
     const [vehiclePrice, setVehiclePrice] = useState('');
     const [downPaymentPercentage, setDownPaymentPercentage] = useState('');
@@ -554,13 +649,18 @@ const BuyVehicle = ({ goalData, setEditedData }) => {
         if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
             setLoanPeriodYears('35');
         }
+
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)) {
+            setLoanPeriodYears((70 - targetAge) > 0 ? (70 - targetAge).toString() : '0');
+        }
+
         const P = parseFloat(vehiclePrice) - parseFloat(downPaymentAmount);
         const r = parseFloat(interestRate) / 100 / 12;
         let n = parseFloat(loanPeriodYears) * 12;
 
         if (!isNaN(P) && !isNaN(r) && !isNaN(n) && r !== 0) {
             const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
-            setMonthlyPayment(monthly);
+            setMonthlyPayment(monthly.toFixed(2));
 
             const totalPayment = monthly * n;
             const totalInterest = totalPayment - P;
@@ -676,8 +776,8 @@ const Traveling = ({ goalData, setEditedData }) => {
     useEffect(() => {
         if (goalData && Object.keys(goalData).length > 0) {
             // console.log(goalData)
-            setOverallCost(goalData.total_amount);
-            console.log(overallCost)
+            setOverallCost(goalData.total_amount.toString());
+            console.log("OVERALL"+overallCost)
             const details = {
                 transport: goalData?.transport !== '-' ? goalData.transport : '',
                 food: goalData?.food_and_beverage !== '-' ? goalData.food_and_beverage : '',

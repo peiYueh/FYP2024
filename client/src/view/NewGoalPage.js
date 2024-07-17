@@ -87,58 +87,61 @@ const NewGoalPage = () => {
             return;
         }
 
+        // Validate goalType early
+        if (![0, 1, 2, 3].includes(goalType)) {
+            alert("Please select a valid goal type!");
+            return;
+        }
+
+        // Common validation for downPaymentPercentage, loanPeriodYears, and interestRate
+        const validateFinancialFields = ({ downPaymentPercentage, loanPeriodYears, interestRate }) => {
+            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 9 || downPaymentPercentage > 100) {
+                alert("Down payment percentage should be more than 10% and less than 100%.");
+                return false;
+            }
+            if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
+                alert("Please enter a valid loan period.");
+                return false;
+            }
+            if (isNaN(interestRate) || interestRate <= 0 || interestRate > 100) {
+                alert("Please enter a valid interest rate (1-100%).");
+                return false;
+            }
+            return true;
+        };
+
         // Validate goalData based on goalType
+        console.log("edited : " + editedData);
         if (goalType === 0) { // Buy Property
             const { propertyPrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
             if (isNaN(propertyPrice) || propertyPrice <= 0) {
-                alert("Please enter a valid property price")
+                alert("Please enter a valid property price.");
                 return;
             }
-            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 9 || downPaymentPercentage > 100) {
-                alert("Down payment percentage should be more than 10% and less than 100%.")
-                return;
-            }
-            if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
-                alert("Please enter a valid loan period.")
-                return;
-            }
-            if (isNaN(interestRate) || interestRate <= 0 || interestRate > 100) {
-                alert("Please enter a valid interest rate (1-100%).")
+            if (!validateFinancialFields({ downPaymentPercentage, loanPeriodYears, interestRate })) {
                 return;
             }
         } else if (goalType === 1) { // Buy Vehicle
             const { vehiclePrice, downPaymentPercentage, loanPeriodYears, interestRate } = goalData;
             if (isNaN(vehiclePrice) || vehiclePrice <= 0) {
-                alert("Please enter a valid vehicle price")
+                alert("Please enter a valid vehicle price.");
                 return;
             }
-            if (isNaN(downPaymentPercentage) || downPaymentPercentage <= 9 || downPaymentPercentage > 100) {
-                alert("Down payment percentage should be more than 10% and less than 100%.")
-                return;
-            }
-            if (isNaN(loanPeriodYears) || loanPeriodYears <= 0 || loanPeriodYears > 35) {
-                alert("Please enter a valid loan period.")
-                return;
-            }
-            if (isNaN(interestRate) || interestRate <= 0 || interestRate > 100) {
-                alert("Please enter a valid interest rate (1-100%).")
+            if (!validateFinancialFields({ downPaymentPercentage, loanPeriodYears, interestRate })) {
                 return;
             }
         } else if (goalType === 2) { // Traveling
             const { overallCost } = goalData;
             if (isNaN(overallCost) || overallCost <= 0) {
-                alert("Please enter a valid overall traveling cost.")
+                alert("Please enter a valid overall traveling cost.");
                 return;
             }
         } else if (goalType === 3) { // Custom Goal
             const { goalCost } = goalData;
             if (isNaN(goalCost) || goalCost <= 0) {
-                alert("Please enter a valid cost.")
+                alert("Please enter a valid cost.");
                 return;
             }
-        } else{
-            alert("please select a goal type!")
-            return;
         }
 
         const goalPayload = {
@@ -161,6 +164,9 @@ const NewGoalPage = () => {
                 console.log('Goal Data:', response.data);
                 alert("Goal added successfully!")
                 setLoading(false)
+                setGoalData([])
+                setGoalDescription('')
+                setTargetAge('')
                 navigation.navigate('My Goals')
             })
             .catch(error => {
@@ -236,8 +242,8 @@ const NewGoalPage = () => {
                     </View>
                 </View>
                 {(loading &&
-                        <LoadingIndicator theme={theme} />
-                    )}
+                    <LoadingIndicator theme={theme} />
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     );
@@ -375,8 +381,8 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
             setLoanPeriodYears('35');
         }
 
-        if(!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)){
-            setLoanPeriodYears((70 - targetAge) >0 ? (70 - targetAge).toString() : '0');
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)) {
+            setLoanPeriodYears((70 - targetAge) > 0 ? (70 - targetAge).toString() : '0');
         }
 
         const P = parseFloat(propertyPrice) - parseFloat(downPaymentAmount);
@@ -549,8 +555,8 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
         if (!isNaN(loanPeriodYears) && loanPeriodYears > 35) {
             setLoanPeriodYears('35');
         }
-        if(!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)){
-            setLoanPeriodYears((70 - targetAge) >0 ? (70 - targetAge).toString() : '0');
+        if (!isNaN(loanPeriodYears) && loanPeriodYears > (70 - targetAge)) {
+            setLoanPeriodYears((70 - targetAge) > 0 ? (70 - targetAge).toString() : '0');
         }
         const P = parseFloat(vehiclePrice) - parseFloat(downPaymentAmount);
         const r = parseFloat(interestRate) / 100 / 12;
