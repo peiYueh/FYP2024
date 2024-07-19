@@ -140,7 +140,7 @@ const SignUpPage = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
       >
-        <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+        <View style={[styles.container, { backgroundColor: theme.colors.primary, paddingHorizontal: 0 }]}>
           <Text style={[styles.pageHeading, { color: theme.colors.onPrimary }]}>
             Sign Up
           </Text>

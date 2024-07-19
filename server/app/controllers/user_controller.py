@@ -174,3 +174,18 @@ def getUserAge(db):
             raise ValueError("User not found")
     except Exception as e:
         raise e
+    
+def forgotPassword(db, email, serializer, mail):
+    user_DAO = User(db)
+    try:
+        return user_DAO.handle_forgot_password(email, serializer, mail)
+    except Exception as e:
+        raise e
+
+def resetPassword(db):
+    email = request.json.get('email')
+    security_answer = request.json.get('securityAnswer')
+    new_password = request.json.get('newPassword')
+    user_DAO = User(db)
+    return user_DAO.reset_password(email, security_answer, new_password)
+    

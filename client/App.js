@@ -20,7 +20,8 @@ import GoalDetailPage from "./src/view/GoalDetailPage";
 import AccountPage from "./src/view/MyAccountPage";
 import MyGoalPage from "./src/view/MyGoalPage";
 import FinancialScenarioSetting from "./src/view/FinancialScenarioSetting";
-
+import ForgotPassword from "./src/view/ForgotPassword";
+import ResetPasswordScreen  from "./src/view/ResetPassword";
 
 import { registerTranslation } from "react-native-paper-dates";
 import { useFonts, Oswald_400Regular } from "@expo-google-fonts/oswald";
@@ -192,7 +193,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Forgot Password">
           <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="Sign Up" component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
@@ -209,6 +210,8 @@ const App = () => {
           <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
           <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }} />
           <Stack.Screen name="Home Page" component={HomePage} options={{ headerShown: false }} />
+          <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{ headerShown: true }} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />

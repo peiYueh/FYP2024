@@ -107,7 +107,7 @@ const GetStarted = () => {
     const progress = (step + 1) / 3;
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+        <View style={[styles.container, { backgroundColor: theme.colors.primary, paddingHorizontal: 0 }]}>
             <Title style={[styles.heading, { color: theme.colors.background }]}>Let's Get Started!</Title>
             <ProgressBar progress={progress} color="#F4F9FB" style={styles.progressBar} />
             {loading && <LoadingIndicator theme={theme} />}

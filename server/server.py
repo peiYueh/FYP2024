@@ -2,17 +2,21 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask import current_app, request
-from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation, getUserAge
+from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation, getUserAge, forgotPassword,resetPassword
 from app.controllers.transaction_controller import newTransaction, editTransaction, getTransactions,deleteTransaction, categorizeTransactions, getMonthlyExpense
 from app.controllers.liability_controller import newLiability, getLiabilities, getPaymentDates, newPaymentUpdate, editLiability, deletePaymentUpdate, deleteLiability
 from app.controllers.scenario_controller import newGoal, getGoal, editGoal, myGoal, deleteGoal
 from app.controllers.machine_learning_controller import classifyCategory, predictSalary, predictExpense
 from app.db import get_db
 from app import create_app
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail, Message
 
 app = create_app()
 CORS(app)
 app.secret_key = '1111'
+mail = Mail(app)
+serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 # members API route
 @app.route("/members")
@@ -217,6 +221,19 @@ def predict_expense_endpoint():
     }
 
     return jsonify(response)
+
+@app.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    # serializer = URLSafeTimedSerializer(app.config['1111'])
+    db = get_db()
+    data = request.json
+    email = data.get('email')
+    return forgotPassword(db, email, serializer, mail)
+
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    db = get_db()
+    return resetPassword(db)
 
 
 if __name__ == "__main__":

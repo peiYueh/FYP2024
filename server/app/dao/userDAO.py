@@ -2,6 +2,13 @@
 import bcrypt
 from bson.objectid import ObjectId
 import logging
+from flask import Flask, request, jsonify
+from itsdangerous import URLSafeTimedSerializer
+from flask_mail import Mail, Message
+from werkzeug.security import generate_password_hash
+from pymongo import MongoClient
+import os
+
 
 class User:
     def __init__(self, db):
@@ -73,3 +80,20 @@ class User:
             result['_id'] = str(result['_id'])  # Convert ObjectId to string
         print(result)
         return result
+    
+    def handle_forgot_password(self, email, serializer, mail):
+        email = request.json.get('email')
+        user = self.collection.find_one({'user_email': email})
+        if user:
+            # Return the security question for this user
+            return jsonify({'message': 'Please answer your security question to reset your password.', 'securityQuestion': 'What is your date of birth?'}), 200
+        return jsonify({'message': 'Email not found.'}), 404
+    
+    def reset_password(self, email, security_answer, new_password):
+        user = self.collection.find_one({'user_email': email})
+        if user and user['user_birthDate'].lower() == security_answer.lower():
+            print("Updating New Password")
+            hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+            self.collection.update_one({'user_email': email}, {'$set': {'user_password': hashed_password}})
+            return jsonify({'message': 'Password has been reset successfully.'}), 200
+        return jsonify({'message': 'Invalid security answer.'}), 400
