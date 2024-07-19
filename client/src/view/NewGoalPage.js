@@ -162,6 +162,7 @@ const NewGoalPage = () => {
             .then(response => {
                 console.log('Goal Data:', response.data);
                 alert("Goal added successfully!")
+                setGoalType(null)
                 setLoading(false)
                 setGoalData([])
                 setGoalDescription('')

@@ -106,6 +106,15 @@ const FinancialScenarioSetting = ({ navigation }) => {
             return;
         }
 
+        if (!initialSavings) {
+            alert('Please fill in initial savings!');
+            return;
+        }
+
+        if (!retirementAge || !lifeExpectancy) {
+            alert('Please fill in all basic information fields!.');
+            return;
+        }
 
         const goalsValid = goalsData.every(goal => goal.goal_description && goal.total_amount && goal.target_age);
         if (!goalsValid) {

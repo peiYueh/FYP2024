@@ -244,6 +244,9 @@ const FinancialScenarioPage = ({ route }) => {
                     <View style={[styles.rotatedContainer, { width: height, height: width }]}>
                         <View style={styles.chartContainer}>
                             <Text style={styles.title}>My Financial Scenario</Text>
+                            <View style={styles.xAxisTitle}>
+                                <Text style={styles.axisTitleText}>Expense</Text>
+                            </View>
                             <BarChart
                                 width={height / 100 * 55}
                                 noOfSections={5}
@@ -260,8 +263,15 @@ const FinancialScenarioPage = ({ route }) => {
                                 yAxisTextNumberOfLines={2}
                                 yAxisLabelWidth={60}
                                 yAxisLabelPrefix={"RM"}
+                                backgroundColor={'#F5F5F5'}
+
                             />
-                            <Legend />
+                            <View style={styles.legendAndAxisContainer}>
+                                <Legend />
+                                <View style={styles.yAxisTitle}>
+                                    <Text style={styles.axisTitleText}>Age</Text>
+                                </View>
+                            </View>
                         </View>
                         <View>
                             <View style={[styles.goalContainer, styles.sideContainer]}>
@@ -298,24 +308,33 @@ const FinancialScenarioPage = ({ route }) => {
                         >
                             <View style={styles.modalBackground}>
                                 <View style={styles.modalContainer}>
-                                    <Text style={styles.modalTitle}>Year {selectedYearData.label}</Text>
-                                    <Text style={styles.modalText}>Active Income: RM {selectedYearData.yearData.active_income.toFixed()}</Text>
-                                    <Text style={styles.modalText}>Passive Income: RM {selectedYearData.yearData.passive_income.toFixed()}</Text>
-                                    <Text style={styles.modalText}>Savings: RM {selectedYearData.yearData.savings.toFixed()}</Text>
-                                    <Text style={styles.modalText}>Downfall: RM {selectedYearData.stacks[3].value.toFixed()}</Text>
-                                    <Text style={styles.modalText}>Expenses: RM {selectedYearData.yearData.expenses.toFixed()}</Text>
+                                    <ScrollView contentContainerStyle={styles.modalContent}>
+                                        <Text style={styles.modalTitle}>{selectedYearData.label} Years Old</Text>
+                                        {[
+                                            { label: 'Active Income', value: selectedYearData.yearData.active_income },
+                                            { label: 'Passive Income', value: selectedYearData.yearData.passive_income },
+                                            { label: 'Savings', value: selectedYearData.yearData.savings },
+                                            { label: 'Downfall', value: selectedYearData.stacks[3].value },
+                                            { label: 'Expenses', value: selectedYearData.yearData.expenses }
+                                        ].map((item, index) => (
+                                            <View key={index} style={styles.modalTextContainer}>
+                                                <Text style={styles.modalText}>{item.label}:</Text>
+                                                <Text style={styles.modalText}> RM {item.value.toFixed()}</Text>
+                                            </View>
+                                        ))}
 
-                                    {/* Add yearly goals if available */}
-                                    {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).length > 0 && (
-                                        <View style={styles.modalGoalsContainer}>
-                                            <Text style={styles.modalText}>Yearly Goals:</Text>
-                                            {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).map((goal, index) => (
-                                                <Text key={index} style={styles.modalGoalText}>
-                                                    - {goal.goal_description}
-                                                </Text>
-                                            ))}
-                                        </View>
-                                    )}
+                                        {/* Add yearly goals if available */}
+                                        {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).length > 0 && (
+                                            <View style={styles.modalGoalsContainer}>
+                                                <Text style={styles.modalText}>Yearly Goals:</Text>
+                                                {goals.filter(goal => parseInt(goal.target_age) === parseInt(selectedYearData.label) && goal.apply).map((goal, index) => (
+                                                    <Text key={index} style={styles.modalGoalText}>
+                                                        ✓ {goal.goal_description} (RM {goal.total_amount})
+                                                    </Text>
+                                                ))}
+                                            </View>
+                                        )}
+                                    </ScrollView>
 
                                     <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
                                         <Text style={styles.modalButtonText}>Close</Text>
@@ -327,14 +346,14 @@ const FinancialScenarioPage = ({ route }) => {
                 </View>
             ) : (
                 <View style={styles.loadingContainer}>
-                            <LottieView
-                                source={{ uri: 'https://lottie.host/40cb96b7-3b31-41c3-98f8-ef82c9e4d8b2/QpBixwoxyq.json' }}
-                                autoPlay
-                                loop
-                                style={styles.lottieAnimation}
-                            />
-                            <Text>Generating Scenario...</Text>
-                        </View>
+                    <LottieView
+                        source={{ uri: 'https://lottie.host/40cb96b7-3b31-41c3-98f8-ef82c9e4d8b2/QpBixwoxyq.json' }}
+                        autoPlay
+                        loop
+                        style={styles.lottieAnimation}
+                    />
+                    <Text>Generating Scenario...</Text>
+                </View>
             )}
         </>
 
@@ -347,7 +366,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#F4F9FB',
     },
     rotatedContainer: {
         transform: [{ rotate: '90deg' }],
@@ -360,12 +379,12 @@ const styles = StyleSheet.create({
     chartContainer: {
         // justifyContent: 'center',
         alignItems: 'center',
-        height: 750
+        height: 750,
+        marginBottom: 20,
     },
     goalContainer: {
         justifyContent: 'center',
-        // marginLeft: height / 100 * 5,
-        flex: 1
+        flex: 1,
     },
     infoContainer: {
         justifyContent: 'center',
@@ -374,22 +393,28 @@ const styles = StyleSheet.create({
     },
     sideContainer: {
         padding: 10,
-        borderRadius: 3,
-        elevation: 2,
+        elevation: 1,
         shadowColor: '#000',
         shadowOffset: { width: 3, height: 5 },
-        marginLeft: height / 100 * 10,
-        // width: height / 100 * 30,
+        marginLeft: height / 100 * 5,
+        width: 230,
+        backgroundColor: '#D5E5EB'
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#005A75',
+        width: '100%'
     },
     sideTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+        backgroundColor: '#1F8AAA',
+        width: '100%',
+        paddingHorizontal: 10,
+        color: '#F4F9FB'
     },
     goalItem: {
         flexDirection: 'row',
@@ -413,8 +438,9 @@ const styles = StyleSheet.create({
     modalContainer: {
         transform: [{ rotate: '90deg' }],
         width: '80%',
+        height: '40%', // Set a fixed height for the modal
         padding: 20,
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         borderRadius: 15,
         alignItems: 'center',
         elevation: 10,
@@ -426,18 +452,19 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#333',
+        marginBottom: 15,
+        color: '#1F8AAA',
     },
     modalText: {
         fontSize: 16,
         marginBottom: 10,
         color: '#555',
+        textAlign: 'center',
     },
     modalGoalsContainer: {
         marginTop: 20,
         width: '100%',
-        padding: 10,
+        padding: 15,
         borderRadius: 10,
         backgroundColor: '#f9f9f9',
         elevation: 5,
@@ -454,14 +481,15 @@ const styles = StyleSheet.create({
     modalButton: {
         marginTop: 20,
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
         borderRadius: 5,
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#F69E35',
     },
     modalButtonText: {
-        fontSize: 16,
-        color: 'white',
+        fontSize: 12,
+        color: '#fff',
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     iconContainer: {
         position: 'absolute',
@@ -499,7 +527,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 5,
     },
-    
+
     loadingContainer: {
         flex: 1,
         alignItems: "center",
@@ -518,6 +546,29 @@ const styles = StyleSheet.create({
     lottieAnimation: {
         width: 200,
         height: 200,
+    },
+    xAxisTitle: {
+        alignSelf: 'flex-start',
+    },
+    yAxisTitle: {
+        alignSelf: 'flex-start',
+    },
+    axisTitleText: {
+        fontSize: 12, // Optional: set the font size
+        color: '#1F8AAA',
+        fontStyle: 'italic',
+        fontFamily: 'Times New Roman, serif'
+    },
+    legendAndAxisContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    modalTextContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 5,
     },
 });
 

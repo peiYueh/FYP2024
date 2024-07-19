@@ -120,7 +120,7 @@ def getInitialIncome(db):
     return 0
 
 def getLifeExpectancy(self, db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
@@ -130,7 +130,7 @@ def getLifeExpectancy(self, db):
     return 0
 
 def getExpectedRetirement(self, db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
@@ -140,9 +140,10 @@ def getExpectedRetirement(self, db):
     return 0
 
 def getBasicInformation(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
+    print(user_id)
     user_document = user_DAO.get_basic_information(user_id)
     return user_document
 
@@ -150,7 +151,7 @@ from flask import jsonify
 from datetime import datetime
 
 def getUserAge(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    user_id = session.get('user_id')
     user_DAO = User(db)
     try:
         user = user_DAO.get_account_by_id(user_id)
