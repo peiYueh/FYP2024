@@ -96,4 +96,4 @@ class User:
             hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
             self.collection.update_one({'user_email': email}, {'$set': {'user_password': hashed_password}})
             return jsonify({'message': 'Password has been reset successfully.'}), 200
-        return jsonify({'message': 'Invalid security answer.'}), 400
+        return jsonify({'message': 'Incorrect Date of Birth.'}), 400

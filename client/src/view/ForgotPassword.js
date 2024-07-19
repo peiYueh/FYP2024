@@ -33,7 +33,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
                 navigation.navigate('ResetPassword', { email, securityQuestion: response.data.securityQuestion });
             }
         } catch (error) {
-            Alert.alert('Error', 'An error occurred while requesting a password reset');
+            if (error.response && error.response.data) {
+                Alert.alert('Error', error.response.data.message);
+            } else {
+                Alert.alert('Error', 'An error occurred while resetting the password');
+            }
         }finally{
             setLoading(false)
         }
@@ -41,7 +45,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
-            <Text style={[styles.heading, { marginBottom: 30 }]}>Forgot Password</Text>
+            <Text style={[styles.heading, { marginBottom: 30, color: '#F4F9FB'}]}>Forgot Password</Text>
             <TextInput
                 placeholder="Enter your email"
                 value={email}

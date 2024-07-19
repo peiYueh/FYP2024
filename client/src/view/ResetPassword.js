@@ -19,7 +19,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
     const [loading, setLoading] = useState(false);
 
     const validatePassword = (password) => {
-        return password.length >= 8;
+        return password.length >= 6;
     };
 
     const handleResetPassword = async () => {
@@ -63,7 +63,6 @@ const ResetPasswordScreen = ({ route, navigation }) => {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
-            <Text>{securityQuestion}</Text>
             <TextInput
                 placeholder="Enter birth date (YYYY-MM-DD)"
                 value={securityAnswer}

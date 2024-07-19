@@ -91,6 +91,11 @@ const LoginPage = () => {
           secureTextEntry={!showPassword} // Toggle password visibility
           placeholder="Password" // Optional: add a placeholder for clarity
         />
+        <Text style={[styles.remarkText, {alignSelf: 'flex-end', top: 0, marginRight: 40}]}>
+          <Text style={[styles.hyperLinkText]} onPress={() => navigation.navigate('Forgot Password')}>
+            Forgot Password?
+          </Text>
+        </Text>
         <TouchableOpacity
           onPress={() => setShowPassword(!showPassword)}
           style={styles.showPasswordIconButton}
