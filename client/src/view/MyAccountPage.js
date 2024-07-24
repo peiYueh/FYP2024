@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, ImageBackground, Text, StyleSheet, TextInput, Pressable } from 'react-native';
-import { IconButton, useTheme } from 'react-native-paper';
+import { IconButton, useTheme, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import IncomeExpenseChart from '../components/income-expense-chart';
@@ -113,6 +113,19 @@ const AccountPage = () => {
         }
     };
 
+    const handleLogout = async () => {
+        try {
+            await axios.post(`${API_BASE_URL}/logout`);
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+        } catch (error) {
+            console.error('Error during logout:', error);
+            alert('Failed to logout. Please try again later.');
+        }
+    };
+
     return (
         <View style={styles.container}>
             {loading ? (
@@ -202,6 +215,9 @@ const AccountPage = () => {
                 </View>
             )}
             <IncomeExpenseChart />
+            <Button mode="contained" onPress={handleLogout} style={styles.logoutButton}>
+                Logout
+            </Button>
         </View>
     );
 };
@@ -230,7 +246,6 @@ const InfoRow = ({ icon, value, isEditMode, onChangeText, onPress, isGenderRow }
         )}
     </View>
 );
-
 
 const styles = StyleSheet.create({
     container: {
@@ -303,6 +318,10 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
     },
+    logoutButton: {
+        marginHorizontal: 20,
+        borderRadius: 10,
+    }
 });
 
 export default AccountPage;

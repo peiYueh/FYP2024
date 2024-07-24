@@ -161,7 +161,7 @@ const ExpenseDistributionChart = () => {
                                                 {(spendingData[focusedIndex].value).toFixed(0)}%
                                             </Text>
                                             <Text style={{ fontSize: 14, color: '#005A75' }}>
-                                                RM {spendingData[focusedIndex].amount}
+                                                RM {parseInt(spendingData[focusedIndex].amount).toFixed(0)}
                                             </Text>
                                         </>
                                     ) : (

@@ -308,7 +308,7 @@ const styles = {
         padding: 10
     },
     pieChartLabel: {
-        marginHorizontal: 10
+        marginLeft: 10
     },
     colorBox: {
         width: 16,
@@ -473,19 +473,22 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
                     <View style={styles.pieChart}>
                         <PieChart
                             data={pieData}
-                            showText
                             textColor="white"
                             textBackgroundColor="black" // Add this line
                             radius={110}
-                            labelsPosition="inward"
                         />
                         <View style={styles.pieChartLabels}>
                             {pieData.map((slice, index) => (
                                 <View key={index} style={styles.row}>
                                     <View style={[styles.colorBox, { backgroundColor: slice.color }]} />
-                                    <Text style={styles.pieChartLabel}>
-                                        {slice.key}
-                                    </Text>
+                                    <View style={{alignItems: 'flex-end'}}>
+                                        <Text style={styles.pieChartLabel}>
+                                            {slice.key}
+                                        </Text>
+                                        <Text style={{fontSize: 12, color: 'gray'}}>
+                                            (RM{slice.value.toFixed(0)})
+                                        </Text>
+                                    </View>
                                 </View>
                             ))}
                         </View>
@@ -633,19 +636,22 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
                     <View style={styles.pieChart}>
                         <PieChart
                             data={pieData}
-                            showText
                             textColor="white"
                             textBackgroundColor="black" // Add this line
                             radius={110}
-                            labelsPosition="inward"
                         />
                         <View style={styles.pieChartLabels}>
                             {pieData.map((slice, index) => (
                                 <View key={index} style={styles.row}>
                                     <View style={[styles.colorBox, { backgroundColor: slice.color }]} />
-                                    <Text style={styles.pieChartLabel}>
-                                        {slice.key}
-                                    </Text>
+                                    <View style={{alignItems: 'flex-end'}}>
+                                        <Text style={styles.pieChartLabel}>
+                                            {slice.key}
+                                        </Text>
+                                        <Text style={{fontSize: 12, color: 'gray'}}>
+                                            (RM{slice.value.toFixed(0)})
+                                        </Text>
+                                    </View>
                                 </View>
                             ))}
                         </View>

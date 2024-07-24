@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LogBox } from 'react-native';
 import { useEffect } from 'react';
 
-import LandingPage from "./src/view/LandingPage"; // Import your LandingPage component
+import LandingPage from "./src/view/LandingPage";
 import LoginPage from "./src/view/LoginPage";
 import SignUpPage from "./src/view/SignUpPage";
 import NewTransactionPage from "./src/view/NewTransactionPage";

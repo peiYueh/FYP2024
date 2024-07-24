@@ -75,7 +75,7 @@ const NewTransactionPage = () => {
             });
             return false;
         }
-        if (transactionType === 2 && (!savingInterestRate || parseFloat(savingInterestRate) <= 0)) {
+        if (transactionType === 2 && (!savingInterestRate || parseFloat(savingInterestRate) < 0)) {
             showMessage({
                 message: "Invalid Interest Rate",
                 description: "Please enter a valid interest rate",

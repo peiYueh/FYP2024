@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     // fontWeight: 900,
     color: "white",
+    width: '100%',
+    alignContent: 'center',
+    textAlign:'center'
   },
   remarkText: {
     fontFamily: "serif",
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
   showPasswordIconButton: {
     position: "absolute",
     right: 60, // Adjust this value as needed
-    transform: [{ translateY: -10 }],
+    transform: [{ translateY: -20 }],
   },
   icon: {
     width: 40,
@@ -251,7 +254,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
-    width: '90%',
+    width: '100%',
   },
   backButton: {
     flex: 1,
@@ -483,9 +486,9 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontWeight: "bold",
     fontSize: 22,
-    marginTop: 30,
+    marginTop: 0,
     paddingBottom: 10,
-    textTransform: "uppercase",
+    // textTransform: "uppercase",
   },
   transactionPopupContainer: {
     flex: 1,
@@ -494,7 +497,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   transactionPopup: {
-    width: 300,
+    // width: 300,
+    marginHorizontal: 20,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10,

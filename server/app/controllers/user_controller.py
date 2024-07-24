@@ -175,10 +175,10 @@ def getUserAge(db):
     except Exception as e:
         raise e
     
-def forgotPassword(db, email, serializer, mail):
+def forgotPassword(db, email, serializer):
     user_DAO = User(db)
     try:
-        return user_DAO.handle_forgot_password(email, serializer, mail)
+        return user_DAO.handle_forgot_password(email, serializer)
     except Exception as e:
         raise e
 

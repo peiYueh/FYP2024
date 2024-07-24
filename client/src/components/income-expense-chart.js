@@ -27,14 +27,14 @@ const IncomeExpenseChart = () => {
         if (!data) return { incomeData: [], expenseData: [] };
 
         const incomeData = [
-            { value: data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Active', frontColor: '#177AD5' },
-            { value: data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0), incomeType: 'Passive', frontColor: '#FF5733' }
+            { value: (data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0)), incomeType: 'Active', frontColor: '#177AD5' },
+            { value: (data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0)), incomeType: 'Passive', frontColor: '#FF5733' }
         ];
 
         const expenseData = [
-            { value: Math.abs(data.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Need', frontColor: '#177AD5' },
-            { value: Math.abs(data.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Want', frontColor: '#FF5733' },
-            { value: Math.abs(data.savings.reduce((acc, item) => acc + item.transaction_amount, 0)), expenseType: 'Saving', frontColor: '#FF5733' }
+            { value: Math.abs(data.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0).toFixed(0)), expenseType: 'Need', frontColor: '#177AD5' },
+            { value: Math.abs(data.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0).toFixed(0)), expenseType: 'Want', frontColor: '#FF5733' },
+            { value: Math.abs(data.savings.reduce((acc, item) => acc + item.transaction_amount, 0).toFixed(0)), expenseType: 'Saving', frontColor: '#FF5733' }
         ];
 
         return { incomeData, expenseData };
@@ -57,8 +57,8 @@ const IncomeExpenseChart = () => {
 
     const { incomeData, expenseData } = calculateTotals(data);
 
-    const totalIncome = incomeData.reduce((acc, item) => acc + item.value, 0);
-    const totalExpense = expenseData.reduce((acc, item) => acc + item.value, 0);
+    const totalIncome = incomeData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
+    const totalExpense = expenseData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
 
     return (
         <View style={styles.content}>

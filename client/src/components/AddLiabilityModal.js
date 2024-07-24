@@ -76,16 +76,16 @@ const AddLiabilityModal = ({ visible, onClose, onSubmit }) => {
 
     const newLiability = {
       name: liabilityName,
-      totalAmount: parseFloat(totalAmount),
-      interestRate: parseFloat(interestRate),
+      total_amount: parseFloat(totalAmount),
+      interest_rate: parseFloat(interestRate),
       term: parseInt(term),
-      monthlyPayment: parseFloat(monthlyPayment),
+      monthly_payment: parseFloat(monthlyPayment),
       lenderInfo: lenderInfo,
       purpose: purpose,
       remaining_amount: parseFloat(totalAmount),
       overall_amount: parseFloat(overallAmount)
     };
-
+    
     setLoading(true);
     try {
       const response = await axios.post(API_BASE_URL + '/newLiability', newLiability);

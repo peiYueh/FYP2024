@@ -12,7 +12,6 @@ import numpy as np
 
 sns.set(style="white", color_codes=True)
 
-# Assuming df is already read from the CSV file
 df = pd.read_csv("../dataset/Daily Household Transactions.csv")
 
 # Keep only expense rows
@@ -65,7 +64,6 @@ expanded_data['Month-Year'] = expanded_data['Date'].dt.to_period('M')
 df_grouped = expanded_data.groupby(expanded_data['Month-Year'])
 
 #CLASS BALANCING
-# Assuming df_grouped is your grouped DataFrame
 # Calculate average data count per group
 average_count = df_grouped.size().mean()
 
@@ -89,21 +87,12 @@ balanced_data = balanced_data.reset_index(drop=True)
 
 
 #SUM BY MONTH
-# Assuming your data is in a DataFrame named expanded_data
 summed_data = expanded_data.groupby('Month-Year')['Amount'].sum().reset_index()
 
 #OUTLIER HANDLING
-# Outlier handling: Removing outliers using IQR method
-Q1 = summed_data['Amount'].quantile(0.25)
-Q3 = summed_data['Amount'].quantile(0.75)
-IQR = Q3 - Q1
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
-expense_data_no_outliers = summed_data[(summed_data['Amount'] >= lower_bound) & (summed_data['Amount'] <= upper_bound)]
-
 # Alternatively, outlier handling: Capping outliers
-lower_bound = summed_data['Amount'].quantile(0.05)
-upper_bound = summed_data['Amount'].quantile(0.95)
+lower_bound = summed_data['Amount'].quantile(0.25)
+upper_bound = summed_data['Amount'].quantile(0.75)
 expense_data_capped = summed_data.copy()
 expense_data_capped['Amount'] = np.where(expense_data_capped['Amount'] > upper_bound, upper_bound,
                                          np.where(expense_data_capped['Amount'] < lower_bound, lower_bound, expense_data_capped['Amount']))
@@ -115,11 +104,6 @@ expense_data_capped['Month-Year'] = pd.to_datetime(expense_data_capped['Month-Ye
 expense_data_capped.set_index('Month-Year', inplace=True)
 
 # ML MODEL TRAINING
-# Assuming you have preprocessed your data and handled outliers
-# Your data should now be in `expense_data_capped`
-# expense_data_capped['Month-Year'] = pd.to_datetime(expense_data_capped['Month-Year'], format='%Y-%m')
-
-
 # Resample data to monthly frequency and sum amounts
 monthly_data = expense_data_capped.resample('M').sum()
 

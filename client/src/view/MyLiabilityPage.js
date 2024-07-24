@@ -63,14 +63,12 @@ const MyLiabilityPage = () => {
     };
 
     const handleAddLiability = (newLiability) => {
-        // Generate a unique key for the new liability
-        newLiability.key = items.length + 1;
-
-        // Update items state with the new liability
-        setItems([...items, newLiability]);
+        setLoading(true)
+        fetchLiabilities()
     };
 
     const handleRowPress = (item) => {
+        console.log("Item Pressed: "+item.details)
         navigation.navigate('Liability Detail', { liability: item.details });
     };
 

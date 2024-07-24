@@ -41,7 +41,7 @@ const FinancialScenarioSetting = ({ navigation }) => {
 
                 const totalNeeds = Math.abs(fetchedData.needs_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
                 const totalWants = Math.abs(fetchedData.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
-                const totalExpenses = totalNeeds + totalWants;
+                const totalExpenses = (totalNeeds + totalWants).toFixed(0);
                 const activeIncome = Math.abs(fetchedData.active_income.reduce((acc, item) => acc + item.transaction_amount, 0));
                 const passiveIncome = Math.abs(fetchedData.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
 

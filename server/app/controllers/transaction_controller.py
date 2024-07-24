@@ -99,7 +99,6 @@ def editTransaction(db):
 
 def getTransactions(db):
     user_id = session.get('user_id')
-    # user_id = "665094c0c1a89d9d19d13606"
     print(user_id)
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
@@ -114,7 +113,8 @@ def getTransactions(db):
     return jsonify(transactions)
 
 def getMonthlyExpense(db):
-    user_id = "665094c0c1a89d9d19d13606"
+    # user_id = session.get('user_id')
+    user_id = "66a0e4b967782968c0b3efca"
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     transaction_DAO = Transaction(db)
@@ -171,9 +171,10 @@ def deleteTransaction(db, transaction_id):
         return jsonify({'message': str(e)}), 500
     
 def categorizeTransactions(db):
-    user_id = session.get('user_id')  # Replace with dynamic user ID retrieval
+    user_id = session.get('user_id')
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
+    print("User ID: " + user_id)
     
     transaction_DAO = Transaction(db)
     transactions = transaction_DAO.get_transaction(user_id)
@@ -204,13 +205,13 @@ def categorizeTransactions(db):
             category = transaction.get('transaction_category')
 
             needs_categories = {
-                'Transportation', 'Household', 'Health', 'Food', 'Education',
-                'Documents', 'Family', 'Liability', 'Utilities'
+                'transportation', 'household', 'health', 'food', 'education',
+                'documents', 'family', 'liability', 'utilities'
             }
 
             wants_categories = {
-                'Apparel', 'Beauty', 'Tourism', 'Subscription', 'Social Life',
-                'Money transfer', 'Investment', 'Grooming', 'Festivals', 'Culture'
+                'apparel', 'beauty', 'tourism', 'subscription', 'social Life',
+                'money transfer', 'investment', 'grooming', 'festivals', 'culture'
             }
 
             if transaction_type == 1: 

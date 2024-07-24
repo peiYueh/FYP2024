@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from flask import current_app, request
 from app.controllers.user_controller import signup, login, getStarted, getAccountDetails, editAccount, getInitialExpense, getInitialIncome, getLifeExpectancy, getBasicInformation, getUserAge, forgotPassword,resetPassword
@@ -10,18 +10,21 @@ from app.controllers.machine_learning_controller import classifyCategory, predic
 from app.db import get_db
 from app import create_app
 from itsdangerous import URLSafeTimedSerializer
-from flask_mail import Mail, Message
+from datetime import timedelta
 
 app = create_app()
 CORS(app)
 app.secret_key = '1111'
-mail = Mail(app)
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 # members API route
 @app.route("/members")
 def members():
     return {"my words": ["This", "Is", "My", "words"]}
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
 
 @app.route('/signup', methods=['POST'])
 def signup_route():
@@ -156,7 +159,6 @@ def delete_goal(goal_id):
 @app.route('/classify', methods=['POST'])
 def classify_category():
     if request.is_json:
-        print("HII")
         data = request.get_json()
         description = data.get('transactionDescription', '')
         return classifyCategory(description)
@@ -213,6 +215,8 @@ def predict_expense_endpoint():
     else:
         expense_history = [expense_initial] * SEQUENCE_LENGTH  # Repeat expense_initial to fill the sequence
 
+    print("Expense History:")
+    print(expense_history)
     future_expenses = predictExpense(expense_history, years_to_predict=years_to_predict)
     print(future_expenses)
     # Prepare response
@@ -228,7 +232,7 @@ def forgot_password():
     db = get_db()
     data = request.json
     email = data.get('email')
-    return forgotPassword(db, email, serializer, mail)
+    return forgotPassword(db, email, serializer)
 
 @app.route('/reset-password', methods=['POST'])
 def reset_password():

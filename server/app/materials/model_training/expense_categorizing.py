@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
+from imblearn.over_sampling import SMOTE
+from collections import Counter
 import joblib
 
 sns.set(style="white", color_codes=True)
@@ -33,6 +35,7 @@ expense_data_2['Category'] = expense_data_2['Category'].str.strip().str.lower()
 
 # Combine datasets
 combined_dataset = pd.concat([expense_data_1, expense_data_2], axis=0)
+
 # print(combined_dataset.head(10))
 
 # Display summary statistics
@@ -42,27 +45,12 @@ combined_dataset = pd.concat([expense_data_1, expense_data_2], axis=0)
 combined_dataset.dropna(subset=['Description'], inplace=True)
 
 # Class Balancing - Oversampling with SMOTE
-from imblearn.over_sampling import SMOTE
-from collections import Counter
-
 # Clean the 'Description' column by filling missing values
 combined_dataset['Description'].fillna('Unknown', inplace=True)
 
 # Convert text data to TF-IDF features
 tfidf = TfidfVectorizer(stop_words='english')
 X = tfidf.fit_transform(combined_dataset['Description'])
-
-# Apply SMOTE for class balancing
-smote = SMOTE(sampling_strategy='auto', random_state=42)
-X_resampled, y_resampled = smote.fit_resample(X, combined_dataset['Category'])
-
-# Create a new dataframe with the resampled data
-df_resampled = pd.DataFrame(X_resampled.toarray(), columns=tfidf.get_feature_names_out())
-df_resampled['Category'] = y_resampled
-
-# To get the descriptions back (for inspection purposes, optional)
-inverse_transform_descriptions = tfidf.inverse_transform(X_resampled)
-df_resampled['Description'] = [' '.join(words) for words in inverse_transform_descriptions]
 
 # Apply Random Under Sampler for class balancing
 rus = RandomUnderSampler(sampling_strategy='auto', random_state=42)
@@ -83,6 +71,8 @@ df_resampled['Description'] = [' '.join(words) for words in inverse_transform_de
 # Print the balanced category distribution and the first 10 rows of the dataset
 # print(df_resampled['Category'].value_counts())
 # print(df_resampled[['Category', 'Description']].head(10))
+
+## Model Training and Building
 
 # Convert text data to TF-IDF features
 tfidf = TfidfVectorizer(stop_words='english')
@@ -109,7 +99,7 @@ print(f'Accuracy: {accuracy:.2f}')
 print(classification_report(y_test, y_pred))
 
 # Save the Model
-# # Export the model
+# Export the model
 model_filename = 'random_forest_model.joblib'
 joblib.dump(model, model_filename)
 

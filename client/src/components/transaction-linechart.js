@@ -4,9 +4,17 @@ import { LineChart } from 'react-native-gifted-charts';
 import { Text, useTheme } from 'react-native-paper';
 import styles from '../styles';
 
-const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense, stepValue, theme }) => {
+const calculateStepValue = (maxValue) => {
+    // Customize this function based on how you want to calculate the step value
+    return Math.ceil(maxValue / 5); // Example: dividing the max value by 5
+};
+
+const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense, theme }) => {
+    // Calculate optimized step values
+    const incomeStepValue = calculateStepValue(maxIncome);
+
     return (
-        <View >
+        <View>
             <LineChart
                 width={280}
                 data={incomeData}
@@ -25,7 +33,7 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 textFontSize={10}
                 maxValue={maxIncome}
                 mostNegativeValue={maxExpense}
-                stepValue={stepValue}
+                stepValue={incomeStepValue} // Use income step value
                 xAxisLabelTextStyle={{ fontSize: 10 }}
                 yAxisTextStyle={{ fontSize: 10 }}
                 rulesType="solid"
@@ -46,6 +54,8 @@ const TransactionLinechart = ({ incomeData, expensesData, maxIncome, maxExpense,
                 overflowBottom
                 textShiftX={-10}
                 textShiftY={15}
+                noOfSections={5}
+                noOfSectionsBelowXAxis={5}
                 // xAxisLabelsVerticalShift={80}
             />
         </View>

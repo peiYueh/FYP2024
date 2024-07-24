@@ -8,10 +8,10 @@ def newLiability(db):
     data = request.json
 
     liability_name = data.get('name')
-    total_amount = data.get('totalAmount')
-    interest_rate = data.get('interestRate')
+    total_amount = data.get('total_amount')
+    interest_rate = data.get('interest_rate')
     term = data.get('term')
-    monthly_payment = data.get('monthlyPayment')
+    monthly_payment = data.get('monthly_payment')
     remaining_amount = data.get('remaining_amount')
     lender_info = data.get('lenderInfo')
     purpose = data.get('purpose')

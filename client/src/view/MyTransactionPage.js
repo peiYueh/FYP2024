@@ -307,8 +307,8 @@ const MyTransactionPage = () => {
             });
         });
 
-
-        const steppingValue = Math.ceil(maxIncome / 4000) * 1000;
+        let maxStep = maxIncome>maxExpense?maxIncome:maxExpense;
+        const steppingValue = Math.ceil(maxStep / 4000) * 1000;
 
         const roundMaxExpense = (amount) => {
             // Round up to the nearest multiple of 2000 for expenses            
