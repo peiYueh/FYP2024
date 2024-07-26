@@ -116,9 +116,10 @@ const AccountPage = () => {
     const handleLogout = async () => {
         try {
             await axios.post(`${API_BASE_URL}/logout`);
+            alert("See you again!")
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Login' }],
+                routes: [{ name: 'Landing' }],
             });
         } catch (error) {
             console.error('Error during logout:', error);

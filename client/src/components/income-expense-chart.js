@@ -65,7 +65,7 @@ const IncomeExpenseChart = () => {
             <View style={styles.card}>
                 <View style={styles.row}>
                     <View style={styles.incomeCardHeader}>
-                        <Text style={styles.textHeader}>Monthly Income</Text>
+                        <Text style={styles.textHeader}>Previous Month Income</Text>
                         <Image
                             source={require('../../assets/Image/income.png')}
                             style={styles.headerImage}
@@ -101,7 +101,7 @@ const IncomeExpenseChart = () => {
             <View style={styles.card}>
                 <View style={styles.row}>
                     <View style={styles.expenseCardHeader}>
-                        <Text style={styles.textHeader}>Monthly Spending</Text>
+                        <Text style={styles.textHeader}>Previous Month Spending</Text>
                         <Image
                             source={require('../../assets/Image/expenses.png')}
                             style={styles.headerImage}

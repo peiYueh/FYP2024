@@ -109,7 +109,7 @@ const NewTransactionPage = () => {
                 transactionData
             });
             alert('New Transaction Added!');
-            navigation.navigate('My Transactions')
+            navigation.goBack();
         } catch (error) {
             alert('Please try again.');
         } finally {

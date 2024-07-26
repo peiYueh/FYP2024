@@ -140,7 +140,7 @@ const MyGoals = ({ navigation }) => {
                                 <Icon name="event" size={20} color="#fff" /> Target Age: {goal.target_age}
                             </Text>
                             <Text style={styles.text}>
-                                <Icon name="attach-money" size={20} color="#fff" /> Total Amount: {goal.total_amount}
+                                <Icon name="attach-money" size={20} color="#fff" /> Total Amount: RM{goal.total_amount}
                             </Text>
                             <IconButton
                                 icon="delete"

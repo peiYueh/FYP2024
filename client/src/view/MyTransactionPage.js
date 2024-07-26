@@ -47,7 +47,6 @@ const MyTransactionPage = () => {
             })).sort((a, b) => parseDate(b.transaction_date) - parseDate(a.transaction_date)); // Sort in descending order
 
             setTransactionData(sortedTransactions);
-            console.log("Transaction Data: " + sortedTransactions)
             setDataFetched(true);
         } catch (error) {
             console.error('Error fetching transactions:', error);
@@ -519,7 +518,7 @@ const MyTransactionPage = () => {
                                                 style={[styles.picker, { width: '100%' }]}
                                             >
                                                 <Picker.Item label="Year" value="" enabled={false} />
-                                                {[...new Set(transactionData.map(item => item.transaction_date.split('/')[2]))].map((year, index) => (
+                                                {[...new Set(transactionData.map(item => item.transaction_date.split('-')[0]))].map((year, index) => (
                                                     <Picker.Item key={index} label={year} value={year} />
                                                 ))}
                                             </Picker>

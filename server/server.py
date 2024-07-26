@@ -50,6 +50,12 @@ def login_route():
     db = get_db()  # Get the database hi
     return login(db)
 
+@app.route('/logout', methods=['POST'])
+def logout_route():
+    session.pop('user_id', None)
+    return jsonify({"message": "Logged out successfully"}), 200    
+
+
 @app.route('/getStarted', methods=['POST'])
 def getStarted_route():
     db = get_db()  # Get the database hi
@@ -208,9 +214,11 @@ def predict_expense_endpoint():
         # Assuming getMonthlyExpense returns a list of monthly expenses
         expense_history = getMonthlyExpense(db)
         # If expense_history is empty, call getInitialExpense function
+        print("Expense History Before times:")
+        print(expense_history)
         if not expense_history:
             expense_history = [getInitialExpense(db)] * SEQUENCE_LENGTH
-        elif len(expense_history) < SEQUENCE_LENGTH:
+        if len(expense_history) < SEQUENCE_LENGTH:
             expense_history = (expense_history * (SEQUENCE_LENGTH // len(expense_history) + 1))[:SEQUENCE_LENGTH]
     else:
         expense_history = [expense_initial] * SEQUENCE_LENGTH  # Repeat expense_initial to fill the sequence

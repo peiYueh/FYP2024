@@ -104,7 +104,8 @@ def editLiability(db):
         'monthly_payment': data.get('monthly_payment'),
         'due_date': data.get('due_date'),
         'lender_info': data.get('lender_info'),
-        'purpose': data.get('purpose')
+        'purpose': data.get('purpose'),
+        'overall_amount': data.get('overall_amount')
     }
     liability_DAO = Liability(db)
     liability_DAO.update_liability(liability)

@@ -8,7 +8,7 @@ const LandingPage = () => {
   const theme = useTheme(); // Access the theme object
   const navigation = useNavigation();
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.primary, paddingHorizontal: 0 }]}>
       <View style={styles.content}>
         <View style={styles.landingContent}>
           <Image

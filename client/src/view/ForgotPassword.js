@@ -30,13 +30,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             const response = await axios.post(`${API_BASE_URL}/forgot-password`, { email });
             setMessage(response.data.message);
             if (response.data.securityQuestion) {
-                navigation.navigate('ResetPassword', { email, securityQuestion: response.data.securityQuestion });
+                navigation.navigate('Reset Password', { email, securityQuestion: response.data.securityQuestion });
             }
         } catch (error) {
             if (error.response && error.response.data) {
-                Alert.alert('Error', error.response.data.message);
+                alert(error.response.data.message);
             } else {
-                Alert.alert('Error', 'An error occurred while resetting the password');
+                alert('An error occurred while resetting the password');
             }
         }finally{
             setLoading(false)

@@ -28,7 +28,7 @@ const DetailedView = ({ route, navigation }) => {
 
     // Validation function to check if edited data is valid
     const validateEditedData = () => {
-        const { liability_amount, interest_rate, term, monthly_payment, lender_info, purpose } = editedData;
+        const { liability_amount, interest_rate, term, monthly_payment, overall_amount, lender_info, purpose } = editedData;
 
         if (!liability_amount || isNaN(parseFloat(liability_amount))) {
             Alert.alert('Invalid Input', 'Please enter a valid liability amount.');
@@ -91,13 +91,14 @@ const DetailedView = ({ route, navigation }) => {
     };
 
     // Calculate remaining amount based on paymentDates
-    const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liabilityData.liability_amount);
+    const remainingAmount = paymentDates.reduce((total, payment) => total - payment.payment_amount, liabilityData.overall_amount);
 
     const handleAmountChange = (inputAmount) => {
         const paymentAmount = parseFloat(inputAmount);
         if (paymentAmount > remainingAmount) {
-            setUpdateAmount(remainingAmount);
-            // Alert.alert('Amount Adjusted', `The payment amount has been adjusted to the remaining liability amount of ${remainingAmount.toFixed(2)}`);
+            console.log(remainingAmount.toFixed(2).toString())
+            setUpdateAmount(remainingAmount.toFixed(2).toString());
+            // alert('The payment amount has been adjusted to the remaining liability amount of RM'+ remainingAmount.toFixed(2));
         } else {
             setUpdateAmount(inputAmount);
         }
@@ -336,7 +337,7 @@ const DetailedView = ({ route, navigation }) => {
                                     onChangeText={(text) => handleChange('liability_amount', parseFloat(text))}
                                 />
                             ) : (
-                                <Text style={styles.value}>${liabilityData.liability_amount.toFixed(2)}</Text>
+                                <Text style={styles.value}>RM {liabilityData.liability_amount.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -379,7 +380,7 @@ const DetailedView = ({ route, navigation }) => {
                                     disabled
                                 />
                             ) : (
-                                <Text style={styles.value}>${liabilityData.monthly_payment.toFixed(2)}</Text>
+                                <Text style={styles.value}>RM {liabilityData.monthly_payment.toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -394,7 +395,7 @@ const DetailedView = ({ route, navigation }) => {
                                     disabled
                                 />
                             ) : (
-                                <Text style={styles.value}>${parseFloat(liabilityData.overall_amount).toFixed(2)}</Text>
+                                <Text style={styles.value}>RM {parseFloat(liabilityData.overall_amount).toFixed(2)}</Text>
                             )}
                         </View>
                         <View style={styles.row}>
@@ -603,7 +604,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#01579b',
+        color: '#0A0505',
     },
     input: {
         flex: 1,
@@ -641,7 +642,7 @@ const styles = StyleSheet.create({
     selectedDateText: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#01579b',
+        color: '#0A0505',
         padding: 5
     },
 });

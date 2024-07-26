@@ -81,7 +81,7 @@ class User:
         print(result)
         return result
     
-    def handle_forgot_password(self, email, serializer, mail):
+    def handle_forgot_password(self, email, serializer):
         email = request.json.get('email')
         user = self.collection.find_one({'user_email': email})
         if user:

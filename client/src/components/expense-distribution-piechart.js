@@ -136,7 +136,7 @@ const ExpenseDistributionChart = () => {
     const renderSpendingStructure = () => (
         <View style={styles.card}>
             <Text style={{ color: '#005A75', fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-                My Spending Structure
+                Previous Month Spending
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 {renderLegendComponent("#004AAD", "#5271FF", "#38B6FF")}

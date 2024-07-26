@@ -4,6 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LogBox } from 'react-native';
 import { useEffect } from 'react';
+import { Text, StyleSheet } from 'react-native';
+
 
 import LandingPage from "./src/view/LandingPage";
 import LoginPage from "./src/view/LoginPage";
@@ -193,29 +195,40 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Home Page">
           <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="Sign Up" component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
-          <Stack.Screen name="New Transaction Page" component={NewTransactionPage} options={{ headerShown: true }} />
+          <Stack.Screen name="New Transaction Page" component={NewTransactionPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
           <Stack.Screen name="Get Started" component={GetStartedPage} options={{ headerShown: false }} />
-          <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true }} />
-          <Stack.Screen name="Edit Transaction" component={EditTransactionPage} options={{ headerShown: true }} />
-          <Stack.Screen name="New Goal" component={NewGoalPage} options={{ headerShown: true }} />
-          <Stack.Screen name="View Goal" component={GoalDetailPage} options={{ headerShown: true }} />
-          <Stack.Screen name="My Goals" component={MyGoalPage} options={{ headerShown: true }} />
-          <Stack.Screen name="My Liabilities" component={MyLiabilityPage} options={{ headerShown: true }} />
-          <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true }} />
-          <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true }} />
+          <Stack.Screen name="My Transactions" component={MyTransactionPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="Edit Transaction" component={EditTransactionPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="New Goal" component={NewGoalPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="View Goal" component={GoalDetailPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="My Goals" component={MyGoalPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="My Liabilities" component={MyLiabilityPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
           <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
-          <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }} />
+          <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }}/>
           <Stack.Screen name="Home Page" component={HomePage} options={{ headerShown: false }} />
-          <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{ headerShown: true }} />
-          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
+          <Stack.Screen name="Reset Password" component={ResetPasswordScreen} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
         </Stack.Navigator>
       </NavigationContainer>
       <FlashMessage position="top" />
     </PaperProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#1F8AAA', // Example background color
+    textAlign: 'center'
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    color: '#EEE9D3', // Example text color
+  },
+});
 export default App;
