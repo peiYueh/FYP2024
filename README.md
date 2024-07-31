@@ -1,6 +1,8 @@
-#run python server
-cd venv
-./Scripts/activate
+#Run server
+py server.py
 
-#run ngrok
+#Run ngrok
 ngrok http http://localhost:5000
+
+#Run Client
+npm start
