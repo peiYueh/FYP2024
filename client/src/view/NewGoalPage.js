@@ -36,7 +36,6 @@ const NewGoalPage = () => {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            // Fetch transactions when the page gains focus
             fetchUserAge();
         });
         return unsubscribe;
@@ -50,9 +49,6 @@ const NewGoalPage = () => {
     ];
     const [goalType, setGoalType] = useState(null);
 
-    const validGoalType = (goalType) => {
-        return goalType !== null;
-    };
 
     const renderGoalComponent = () => {
         switch (goalType) {
@@ -69,8 +65,6 @@ const NewGoalPage = () => {
         }
     };
     const handleAddGoal = () => {
-        // validate data
-        // Validate targetAge
         if (isNaN(targetAge) || targetAge <= 0) {
             alert("Please enter a valid target age.")
             return;
@@ -81,13 +75,11 @@ const NewGoalPage = () => {
             return;
         }
 
-        // Validate goalDescription
         if (!goalDescription.trim()) {
             alert("Please enter a goal description.")
             return;
         }
 
-        // Validate goalType early
         if (![0, 1, 2, 3].includes(goalType)) {
             alert("Please select a valid goal type!");
             return;
@@ -147,20 +139,12 @@ const NewGoalPage = () => {
             goal_type: goalType,
             goal_description: goalDescription,
             target_age: targetAge,
-            component_data: goalData  // Assuming goalData contains specific details related to the selected goal type
+            component_data: goalData 
         };
 
-        if (goalPayload.goal_type == 2) {
-            console.log("Goal 2 total amount: " + goalPayload.component_data.overallCost);
-        } else if (goalPayload.goal_type == 3) {
-            console.log("Goal 3 total amount: " + goalPayload.component_data.goalCost);
-        }
-
-        console.log(goalPayload)
         setLoading(true)
         axios.post(API_BASE_URL + '/newGoal', { goalPayload })
             .then(response => {
-                console.log('Goal Data:', response.data);
                 alert("Goal added successfully!")
                 setGoalType(null)
                 setLoading(false)
@@ -179,8 +163,6 @@ const NewGoalPage = () => {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
         >
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1 }}
@@ -356,7 +338,7 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
     const calculateDownPayment = () => {
         const price = parseFloat(propertyPrice);
         const percentage = parseFloat(downPaymentPercentage);
-        if (percentage >= 100) {
+        if (percentage == 100) {
             setDownPaymentAmount(price)
         } else {
             if (!isNaN(price) && !isNaN(percentage)) {
@@ -423,8 +405,6 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
         });
     }, [propertyPrice, downPaymentPercentage, downPaymentAmount, loanPeriodYears, interestRate, monthlyPayment]);
 
-
-
     return (
         <ScrollView>
             <View style={styles.content}>
@@ -474,18 +454,18 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
                         <PieChart
                             data={pieData}
                             textColor="white"
-                            textBackgroundColor="black" // Add this line
+                            textBackgroundColor="black"
                             radius={110}
                         />
                         <View style={styles.pieChartLabels}>
                             {pieData.map((slice, index) => (
                                 <View key={index} style={styles.row}>
                                     <View style={[styles.colorBox, { backgroundColor: slice.color }]} />
-                                    <View style={{alignItems: 'flex-end'}}>
+                                    <View style={{ alignItems: 'flex-end' }}>
                                         <Text style={styles.pieChartLabel}>
                                             {slice.key}
                                         </Text>
-                                        <Text style={{fontSize: 12, color: 'gray'}}>
+                                        <Text style={{ fontSize: 12, color: 'gray' }}>
                                             (RM{slice.value.toFixed(0)})
                                         </Text>
                                     </View>
@@ -493,7 +473,6 @@ const BuyProperty = ({ setGoalData, targetAge }) => {
                             ))}
                         </View>
                     </View>
-
                 )}
             </View>
         </ScrollView>
@@ -534,7 +513,7 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
     const calculateDownPayment = () => {
         const price = parseFloat(vehiclePrice);
         const percentage = parseFloat(downPaymentPercentage);
-        if (percentage >= 100) {
+        if (percentage == 100) {
             setDownPaymentAmount(price)
         } else {
             if (!isNaN(price) && !isNaN(percentage)) {
@@ -587,7 +566,6 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
         { key: 'Interest', value: parseFloat(interest.toFixed(2)), color: theme.colors.tertiary, text: 'RM ' + interest.toFixed(2) },
     ];
 
-
     return (
         <ScrollView>
             <View style={styles.content}>
@@ -637,18 +615,18 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
                         <PieChart
                             data={pieData}
                             textColor="white"
-                            textBackgroundColor="black" // Add this line
+                            textBackgroundColor="black" 
                             radius={110}
                         />
                         <View style={styles.pieChartLabels}>
                             {pieData.map((slice, index) => (
                                 <View key={index} style={styles.row}>
                                     <View style={[styles.colorBox, { backgroundColor: slice.color }]} />
-                                    <View style={{alignItems: 'flex-end'}}>
+                                    <View style={{ alignItems: 'flex-end' }}>
                                         <Text style={styles.pieChartLabel}>
                                             {slice.key}
                                         </Text>
-                                        <Text style={{fontSize: 12, color: 'gray'}}>
+                                        <Text style={{ fontSize: 12, color: 'gray' }}>
                                             (RM{slice.value.toFixed(0)})
                                         </Text>
                                     </View>
@@ -663,7 +641,6 @@ const BuyVehicle = ({ setGoalData, targetAge }) => {
     );
 }
 const Traveling = ({ setGoalData }) => {
-    const theme = useTheme();
     const [overallCost, setOverallCost] = useState(0);
     const [detailedCosts, setDetailedCosts] = useState({
         transport: '',
@@ -672,13 +649,6 @@ const Traveling = ({ setGoalData }) => {
         activities: ''
     });
     const [enterDetailedCosts, setEnterDetailedCosts] = useState(false);
-
-    // useEffect(() => {
-    //     if (enterDetailedCosts) {
-    //         const total = totalDetailedCost();
-    //         setOverallCost(total.toFixed(2));
-    //     }
-    // }, [detailedCosts, enterDetailedCosts]);
 
     const handleOverallCostChange = (text) => {
         if (!enterDetailedCosts) {
@@ -767,12 +737,10 @@ const Traveling = ({ setGoalData }) => {
                 )}
             </View>
         </ScrollView>
-        // </KeyboardAvoidingView>
     );
 };
 
 const CustomGoal = ({ setGoalData }) => {
-    const theme = useTheme();
     const [goalCost, setGoalCost] = useState('');
 
     const handleGoalCostChange = (text) => {

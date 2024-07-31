@@ -127,7 +127,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
             passiveIncome,
             totalSpending,
             goalsData,
-            useHistoricalDataForIncome,
             useHistoricalDataForExpenses,
             retirementAge,
             lifeExpectancy,
@@ -141,10 +140,6 @@ const FinancialScenarioSetting = ({ navigation }) => {
                 dataLoaded ? (
                     <>
                         <View style={styles.container}>
-                            <Appbar.Header>
-                                <Appbar.BackAction onPress={() => navigation.goBack()} />
-                                <Appbar.Content title="Financial Scenario Settings" />
-                            </Appbar.Header>
                             <ScrollView style={styles.content}>
                                 <Card style={styles.card}>
                                     <Card.Content>

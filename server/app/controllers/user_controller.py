@@ -3,6 +3,7 @@ from app.dao.userDAO import User
 import bcrypt
 from bson import ObjectId
 import logging
+from datetime import datetime
 
 def signup(db):
     try:
@@ -72,7 +73,6 @@ def getAccountDetails(db):
         return jsonify({"error": str(e)}), 500
     
 def editAccount(db):
-    print("Editing")
     data = request.get_json()
     userID = data.get('_id')
 
@@ -103,9 +103,7 @@ def getInitialExpense(db):
     # Fetch the user document from the database
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
-    # user_document = db.basic_info_collection.find_one({'_id': ObjectId(user_id)})
     if user_document:
-        # Assuming the expenses are stored as a single integer under a key like 'expenses'
         return user_document.get('expenses', 0)
     return 0
 
@@ -115,7 +113,6 @@ def getInitialIncome(db):
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
     if user_document:
-        # Assuming the expenses are stored as a single integer under a key like 'expenses'
         return user_document.get('income', 0)
     return 0
 
@@ -125,7 +122,6 @@ def getLifeExpectancy(self, db):
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
     if user_document:
-        # Assuming the expenses are stored as a single integer under a key like 'expenses'
         return user_document.get('lifeExpectancy', 0)
     return 0
 
@@ -135,7 +131,6 @@ def getExpectedRetirement(self, db):
     user_DAO = User(db)
     user_document = user_DAO.get_basic_information(user_id)
     if user_document:
-        # Assuming the expenses are stored as a single integer under a key like 'expenses'
         return user_document.get('retirementAge', 0)
     return 0
 
@@ -143,12 +138,9 @@ def getBasicInformation(db):
     user_id = session.get('user_id')
     # Fetch the user document from the database
     user_DAO = User(db)
-    print(user_id)
     user_document = user_DAO.get_basic_information(user_id)
     return user_document
 
-from flask import jsonify
-from datetime import datetime
 
 def getUserAge(db):
     user_id = session.get('user_id')
@@ -159,11 +151,10 @@ def getUserAge(db):
             user["_id"] = str(user["_id"])
             for key, value in user.items():
                 if isinstance(value, bytes):
-                    user[key] = value.decode('utf-8')  # Decode bytes to string
+                    user[key] = value.decode('utf-8')
 
             birth_date_str = user.get("user_birthDate")
             if birth_date_str:
-                # Assuming birth_date_str is in the format "YYYY-MM-DD"
                 birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d").date()
                 today = datetime.today().date()
                 age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))

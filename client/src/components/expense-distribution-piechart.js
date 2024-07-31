@@ -48,7 +48,8 @@ const ExpenseDistributionChart = () => {
         const totalWants = Math.abs(data.wants_expense.reduce((acc, item) => acc + item.transaction_amount, 0));
         const totalSavings = Math.abs(data.savings.reduce((acc, item) => acc + item.transaction_amount, 0));
         const totalAmount = totalNeeds + totalWants + totalSavings;
-        const totalIncome = Math.abs(data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0)) + Math.abs(data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
+        const totalIncome = Math.abs(data.active_income.reduce((acc, item) => acc + item.transaction_amount, 0)) 
+                            + Math.abs(data.passive_income.reduce((acc, item) => acc + item.transaction_amount, 0));
 
         const spendingData = [
             { value: (totalNeeds / totalAmount) * 100, amount: totalNeeds, label: 'Needs', color: '#004AAD', gradientCenterColor: '#3366CC', index: 0, focused: focusedIndex === 0 },
@@ -166,7 +167,7 @@ const ExpenseDistributionChart = () => {
                                         </>
                                     ) : (
                                         <Image
-                                            source={require('../../assets/Image/spending.png')} // Make sure to replace with the correct path
+                                            source={require('../../assets/Image/spending.png')}
                                             style={{ width: 50, height: 50 }}
                                         />
                                     )}
@@ -220,7 +221,7 @@ const ExpenseDistributionChart = () => {
                                         </>
                                     ) : (
                                         <Image
-                                            source={require('../../assets/Image/spending.png')} // Make sure to replace with the correct path
+                                            source={require('../../assets/Image/spending.png')} 
                                             style={{ width: 50, height: 50 }}
                                         />
                                     )}

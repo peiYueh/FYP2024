@@ -85,7 +85,7 @@ const MyLiabilityPage = () => {
     return (
         <ScrollView contentContainerStyle={[styles.scrollViewContent, { backgroundColor: theme.colors.background }]}>
             <View style={styles.totalLiabilityContainer}>
-                <Text style={[styles.subHeading, {alignItems:'center'}]}>Total Liabilities</Text>
+                <Text style={[styles.subHeading, {textAlign: 'center'}]}>Total Liabilities</Text>
                 <Text style={[styles.heading, {paddingTop: 0}]}>RM {calculateTotalLiability().toLocaleString()}</Text>
             </View>
 

@@ -10,7 +10,6 @@ class Transaction:
         return result.inserted_id
     
     def update_transaction(self, transaction):
-        print("in model")
         transaction_id = transaction['_id']
         transaction.pop('_id')
         result = self.collection.update_one({'_id': ObjectId(transaction_id)}, {'$set': transaction})

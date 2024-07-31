@@ -40,6 +40,10 @@ const IncomeExpenseChart = () => {
         return { incomeData, expenseData };
     };
 
+    const { incomeData, expenseData } = calculateTotals(data);
+    const totalIncome = incomeData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
+    const totalExpense = expenseData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
+
     const renderLoadingIndicator = () => (
         <View style={styles.loadingContainer}>
             <LottieView
@@ -54,11 +58,6 @@ const IncomeExpenseChart = () => {
     if (loading) {
         return renderLoadingIndicator();
     }
-
-    const { incomeData, expenseData } = calculateTotals(data);
-
-    const totalIncome = incomeData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
-    const totalExpense = expenseData.reduce((acc, item) => acc + item.value, 0).toFixed(0);
 
     return (
         <View style={styles.content}>

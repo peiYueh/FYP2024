@@ -113,7 +113,7 @@ const NewTransactionPage = () => {
         } catch (error) {
             alert('Please try again.');
         } finally {
-            setLoading(false); // Set loading to false regardless of login success or failure
+            setLoading(false);
         }
     };
 
@@ -167,14 +167,14 @@ const NewTransactionPage = () => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
             () => {
-                setKeyboardVisible(true); // Set keyboard visibility to true when the keyboard is shown
+                setKeyboardVisible(true); 
             }
         );
 
         const keyboardDidHideListener = Keyboard.addListener(
             'keyboardDidHide',
             () => {
-                setKeyboardVisible(false); // Set keyboard visibility to false when the keyboard is hidden
+                setKeyboardVisible(false);
             }
         );
 
@@ -250,28 +250,13 @@ const NewTransactionPage = () => {
     );
 };
 
-const ExpenseComponent = ({ transactionDescription, setTransactionDescription, transactionDate, settransactionDate, transactionCategory, setTransactionCategory, isDatePickerVisible, setDatePickerVisibility }) => {
+const ExpenseComponent = ({ transactionDescription, setTransactionDescription, transactionDate, 
+                            settransactionDate, transactionCategory, setTransactionCategory, 
+                            isDatePickerVisible, setDatePickerVisibility }) => {
     const categories = [
-        'apparel',
-        'health',
-        'tourism',
-        'subscription',
-        'social life',
-        'money transfer',
-        'investment',
-        'household',
-        'grooming',
-        'beauty',
-        'food',
-        'festivals',
-        'family',
-        'education',
-        'documents',
-        'culture',
-        'transportation',
-        'others'
-    ];
-    const theme = useTheme();
+        'apparel','health','tourism','subscription','social life','money transfer','investment',
+        'household','grooming','beauty','food','festivals','family','education','documents',
+        'culture','transportation','others'];
     const [isMenuVisible, setMenuVisible] = useState(false);
     const showDatePicker = () => setDatePickerVisibility(true);
     const hideDatePicker = () => setDatePickerVisibility(false);
@@ -281,7 +266,6 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
 
     const handleConfirm = (params) => {
         settransactionDate(params.date.toISOString().split('T')[0]);
-        // settransactionDateTouched(true);
         hideDatePicker();
     };
 
@@ -316,7 +300,7 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
                 onPress={showDatePicker}
                 accessibilityLabel="Transaction Date"
                 locale={'en'}
-                style={styles.transactionDetailInput} // Apply the styles here
+                style={styles.transactionDetailInput}
             >
                 <TextInput
                     label={transactionDate}
@@ -364,7 +348,7 @@ const ExpenseComponent = ({ transactionDescription, setTransactionDescription, t
                     dropDownContainerStyle={styles.dropDownContainer}
                     accessibilityLabel="Date Picker Modal"
                     validRange={{
-                        endDate: today, // Set the maximum date to today
+                        endDate: today,
                     }}
                 />
             </Portal>
@@ -395,7 +379,7 @@ const IncomeComponent = ({ transactionDescription, setTransactionDescription, tr
                 onPress={showDatePicker}
                 accessibilityLabel="Transaction Date"
                 locale={'en'}
-                style={styles.transactionDetailInput} // Apply the styles here
+                style={styles.transactionDetailInput}
             >
                 <TextInput
                     label={transactionDate}

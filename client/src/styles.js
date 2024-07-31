@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   subHeading: {
     fontFamily: "Montserrat_700Bold",
     fontSize: 20,
-    width: '100%'
+    width: '100%',
   },
   pageHeading: {
     textShadowColor: "#F69E35",

@@ -6,7 +6,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 def newTransaction(db):
-    # userID = "665094c0c1a89d9d19d13606"
     userID = session.get('user_id')
     data = request.get_json().get('transactionData')
     transactionType = data.get('transaction_type')
@@ -113,8 +112,7 @@ def getTransactions(db):
     return jsonify(transactions)
 
 def getMonthlyExpense(db):
-    # user_id = session.get('user_id')
-    user_id = "66a0e4b967782968c0b3efca"
+    user_id = session.get('user_id')
     if not user_id:
         return jsonify({'error': 'User ID is required'}), 400
     transaction_DAO = Transaction(db)
@@ -161,7 +159,6 @@ def getMonthlyExpense(db):
 def deleteTransaction(db, transaction_id):
     transaction_DAO = Transaction(db)
     
-    # transactions = transaction_DAO.get_transaction(user_id)
     try:
         if transaction_DAO.delete_transaction(transaction_id):
             return jsonify({'message': 'Transaction deleted successfully'}), 200
@@ -197,7 +194,7 @@ def categorizeTransactions(db):
         if '_id' in transaction:
             transaction['_id'] = str(transaction['_id'])
         
-        transaction_date = datetime.strptime(transaction['transaction_date'], '%Y-%m-%d')  # Adjust date format as necessary
+        transaction_date = datetime.strptime(transaction['transaction_date'], '%Y-%m-%d')
 
         # Filter transactions for the last month
         if first_day_of_last_month <= transaction_date <= last_day_of_last_month:
@@ -215,16 +212,15 @@ def categorizeTransactions(db):
             }
 
             if transaction_type == 1: 
-                if transaction.get('income_type') == True:  # Adjust condition based on your schema
+                if transaction.get('income_type') == True:  
                     categorized_data["active_income"].append(transaction)
                 else:
                     categorized_data["passive_income"].append(transaction)
-            elif transaction_type == 0:  # Assuming '0' denotes expense
+            elif transaction_type == 0:  
                 if category in needs_categories:
                     categorized_data["needs_expense"].append(transaction)
                 else:
                     categorized_data["wants_expense"].append(transaction)
             else:
                 categorized_data["savings"].append(transaction)
-    print(categorized_data)
     return jsonify(categorized_data), 200

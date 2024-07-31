@@ -5,7 +5,6 @@ import os
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 
-    # Load the model and the TF-IDF vectorizer
 def classifyCategory(description):
     try:
         model = joblib.load('./app/materials/random_forest_model.joblib')
@@ -35,7 +34,6 @@ def predictSalary(current_salary, years_to_predict):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
 def predictExpense(expense_history, years_to_predict=12):
     # Load the saved model
     model = load_model('./app/materials/expense_prediction_model.h5')
@@ -44,15 +42,7 @@ def predictExpense(expense_history, years_to_predict=12):
     scaler = StandardScaler()
     expense_history_scaled = scaler.fit_transform(np.array(expense_history).reshape(-1, 1))
     
-    # Create sequences from the input data
     SEQUENCE_LENGTH = 12
-    def create_sequences(data, seq_length):
-        xs = []
-        for i in range(len(data) - seq_length):
-            x = data[i:i + seq_length]
-            xs.append(x)
-        return np.array(xs)
-    
     future_seq = expense_history_scaled[-SEQUENCE_LENGTH:].reshape((1, SEQUENCE_LENGTH, 1))  # Last sequence in the scaled data
     future_forecast = []
     for _ in range(years_to_predict):

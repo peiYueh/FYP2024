@@ -13,7 +13,6 @@ const FinancialScenarioPage = ({ route }) => {
         passiveIncome,
         totalSpending,
         goalsData,
-        useHistoricalDataForIncome,
         useHistoricalDataForExpenses,
         retirementAge,
         lifeExpectancy,
@@ -83,7 +82,6 @@ const FinancialScenarioPage = ({ route }) => {
             expenses: predictedExpense[index] || 0,
         }));
 
-
         let remainingSavings = parseInt(initialSavings);
         const tempStackData = combinedData.map((yearData, index) => {
             let remainingExpense = yearData.expenses;
@@ -145,7 +143,7 @@ const FinancialScenarioPage = ({ route }) => {
                         name={goalIcons[goal.goal_type]}
                         size={15}
                         color="gold"
-                        style={[styles.icon, { top: -index * 20 }]} // Adjusted position
+                        style={[styles.icon, { top: -index * 20 }]}
                     />
                 ))}
             </View>
@@ -178,7 +176,7 @@ const FinancialScenarioPage = ({ route }) => {
             const targetAge = parseInt(goal.target_age);
             const targetIndex = targetAge - BASE_AGE;
 
-            if (targetIndex < 0) return; // Skip goals starting before the base age (23)
+            if (targetIndex < 0) return; // Skip goals starting before the base age
 
             switch (goal.goal_type) {
                 case 0: // Property Purchase
@@ -188,7 +186,7 @@ const FinancialScenarioPage = ({ route }) => {
                     const loanPeriod = parseInt(goal.loan_period);
                     for (let i = 0; i < loanPeriod; i++) {
                         const yearIndex = targetIndex + i;
-                        if (yearIndex >= updatedExpenses.length) break; // Ensure we don't go out of bounds
+                        if (yearIndex >= updatedExpenses.length) break;
 
                         if (i === 0) {
                             updatedExpenses[yearIndex] = (updatedExpenses[yearIndex] || 0) + downPayment + (monthlyPayment * 12);

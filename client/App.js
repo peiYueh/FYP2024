@@ -195,7 +195,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home Page">
+        <Stack.Navigator initialRouteName="Landing">
           <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
           <Stack.Screen name="Sign Up" component={SignUpPage} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
@@ -210,7 +210,7 @@ const App = () => {
           <Stack.Screen name="Liability Detail" component={LiabilityDetailPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
           <Stack.Screen name="My Account" component={AccountPage} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
           <Stack.Screen name="Financial Scenario" component={FinancialScenarioPage} options={{ headerShown: false }} />
-          <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: false }}/>
+          <Stack.Screen name="Financial Scenario Settings" component={FinancialScenarioSetting} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }}/>
           <Stack.Screen name="Home Page" component={HomePage} options={{ headerShown: false }} />
           <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />
           <Stack.Screen name="Reset Password" component={ResetPasswordScreen} options={{ headerShown: true, headerStyle: styles.header, headerTitleStyle: styles.headerTitle, }} />

@@ -142,7 +142,6 @@ def get_user_age():
 
 @app.route('/newGoal', methods=['POST'])
 def add_goal():
-    print("Adding Goal")
     db = get_db()
     return newGoal(db)
 
@@ -173,12 +172,12 @@ def classify_category():
 
 @app.route('/categorizeTransaction', methods=['GET'])
 def categorize_transactions():
-    db = get_db()  # Replace with your method of obtaining the database hi
+    db = get_db() 
     return categorizeTransactions(db)    
 
 @app.route('/initialIncome', methods=['GET'])
 def initial_income():
-    db = get_db()  # Replace with your method of obtaining the database hi
+    db = get_db() 
     return getInitialIncome(db)    
 
 @app.route('/predictSalary', methods=['GET'])
@@ -195,12 +194,11 @@ def predict_salary_endpoint():
     if 'error' in result:
         return jsonify(result), 500
     return jsonify({'future_salaries': result})
-    # return result
 
 @app.route('/predictExpense', methods=['GET'])
 def predict_expense_endpoint():
     use_history_data = request.args.get('useHistoricalDataForExpenses', 'false').lower() == 'true'
-    expense_initial = float(request.args.get('totalSpending', 0))  # Default to 0 if not provided
+    expense_initial = float(request.args.get('totalSpending', 0)) 
     life_expectancy = int(request.args.get('lifeExpectancy', 0)) + 1
     db = get_db()
     current_age = getUserAge(db)
@@ -208,14 +206,11 @@ def predict_expense_endpoint():
     # Calculate the number of years to predict
     years_to_predict = (life_expectancy - current_age)
 
-    SEQUENCE_LENGTH = 12  # Sequence length expected by the model
+    SEQUENCE_LENGTH = 12  # Sequence length needed by the model
     
     if use_history_data:
-        # Assuming getMonthlyExpense returns a list of monthly expenses
         expense_history = getMonthlyExpense(db)
         # If expense_history is empty, call getInitialExpense function
-        print("Expense History Before times:")
-        print(expense_history)
         if not expense_history:
             expense_history = [getInitialExpense(db)] * SEQUENCE_LENGTH
         if len(expense_history) < SEQUENCE_LENGTH:
@@ -223,11 +218,7 @@ def predict_expense_endpoint():
     else:
         expense_history = [expense_initial] * SEQUENCE_LENGTH  # Repeat expense_initial to fill the sequence
 
-    print("Expense History:")
-    print(expense_history)
     future_expenses = predictExpense(expense_history, years_to_predict=years_to_predict)
-    print(future_expenses)
-    # Prepare response
     response = {
         'predictions': future_expenses.flatten().tolist()  # Convert NumPy array to list
     }
